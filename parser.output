@@ -1,0 +1,191 @@
+Nonterminals useless in grammar
+
+    translation_unit
+    struct_specifier
+    function_definition
+    type_specifier
+    fun_declarator
+    parameter_list
+    parameter_declaration
+    declarator_arr
+    declarator
+    compound_statement
+    statement_list
+    statement
+    assignment_expression
+    assignment_statement
+    procedure_call
+    expression
+    logical_and_expression
+    equality_expression
+    relational_expression
+    additive_expression
+    unary_expression
+    multiplicative_expression
+    postfix_expression
+    expression_list
+    unary_operator
+    selection_statement
+    iteration_statement
+    declaration_list
+    declaration
+    declarator_list
+
+
+Terminals unused in grammar
+
+    VOID
+    INT
+    FLOAT
+    STRUCT
+    OR_OP
+    AND_OP
+    EQ_OP
+    NE_OP
+    LE_OP
+    GE_OP
+    INC_OP
+    PTR_OP
+    IF
+    ELSE
+    WHILE
+    FOR
+    RETURN
+    OTHERS
+    '+'
+    '-'
+    '*'
+    '/'
+    '='
+    '('
+    ')'
+    ','
+    '{'
+    '}'
+    '['
+    ']'
+    '!'
+    '&'
+    '<'
+    '>'
+    ';'
+    '\n'
+
+
+Grammar
+
+    0 $accept: primary_expression $end
+
+    1 primary_expression: IDENTIFIER
+    2                   | INT_CONSTANT
+    3                   | FLOAT_CONSTANT
+    4                   | STRING_LITERAL
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    '\n' (10)
+    '!' (33)
+    '&' (38)
+    '(' (40)
+    ')' (41)
+    '*' (42)
+    '+' (43)
+    ',' (44)
+    '-' (45)
+    '/' (47)
+    ';' (59)
+    '<' (60)
+    '=' (61)
+    '>' (62)
+    '[' (91)
+    ']' (93)
+    '{' (123)
+    '}' (125)
+    error (256)
+    VOID <std::string> (258)
+    INT <std::string> (259)
+    FLOAT <std::string> (260)
+    STRUCT <std::string> (261)
+    IDENTIFIER <std::string> (262) 1
+    INT_CONSTANT <std::string> (263) 2
+    FLOAT_CONSTANT <std::string> (264) 3
+    STRING_LITERAL <std::string> (265) 4
+    OR_OP <std::string> (266)
+    AND_OP <std::string> (267)
+    EQ_OP <std::string> (268)
+    NE_OP <std::string> (269)
+    LE_OP <std::string> (270)
+    GE_OP <std::string> (271)
+    INC_OP <std::string> (272)
+    PTR_OP <std::string> (273)
+    IF <std::string> (274)
+    ELSE <std::string> (275)
+    WHILE <std::string> (276)
+    FOR <std::string> (277)
+    RETURN <std::string> (278)
+    OTHERS <std::string> (279)
+
+
+Nonterminals, with rules where they appear
+
+    $accept (43)
+        on left: 0
+    primary_expression <abstract_astnode*> (44)
+        on left: 1 2 3 4
+        on right: 0
+
+
+State 0
+
+    0 $accept: . primary_expression $end
+
+    IDENTIFIER      shift, and go to state 1
+    INT_CONSTANT    shift, and go to state 2
+    FLOAT_CONSTANT  shift, and go to state 3
+    STRING_LITERAL  shift, and go to state 4
+
+    primary_expression  go to state 5
+
+
+State 1
+
+    1 primary_expression: IDENTIFIER .
+
+    $default  reduce using rule 1 (primary_expression)
+
+
+State 2
+
+    2 primary_expression: INT_CONSTANT .
+
+    $default  reduce using rule 2 (primary_expression)
+
+
+State 3
+
+    3 primary_expression: FLOAT_CONSTANT .
+
+    $default  reduce using rule 3 (primary_expression)
+
+
+State 4
+
+    4 primary_expression: STRING_LITERAL .
+
+    $default  reduce using rule 4 (primary_expression)
+
+
+State 5
+
+    0 $accept: primary_expression . $end
+
+    $end  shift, and go to state 6
+
+
+State 6
+
+    0 $accept: primary_expression $end .
+
+    $default  accept

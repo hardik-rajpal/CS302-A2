@@ -24,8 +24,8 @@ int main(const int argc, const char **argv)
    parser.set_debug_level(1);
   #endif 
 
-  std::cout << "digraph D { node [ordering=out]" << std::endl;
+  // std::cout << "digraph D { node [ordering=out]" << std::endl;
   parser.parse();
-  std::cout << "}" << std::endl;
+  // std::cout << "}" << std::endl;
 }
 
