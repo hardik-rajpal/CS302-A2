@@ -51,9 +51,7 @@
       class Scanner;
    }
 
-
-
-#line 57 "parser.tab.hh"
+#line 55 "parser.tab.hh"
 
 # include <cassert>
 # include <cstdlib> // std::abort
@@ -188,7 +186,7 @@
 
 #line 5 "parser.yy"
 namespace IPL {
-#line 192 "parser.tab.hh"
+#line 190 "parser.tab.hh"
 
 
 
@@ -392,7 +390,36 @@ namespace IPL {
     /// An auxiliary type to compute the largest semantic type.
     union union_type
     {
+      // translation_unit
+      // struct_specifier
+      // function_definition
+      // fun_declarator
+      // parameter_list
+      // parameter_declaration
+      // declarator_arr
+      // declarator
+      // compound_statement
+      // statement_list
+      // statement
+      // assignment_expression
+      // assignment_statement
+      // procedure_call
+      // expression
+      // logical_and_expression
+      // equality_expression
+      // relational_expression
+      // additive_expression
+      // unary_expression
+      // multiplicative_expression
+      // postfix_expression
       // primary_expression
+      // expression_list
+      // unary_operator
+      // selection_statement
+      // iteration_statement
+      // declaration_list
+      // declaration
+      // declarator_list
       char dummy1[sizeof (abstract_astnode*)];
 
       // VOID
@@ -417,6 +444,7 @@ namespace IPL {
       // FOR
       // RETURN
       // OTHERS
+      // type_specifier
       char dummy2[sizeof (std::string)];
     };
 
@@ -589,7 +617,36 @@ namespace IPL {
         // Type destructor.
 switch (yytype)
     {
-      case 44: // primary_expression
+      case 45: // translation_unit
+      case 46: // struct_specifier
+      case 47: // function_definition
+      case 48: // fun_declarator
+      case 49: // parameter_list
+      case 50: // parameter_declaration
+      case 51: // declarator_arr
+      case 52: // declarator
+      case 53: // compound_statement
+      case 54: // statement_list
+      case 55: // statement
+      case 56: // assignment_expression
+      case 57: // assignment_statement
+      case 58: // procedure_call
+      case 59: // expression
+      case 60: // logical_and_expression
+      case 61: // equality_expression
+      case 62: // relational_expression
+      case 63: // additive_expression
+      case 64: // unary_expression
+      case 65: // multiplicative_expression
+      case 66: // postfix_expression
+      case 67: // primary_expression
+      case 68: // expression_list
+      case 69: // unary_operator
+      case 70: // selection_statement
+      case 71: // iteration_statement
+      case 72: // declaration_list
+      case 73: // declaration
+      case 74: // declarator_list
         value.template destroy< abstract_astnode* > ();
         break;
 
@@ -615,6 +672,7 @@ switch (yytype)
       case 22: // FOR
       case 23: // RETURN
       case 24: // OTHERS
+      case 75: // type_specifier
         value.template destroy< std::string > ();
         break;
 
@@ -694,13 +752,13 @@ switch (yytype)
       symbol_type (int tok, location_type l)
         : super_type(token_type (tok), std::move (l))
       {
-        YY_ASSERT (tok == 0 || tok == 43 || tok == 45 || tok == 42 || tok == 47 || tok == 61 || tok == 40 || tok == 41 || tok == 44 || tok == 123 || tok == 125 || tok == 91 || tok == 93 || tok == 33 || tok == 38 || tok == 60 || tok == 62 || tok == 59 || tok == 10);
+        YY_ASSERT (tok == 0 || tok == 43 || tok == 45 || tok == 42 || tok == 47 || tok == 61 || tok == 40 || tok == 41 || tok == 44 || tok == 123 || tok == 125 || tok == 91 || tok == 93 || tok == 33 || tok == 38 || tok == 60 || tok == 62 || tok == 59 || tok == 10 || tok == 46);
       }
 #else
       symbol_type (int tok, const location_type& l)
         : super_type(token_type (tok), l)
       {
-        YY_ASSERT (tok == 0 || tok == 43 || tok == 45 || tok == 42 || tok == 47 || tok == 61 || tok == 40 || tok == 41 || tok == 44 || tok == 123 || tok == 125 || tok == 91 || tok == 93 || tok == 33 || tok == 38 || tok == 60 || tok == 62 || tok == 59 || tok == 10);
+        YY_ASSERT (tok == 0 || tok == 43 || tok == 45 || tok == 42 || tok == 47 || tok == 61 || tok == 40 || tok == 41 || tok == 44 || tok == 123 || tok == 125 || tok == 91 || tok == 93 || tok == 33 || tok == 38 || tok == 60 || tok == 62 || tok == 59 || tok == 10 || tok == 46);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
@@ -1091,7 +1149,7 @@ switch (yytype)
     Parser& operator= (const Parser&);
 
     /// Stored state numbers (used for stacks).
-    typedef signed char state_type;
+    typedef unsigned char state_type;
 
     /// Generate an error message.
     /// \param yystate   the state where the error occurred.
@@ -1123,7 +1181,7 @@ switch (yytype)
     // Tables.
     // YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
     // STATE-NUM.
-    static const signed char yypact_[];
+    static const short yypact_[];
 
     // YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
     // Performed when YYTABLE does not specify something else to do.  Zero
@@ -1131,7 +1189,7 @@ switch (yytype)
     static const signed char yydefact_[];
 
     // YYPGOTO[NTERM-NUM].
-    static const signed char yypgoto_[];
+    static const short yypgoto_[];
 
     // YYDEFGOTO[NTERM-NUM].
     static const signed char yydefgoto_[];
@@ -1139,9 +1197,9 @@ switch (yytype)
     // YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
     // positive, shift that token.  If negative, reduce the rule whose
     // number is the opposite.  If YYTABLE_NINF, syntax error.
-    static const signed char yytable_[];
+    static const unsigned char yytable_[];
 
-    static const signed char yycheck_[];
+    static const short yycheck_[];
 
     // YYSTOS[STATE-NUM] -- The (internal number of the) accessing
     // symbol of state STATE-NUM.
@@ -1159,7 +1217,7 @@ switch (yytype)
     static const char* const yytname_[];
 
     // YYRLINE[YYN] -- Source line where rule number YYN was defined.
-    static const signed char yyrline_[];
+    static const short yyrline_[];
     /// Report on the debug stream that the rule \a r is going to be reduced.
     virtual void yy_reduce_print_ (int r);
     /// Print the state stack on the debug stream.
@@ -1386,10 +1444,10 @@ switch (yytype)
     enum
     {
       yyeof_ = 0,
-      yylast_ = 4,     ///< Last index in yytable_.
-      yynnts_ = 2,  ///< Number of nonterminal symbols.
-      yyfinal_ = 6, ///< Termination state number.
-      yyntokens_ = 43  ///< Number of tokens.
+      yylast_ = 375,     ///< Last index in yytable_.
+      yynnts_ = 32,  ///< Number of nonterminal symbols.
+      yyfinal_ = 10, ///< Termination state number.
+      yyntokens_ = 44  ///< Number of tokens.
     };
 
 
@@ -1400,7 +1458,7 @@ switch (yytype)
 
 #line 5 "parser.yy"
 } // IPL
-#line 1404 "parser.tab.hh"
+#line 1462 "parser.tab.hh"
 
 
 

@@ -1,0 +1,64 @@
+[
+    {
+        "seq": [
+            {
+                "for": {
+                    "assignE": {
+                        "identifier": "i",
+                        "intconst": 0
+                    },
+                    "op_binary": {
+                        "": "LT?",
+                        "identifier": "i",
+                        "intconst": 10
+                    },
+                    "assignE": {
+                        "identifier": "i",
+                        "op_binary": {
+                            "": "PLUS?",
+                            "identifier": "i",
+                            "intconst": 1
+                        }
+                    },
+                    "seq": [
+                        {
+                            "assignS": {
+                                "identifier": "y",
+                                "op_unary": {
+                                    "": "DEREF",
+                                    "member": {
+                                        "identifier": "x",
+                                        "identifier": "p"
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "assignS": {
+                                "identifier": "z",
+                                "op_unary": {
+                                    "": "ADDRESS",
+                                    "arrayref": {
+                                        "identifier": "a",
+                                        "intconst": 1
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "funcall": {
+                                "identifier": "foo",
+                                "": []
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "return": {
+                    "intconst": 0
+                }
+            }
+        ]
+    }
+]

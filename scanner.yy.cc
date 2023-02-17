@@ -349,7 +349,7 @@ static const flex_int16_t yy_accept[102] =
 static const YY_CHAR yy_ec[256] =
     {   0,
         1,    1,    1,    1,    1,    1,    1,    1,    2,    3,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    2,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    4,    5,    6,    7,    7,    7,    8,    7,    9,
        10,   11,   12,   13,   14,   15,   16,   17,   18,   19,
@@ -979,14 +979,14 @@ YY_RULE_SETUP
   return token_type::IDENTIFIER;
 }
 	YY_BREAK
-case YY_STATE_EOF(INITIAL):
-#line 138 "scanner.l"
-yyterminate();
-	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 139 "scanner.l"
+#line 138 "scanner.l"
 return token_type::OTHERS;
+	YY_BREAK
+case YY_STATE_EOF(INITIAL):
+#line 139 "scanner.l"
+yyterminate();
 	YY_BREAK
 case 43:
 YY_RULE_SETUP

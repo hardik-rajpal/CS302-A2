@@ -30,7 +30,7 @@ using token_type = IPL::Parser::token;
 
 %}
 
-[ \t\n]                                                   {}
+[ \t\n\r]                                                   {}
 [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]                       {}
 void {
   yylval->emplace< std::string >( YYText() );
@@ -134,6 +134,6 @@ return {
   yylval->emplace< std::string >( YYText() );
   return token_type::IDENTIFIER;
 }
-<<EOF>>                                                 yyterminate();
 .                                                       return token_type::OTHERS;
+<<EOF>>                                                 yyterminate();
 %%
