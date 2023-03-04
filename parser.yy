@@ -53,7 +53,7 @@
 %define api.value.type variant
 %define parse.assert
 
-%start translation_unit
+%start begin_nterm
 
 %token <std::string> VOID
 %token <std::string> INT
@@ -81,21 +81,27 @@
 %left '*' '/'
 %token '=' '(' ')' ',' '{' '}' '[' ']' '!' '&' '<' '>' ';' '\n'
 
-%nterm <abstract_astnode*> translation_unit struct_specifier function_definition fun_declarator parameter_list parameter_declaration declarator_arr declarator compound_statement statement_list statement assignment_expression assignment_statement procedure_call expression logical_and_expression equality_expression relational_expression additive_expression unary_expression multiplicative_expression postfix_expression primary_expression expression_list unary_operator selection_statement iteration_statement declaration_list declaration declarator_list 
+%nterm <abstract_astnode*> begin_nterm, translation_unit struct_specifier function_definition fun_declarator parameter_list parameter_declaration declarator_arr declarator compound_statement statement_list statement assignment_expression assignment_statement procedure_call expression logical_and_expression equality_expression relational_expression additive_expression unary_expression multiplicative_expression postfix_expression primary_expression expression_list selection_statement iteration_statement declaration_list declaration declarator_list 
 
-%nterm <std::string> type_specifier 
+%nterm <exp_astnode*> 
+
+%nterm <statement_astnode*> function_definition 
+
+%nterm <std::vector<statement_astnode*>> compound_statement statement_list
+
+%nterm <std::string> type_specifier, unary_operator
 %%
-translation_unit: struct_specifier{
+begin_nterm: translation_unit {
     $1->print();
+}
+
+translation_unit: struct_specifier{
 }
 | function_definition{
-    $1->print();
 }
 | translation_unit struct_specifier{
-    $1->print();
 }
 | translation_unit function_definition{
-    $1->print();
 }
 ;
 
@@ -146,16 +152,22 @@ declarator: declarator_arr{
 compound_statement: '{' '}'{
 }
 | '{' statement_list '}'{
+    $$ = $2;
 }
 | '{' declaration_list '}' {
 }
 | '{' declaration_list statement_list '}'{
+    $$ = $3;
 }
 ;
 
 statement_list: statement{
+    std::vector<statement_astnode*> temp;
+    temp.push_back($1);
+    $$ = temp;
 }
 | statement_list statement{
+    $$ = $1.push_back($2);
 }
 ;
 
@@ -203,43 +215,54 @@ logical_and_expression: equality_expression{
 
 equality_expression: relational_expression{
 }
-| equality_expression EQ_OP relational_expression{
+| equality_expression EQ_OP relational_expression {
+    $$ = new op_binary_astnode("EQ?", $1, $3);
 }
 | equality_expression NE_OP relational_expression{
+    $$ = new op_binary_astnode("NE?", $1, $3);
 }
 ;
 
 relational_expression: additive_expression{
 }
 | relational_expression '<' additive_expression{
+    $$ = new op_binary_astnode("LT?", $1, $3);
 }
 | relational_expression '>' additive_expression{
+    $$ = new op_binary_astnode("GT?", $1, $3);
 }
 | relational_expression LE_OP additive_expression{
+    $$ = new op_binary_astnode("LE?", $1, $3);
 }
 | relational_expression GE_OP additive_expression{
+    $$ = new op_binary_astnode("GE?", $1, $3);
 }
 ;
 
 additive_expression: multiplicative_expression{
 }
 | additive_expression '+' multiplicative_expression{
+    $$ = new op_binary_astnode("PLUS?", $1, $3);
 }
 | additive_expression '-' multiplicative_expression{
+    $$ = new op_binary_astnode("MINUS?", $1, $3);
 }
 ;
 
 unary_expression: postfix_expression{
 }
 | unary_operator unary_expression{
+    $$ = new op_unary_astnode($1, $2);
 }
 ;
 
 multiplicative_expression: unary_expression{
 }
 | multiplicative_expression '*' unary_expression{
+    $$ = new op_binary_astnode("MULT?", $1, $3);
 }
 | multiplicative_expression '/' unary_expression{
+    $$ = new op_binary_astnode("DIV?", $1, $3);
 }
 ;
 
@@ -283,12 +306,16 @@ expression_list: expression{
 ;
 
 unary_operator: '-'{
+    $$ = std::string("UMINUS?");
 }
 | '!'{
+    $$ = std::string("NOT");
 }
 | '&'{
+    $$ = std::string("ADDRESS");
 }
 | '*'{
+    $$ = std::string("DEREF");
 }
 ;
 

@@ -28,12 +28,12 @@ class exp_astnode: public abstract_astnode {
 class ref_astnode: public exp_astnode {
 };
 
+/* Derived Classes */
 class empty_astnode: public statement_astnode {
 public:
     void print();
 };
 
-/* Derived Classes */
 class seq_astnode: public statement_astnode {
 public:
     seq_astnode(std::vector<statement_astnode*>);
@@ -176,6 +176,7 @@ private:
 
 class member_astnode: public ref_astnode {
 public:
+    member_astnode(exp_astnode*, identifier_astnode*);
     void print();
 private:
     exp_astnode* exp;
@@ -184,6 +185,7 @@ private:
 
 class arrow_astnode: public ref_astnode {
 public: 
+    arrow_astnode(exp_astnode*, identifier_astnode*);
     void print();
 private:
     exp_astnode* exp;

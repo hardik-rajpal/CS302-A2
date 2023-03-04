@@ -135,3 +135,29 @@ void arrayref_astnode::print() {
     this->exp2->print();
     std::cout << "\n}";
 }
+
+deref_astnode::deref_astnode(exp_astnode* exp): exp(exp) {}
+
+void deref_astnode::print() {
+    std::cout << "\"deref";
+}
+
+member_astnode::member_astnode(exp_astnode* exp, identifier_astnode* identifier): exp(exp), identifier(identifier) {}
+
+void member_astnode::print() {
+    std::cout << "\"member\": {\n";
+    this->exp->print();
+    std::cout << ",\n";
+    this->identifier->print();
+    std::cout << "\n}";
+}
+
+arrow_astnode::arrow_astnode(exp_astnode* exp, identifier_astnode* identifier): exp(exp), identifier(identifier) {}
+
+void arrow_astnode::print() {
+    std::cout << "\"arrow\": {\n";
+    this->exp->print();
+    std::cout << ",\n";
+    this->identifier->print();
+    std::cout << "\n}";
+}

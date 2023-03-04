@@ -390,6 +390,7 @@ namespace IPL {
     /// An auxiliary type to compute the largest semantic type.
     union union_type
     {
+      // begin_nterm
       // translation_unit
       // struct_specifier
       // function_definition
@@ -414,7 +415,6 @@ namespace IPL {
       // postfix_expression
       // primary_expression
       // expression_list
-      // unary_operator
       // selection_statement
       // iteration_statement
       // declaration_list
@@ -445,6 +445,7 @@ namespace IPL {
       // RETURN
       // OTHERS
       // type_specifier
+      // unary_operator
       char dummy2[sizeof (std::string)];
     };
 
@@ -617,31 +618,31 @@ namespace IPL {
         // Type destructor.
 switch (yytype)
     {
-      case 45: // translation_unit
-      case 46: // struct_specifier
-      case 47: // function_definition
-      case 48: // fun_declarator
-      case 49: // parameter_list
-      case 50: // parameter_declaration
-      case 51: // declarator_arr
-      case 52: // declarator
-      case 53: // compound_statement
-      case 54: // statement_list
-      case 55: // statement
-      case 56: // assignment_expression
-      case 57: // assignment_statement
-      case 58: // procedure_call
-      case 59: // expression
-      case 60: // logical_and_expression
-      case 61: // equality_expression
-      case 62: // relational_expression
-      case 63: // additive_expression
-      case 64: // unary_expression
-      case 65: // multiplicative_expression
-      case 66: // postfix_expression
-      case 67: // primary_expression
-      case 68: // expression_list
-      case 69: // unary_operator
+      case 45: // begin_nterm
+      case 46: // translation_unit
+      case 47: // struct_specifier
+      case 48: // function_definition
+      case 49: // fun_declarator
+      case 50: // parameter_list
+      case 51: // parameter_declaration
+      case 52: // declarator_arr
+      case 53: // declarator
+      case 54: // compound_statement
+      case 55: // statement_list
+      case 56: // statement
+      case 57: // assignment_expression
+      case 58: // assignment_statement
+      case 59: // procedure_call
+      case 60: // expression
+      case 61: // logical_and_expression
+      case 62: // equality_expression
+      case 63: // relational_expression
+      case 64: // additive_expression
+      case 65: // unary_expression
+      case 66: // multiplicative_expression
+      case 67: // postfix_expression
+      case 68: // primary_expression
+      case 69: // expression_list
       case 70: // selection_statement
       case 71: // iteration_statement
       case 72: // declaration_list
@@ -673,6 +674,7 @@ switch (yytype)
       case 23: // RETURN
       case 24: // OTHERS
       case 75: // type_specifier
+      case 76: // unary_operator
         value.template destroy< std::string > ();
         break;
 
@@ -1444,9 +1446,9 @@ switch (yytype)
     enum
     {
       yyeof_ = 0,
-      yylast_ = 375,     ///< Last index in yytable_.
-      yynnts_ = 32,  ///< Number of nonterminal symbols.
-      yyfinal_ = 10, ///< Termination state number.
+      yylast_ = 343,     ///< Last index in yytable_.
+      yynnts_ = 33,  ///< Number of nonterminal symbols.
+      yyfinal_ = 11, ///< Termination state number.
       yyntokens_ = 44  ///< Number of tokens.
     };
 
@@ -1458,7 +1460,7 @@ switch (yytype)
 
 #line 5 "parser.yy"
 } // IPL
-#line 1462 "parser.tab.hh"
+#line 1464 "parser.tab.hh"
 
 
 

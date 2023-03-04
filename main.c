@@ -1,9 +1,19 @@
+void foo() {
+    int y;
+    y =  10;
+    x = x + 1;
+}
+
+
 int main() { 
     int x;
-    for (i=0; i<10; i=i+1) {
-        y = *x.p;
-        z = &(a[1]);
-        foo();
+    {
+        y = 0;
     }
-    return 0;
+    while (x != 2) {
+        x = x-1;
+        y = 2 / 3;
+        y = p.q;
+        y = p->q;
+    }
 }

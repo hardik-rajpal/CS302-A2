@@ -1,64 +1,85 @@
 [
-    {
-        "seq": [
-            {
-                "for": {
-                    "assignE": {
-                        "identifier": "i",
-                        "intconst": 0
-                    },
-                    "op_binary": {
-                        "": "LT?",
-                        "identifier": "i",
-                        "intconst": 10
-                    },
-                    "assignE": {
-                        "identifier": "i",
-                        "op_binary": {
-                            "": "PLUS?",
-                            "identifier": "i",
-                            "intconst": 1
-                        }
-                    },
-                    "seq": [
-                        {
-                            "assignS": {
-                                "identifier": "y",
-                                "op_unary": {
-                                    "": "DEREF",
-                                    "member": {
-                                        "identifier": "x",
-                                        "identifier": "p"
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            "assignS": {
-                                "identifier": "z",
-                                "op_unary": {
-                                    "": "ADDRESS",
-                                    "arrayref": {
-                                        "identifier": "a",
-                                        "intconst": 1
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            "funcall": {
-                                "identifier": "foo",
-                                "": []
-                            }
-                        }
-                    ]
-                }
-            },
-            {
-                "return": {
-                    "intconst": 0
-                }
+   {
+      "seq": [
+         {
+            "assignS": {
+               "identifier": "y",
+               "intconst": 10
             }
-        ]
-    }
+         },
+         {
+            "assignS": {
+               "identifier": "x",
+               "op_binary": {
+                  "": "PLUS?",
+                  "identifier": "x",
+                  "intconst": 1
+               }
+            }
+         }
+      ]
+   },
+   {
+      "seq": [
+         {
+            "seq": [
+               {
+                  "assignS": {
+                     "identifier": "y",
+                     "intconst": 0
+                  }
+               }
+            ]
+         },
+         {
+            "while": {
+               "op_binary": {
+                  "": "NE?",
+                  "identifier": "x",
+                  "intconst": 2
+               },
+               "seq": [
+                  {
+                     "assignS": {
+                        "identifier": "x",
+                        "op_binary": {
+                           "": "MINUS?",
+                           "identifier": "x",
+                           "intconst": 1
+                        }
+                     }
+                  },
+                  {
+                     "assignS": {
+                        "identifier": "y",
+                        "op_binary": {
+                           "": "DIV?",
+                           "intconst": 2,
+                           "intconst": 3
+                        }
+                     }
+                  },
+                  {
+                     "assignS": {
+                        "identifier": "y",
+                        "member": {
+                           "identifier": "p",
+                           "identifier": "q"
+                        }
+                     }
+                  },
+                  {
+                     "assignS": {
+                        "identifier": "y",
+                        "arrow": {
+                           "identifier": "p",
+                           "identifier": "q"
+                        }
+                     }
+                  }
+               ]
+            }
+         }
+      ]
+   }
 ]
