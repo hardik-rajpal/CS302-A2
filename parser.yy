@@ -45,9 +45,11 @@
    #include <fstream>
    #include <string>
    #include "scanner.hh"
-
+   #include "symtab.h"
 #undef yylex
 #define yylex IPL::Parser::scanner.yylex
+    SymTab* currst; 
+    currst = Symbols::gst;
 }
 
 %define api.value.type variant
@@ -109,6 +111,8 @@ struct_specifier: STRUCT IDENTIFIER '{' declaration_list '}' ';'{
 };
 
 function_definition: type_specifier fun_declarator compound_statement{
+    //TODO symtab work.
+    currst->rows["fname"] = SymEntry(ret_type,SymTab::FUN,SymTab::GLOBAL,rettypesize,???);
 };
 
 type_specifier: VOID{

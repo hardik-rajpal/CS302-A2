@@ -6,7 +6,7 @@ CXXSTD = -std=c++11
 
 .PHONY: all
 all: parser lexer ast.o
-	$(CXX) $(CXXDEBUG) -o iplC driver.cpp parser.o scanner.o ast.o
+	$(CXX) $(CXXDEBUG) -o iplC driver.cpp symtab.cpp parser.o scanner.o ast.o
 .PHONY: parser
 parser: parser.yy scanner.hh
 	bison -d -v $<
