@@ -1,85 +1,30 @@
-[
-   {
-      "seq": [
-         {
-            "assignS": {
-               "identifier": "y",
-               "intconst": 10
-            }
-         },
-         {
-            "assignS": {
-               "identifier": "x",
-               "op_binary": {
-                  "": "PLUS?",
-                  "identifier": "x",
-                  "intconst": 1
-               }
-            }
-         }
-      ]
-   },
-   {
-      "seq": [
-         {
-            "seq": [
-               {
-                  "assignS": {
-                     "identifier": "y",
-                     "intconst": 0
-                  }
-               }
-            ]
-         },
-         {
-            "while": {
-               "op_binary": {
-                  "": "NE?",
-                  "identifier": "x",
-                  "intconst": 2
-               },
-               "seq": [
-                  {
-                     "assignS": {
-                        "identifier": "x",
-                        "op_binary": {
-                           "": "MINUS?",
-                           "identifier": "x",
-                           "intconst": 1
-                        }
-                     }
-                  },
-                  {
-                     "assignS": {
-                        "identifier": "y",
-                        "op_binary": {
-                           "": "DIV?",
-                           "intconst": 2,
-                           "intconst": 3
-                        }
-                     }
-                  },
-                  {
-                     "assignS": {
-                        "identifier": "y",
-                        "member": {
-                           "identifier": "p",
-                           "identifier": "q"
-                        }
-                     }
-                  },
-                  {
-                     "assignS": {
-                        "identifier": "y",
-                        "arrow": {
-                           "identifier": "p",
-                           "identifier": "q"
-                        }
-                     }
-                  }
-               ]
-            }
-         }
-      ]
-   }
+{"globalST": 
+[[         "main",         "fun",         "global",       0,       0,"int"
+],
+[         "struct nigger",         "struct",         "global",       4,       0,"int"
 ]
+]
+,
+  "structs": [
+{
+"name": "struct nigger",
+"localST": 
+[
+["t",         "var",         "local",       4,      -4,"int"
+]
+]
+}
+],
+  "functions": [
+{
+"name": "main",
+"localST": 
+[
+["nigga",         "var",         "local",       4,      -4,"struct nigger*"
+]
+,
+["z",         "var",         "local",       4,      -8,"int"
+]
+]
+,
+"ast": 

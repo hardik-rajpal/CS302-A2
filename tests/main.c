@@ -1,19 +1,11 @@
-void foo() {
-    int y;
-    y =  10;
-    x = x + 1;
-}
+struct nigger {
+    int t;
+};
 
-
-int main() { 
-    int x;
-    {
-        y = 0;
-    }
-    while (x != 2) {
-        x = x-1;
-        y = 2 / 3;
-        y = p.q;
-        y = p->q;
-    }
+int main() {
+    struct nigger* nigga;
+    int z;
+    z = nigga->t;
+    z++;
+    return 0;
 }

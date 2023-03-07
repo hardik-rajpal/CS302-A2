@@ -5,7 +5,7 @@
 identifier_astnode::identifier_astnode(std::string id) : id(id) { }
 
 void identifier_astnode::print() {
-    std::cout << "\"identifier\": \"" << this->id << "\",";
+    std::cout << "\"identifier\": \"" << this->id << "\"";
 }
 
 stringconst_astnode::stringconst_astnode(std::string value) : value(value) { }

@@ -106,7 +106,6 @@ class assignE_astnode: public exp_astnode {
 public:
     assignE_astnode(exp_astnode* exp1, exp_astnode* exp2);
     void print();
-private:
     exp_astnode* exp1, *exp2;
 };
 
