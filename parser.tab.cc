@@ -181,34 +181,41 @@ namespace IPL {
       case 45: // begin_nterm
       case 46: // translation_unit
       case 47: // struct_specifier
-      case 48: // function_definition
-      case 49: // fun_declarator
-      case 50: // parameter_list
-      case 51: // parameter_declaration
-      case 52: // declarator_arr
-      case 53: // declarator
-      case 54: // compound_statement
-      case 55: // statement_list
-      case 56: // statement
-      case 57: // assignment_expression
-      case 58: // assignment_statement
-      case 59: // procedure_call
-      case 60: // expression
-      case 61: // logical_and_expression
-      case 62: // equality_expression
-      case 63: // relational_expression
-      case 64: // additive_expression
-      case 65: // unary_expression
-      case 66: // multiplicative_expression
-      case 67: // postfix_expression
-      case 68: // primary_expression
-      case 69: // expression_list
+      case 48: // fun_declarator
+      case 49: // parameter_list
+      case 50: // parameter_declaration
+      case 51: // declarator_arr
+      case 52: // declarator
+      case 53: // procedure_call
+      case 54: // declaration_list
+      case 55: // declaration
+      case 56: // declarator_list
+        value.move< abstract_astnode* > (std::move (that.value));
+        break;
+
+      case 67: // assignment_expression
+        value.move< assignE_astnode* > (std::move (that.value));
+        break;
+
+      case 57: // expression
+      case 58: // logical_and_expression
+      case 59: // equality_expression
+      case 60: // relational_expression
+      case 61: // additive_expression
+      case 62: // unary_expression
+      case 63: // multiplicative_expression
+      case 64: // postfix_expression
+      case 65: // primary_expression
+      case 66: // expression_list
+        value.move< exp_astnode* > (std::move (that.value));
+        break;
+
+      case 68: // function_definition
+      case 69: // statement
       case 70: // selection_statement
       case 71: // iteration_statement
-      case 72: // declaration_list
-      case 73: // declaration
-      case 74: // declarator_list
-        value.move< abstract_astnode* > (std::move (that.value));
+      case 72: // assignment_statement
+        value.move< statement_astnode* > (std::move (that.value));
         break;
 
       case 3: // VOID
@@ -238,6 +245,11 @@ namespace IPL {
         value.move< std::string > (std::move (that.value));
         break;
 
+      case 73: // compound_statement
+      case 74: // statement_list
+        value.move< std::vector<statement_astnode*> > (std::move (that.value));
+        break;
+
       default:
         break;
     }
@@ -256,34 +268,41 @@ namespace IPL {
       case 45: // begin_nterm
       case 46: // translation_unit
       case 47: // struct_specifier
-      case 48: // function_definition
-      case 49: // fun_declarator
-      case 50: // parameter_list
-      case 51: // parameter_declaration
-      case 52: // declarator_arr
-      case 53: // declarator
-      case 54: // compound_statement
-      case 55: // statement_list
-      case 56: // statement
-      case 57: // assignment_expression
-      case 58: // assignment_statement
-      case 59: // procedure_call
-      case 60: // expression
-      case 61: // logical_and_expression
-      case 62: // equality_expression
-      case 63: // relational_expression
-      case 64: // additive_expression
-      case 65: // unary_expression
-      case 66: // multiplicative_expression
-      case 67: // postfix_expression
-      case 68: // primary_expression
-      case 69: // expression_list
+      case 48: // fun_declarator
+      case 49: // parameter_list
+      case 50: // parameter_declaration
+      case 51: // declarator_arr
+      case 52: // declarator
+      case 53: // procedure_call
+      case 54: // declaration_list
+      case 55: // declaration
+      case 56: // declarator_list
+        value.copy< abstract_astnode* > (YY_MOVE (that.value));
+        break;
+
+      case 67: // assignment_expression
+        value.copy< assignE_astnode* > (YY_MOVE (that.value));
+        break;
+
+      case 57: // expression
+      case 58: // logical_and_expression
+      case 59: // equality_expression
+      case 60: // relational_expression
+      case 61: // additive_expression
+      case 62: // unary_expression
+      case 63: // multiplicative_expression
+      case 64: // postfix_expression
+      case 65: // primary_expression
+      case 66: // expression_list
+        value.copy< exp_astnode* > (YY_MOVE (that.value));
+        break;
+
+      case 68: // function_definition
+      case 69: // statement
       case 70: // selection_statement
       case 71: // iteration_statement
-      case 72: // declaration_list
-      case 73: // declaration
-      case 74: // declarator_list
-        value.copy< abstract_astnode* > (YY_MOVE (that.value));
+      case 72: // assignment_statement
+        value.copy< statement_astnode* > (YY_MOVE (that.value));
         break;
 
       case 3: // VOID
@@ -313,6 +332,11 @@ namespace IPL {
         value.copy< std::string > (YY_MOVE (that.value));
         break;
 
+      case 73: // compound_statement
+      case 74: // statement_list
+        value.copy< std::vector<statement_astnode*> > (YY_MOVE (that.value));
+        break;
+
       default:
         break;
     }
@@ -338,34 +362,41 @@ namespace IPL {
       case 45: // begin_nterm
       case 46: // translation_unit
       case 47: // struct_specifier
-      case 48: // function_definition
-      case 49: // fun_declarator
-      case 50: // parameter_list
-      case 51: // parameter_declaration
-      case 52: // declarator_arr
-      case 53: // declarator
-      case 54: // compound_statement
-      case 55: // statement_list
-      case 56: // statement
-      case 57: // assignment_expression
-      case 58: // assignment_statement
-      case 59: // procedure_call
-      case 60: // expression
-      case 61: // logical_and_expression
-      case 62: // equality_expression
-      case 63: // relational_expression
-      case 64: // additive_expression
-      case 65: // unary_expression
-      case 66: // multiplicative_expression
-      case 67: // postfix_expression
-      case 68: // primary_expression
-      case 69: // expression_list
+      case 48: // fun_declarator
+      case 49: // parameter_list
+      case 50: // parameter_declaration
+      case 51: // declarator_arr
+      case 52: // declarator
+      case 53: // procedure_call
+      case 54: // declaration_list
+      case 55: // declaration
+      case 56: // declarator_list
+        value.move< abstract_astnode* > (YY_MOVE (s.value));
+        break;
+
+      case 67: // assignment_expression
+        value.move< assignE_astnode* > (YY_MOVE (s.value));
+        break;
+
+      case 57: // expression
+      case 58: // logical_and_expression
+      case 59: // equality_expression
+      case 60: // relational_expression
+      case 61: // additive_expression
+      case 62: // unary_expression
+      case 63: // multiplicative_expression
+      case 64: // postfix_expression
+      case 65: // primary_expression
+      case 66: // expression_list
+        value.move< exp_astnode* > (YY_MOVE (s.value));
+        break;
+
+      case 68: // function_definition
+      case 69: // statement
       case 70: // selection_statement
       case 71: // iteration_statement
-      case 72: // declaration_list
-      case 73: // declaration
-      case 74: // declarator_list
-        value.move< abstract_astnode* > (YY_MOVE (s.value));
+      case 72: // assignment_statement
+        value.move< statement_astnode* > (YY_MOVE (s.value));
         break;
 
       case 3: // VOID
@@ -393,6 +424,11 @@ namespace IPL {
       case 75: // type_specifier
       case 76: // unary_operator
         value.move< std::string > (YY_MOVE (s.value));
+        break;
+
+      case 73: // compound_statement
+      case 74: // statement_list
+        value.move< std::vector<statement_astnode*> > (YY_MOVE (s.value));
         break;
 
       default:
@@ -489,34 +525,41 @@ namespace IPL {
       case 45: // begin_nterm
       case 46: // translation_unit
       case 47: // struct_specifier
-      case 48: // function_definition
-      case 49: // fun_declarator
-      case 50: // parameter_list
-      case 51: // parameter_declaration
-      case 52: // declarator_arr
-      case 53: // declarator
-      case 54: // compound_statement
-      case 55: // statement_list
-      case 56: // statement
-      case 57: // assignment_expression
-      case 58: // assignment_statement
-      case 59: // procedure_call
-      case 60: // expression
-      case 61: // logical_and_expression
-      case 62: // equality_expression
-      case 63: // relational_expression
-      case 64: // additive_expression
-      case 65: // unary_expression
-      case 66: // multiplicative_expression
-      case 67: // postfix_expression
-      case 68: // primary_expression
-      case 69: // expression_list
+      case 48: // fun_declarator
+      case 49: // parameter_list
+      case 50: // parameter_declaration
+      case 51: // declarator_arr
+      case 52: // declarator
+      case 53: // procedure_call
+      case 54: // declaration_list
+      case 55: // declaration
+      case 56: // declarator_list
+        value.YY_MOVE_OR_COPY< abstract_astnode* > (YY_MOVE (that.value));
+        break;
+
+      case 67: // assignment_expression
+        value.YY_MOVE_OR_COPY< assignE_astnode* > (YY_MOVE (that.value));
+        break;
+
+      case 57: // expression
+      case 58: // logical_and_expression
+      case 59: // equality_expression
+      case 60: // relational_expression
+      case 61: // additive_expression
+      case 62: // unary_expression
+      case 63: // multiplicative_expression
+      case 64: // postfix_expression
+      case 65: // primary_expression
+      case 66: // expression_list
+        value.YY_MOVE_OR_COPY< exp_astnode* > (YY_MOVE (that.value));
+        break;
+
+      case 68: // function_definition
+      case 69: // statement
       case 70: // selection_statement
       case 71: // iteration_statement
-      case 72: // declaration_list
-      case 73: // declaration
-      case 74: // declarator_list
-        value.YY_MOVE_OR_COPY< abstract_astnode* > (YY_MOVE (that.value));
+      case 72: // assignment_statement
+        value.YY_MOVE_OR_COPY< statement_astnode* > (YY_MOVE (that.value));
         break;
 
       case 3: // VOID
@@ -546,6 +589,11 @@ namespace IPL {
         value.YY_MOVE_OR_COPY< std::string > (YY_MOVE (that.value));
         break;
 
+      case 73: // compound_statement
+      case 74: // statement_list
+        value.YY_MOVE_OR_COPY< std::vector<statement_astnode*> > (YY_MOVE (that.value));
+        break;
+
       default:
         break;
     }
@@ -564,34 +612,41 @@ namespace IPL {
       case 45: // begin_nterm
       case 46: // translation_unit
       case 47: // struct_specifier
-      case 48: // function_definition
-      case 49: // fun_declarator
-      case 50: // parameter_list
-      case 51: // parameter_declaration
-      case 52: // declarator_arr
-      case 53: // declarator
-      case 54: // compound_statement
-      case 55: // statement_list
-      case 56: // statement
-      case 57: // assignment_expression
-      case 58: // assignment_statement
-      case 59: // procedure_call
-      case 60: // expression
-      case 61: // logical_and_expression
-      case 62: // equality_expression
-      case 63: // relational_expression
-      case 64: // additive_expression
-      case 65: // unary_expression
-      case 66: // multiplicative_expression
-      case 67: // postfix_expression
-      case 68: // primary_expression
-      case 69: // expression_list
+      case 48: // fun_declarator
+      case 49: // parameter_list
+      case 50: // parameter_declaration
+      case 51: // declarator_arr
+      case 52: // declarator
+      case 53: // procedure_call
+      case 54: // declaration_list
+      case 55: // declaration
+      case 56: // declarator_list
+        value.move< abstract_astnode* > (YY_MOVE (that.value));
+        break;
+
+      case 67: // assignment_expression
+        value.move< assignE_astnode* > (YY_MOVE (that.value));
+        break;
+
+      case 57: // expression
+      case 58: // logical_and_expression
+      case 59: // equality_expression
+      case 60: // relational_expression
+      case 61: // additive_expression
+      case 62: // unary_expression
+      case 63: // multiplicative_expression
+      case 64: // postfix_expression
+      case 65: // primary_expression
+      case 66: // expression_list
+        value.move< exp_astnode* > (YY_MOVE (that.value));
+        break;
+
+      case 68: // function_definition
+      case 69: // statement
       case 70: // selection_statement
       case 71: // iteration_statement
-      case 72: // declaration_list
-      case 73: // declaration
-      case 74: // declarator_list
-        value.move< abstract_astnode* > (YY_MOVE (that.value));
+      case 72: // assignment_statement
+        value.move< statement_astnode* > (YY_MOVE (that.value));
         break;
 
       case 3: // VOID
@@ -621,6 +676,11 @@ namespace IPL {
         value.move< std::string > (YY_MOVE (that.value));
         break;
 
+      case 73: // compound_statement
+      case 74: // statement_list
+        value.move< std::vector<statement_astnode*> > (YY_MOVE (that.value));
+        break;
+
       default:
         break;
     }
@@ -639,34 +699,41 @@ namespace IPL {
       case 45: // begin_nterm
       case 46: // translation_unit
       case 47: // struct_specifier
-      case 48: // function_definition
-      case 49: // fun_declarator
-      case 50: // parameter_list
-      case 51: // parameter_declaration
-      case 52: // declarator_arr
-      case 53: // declarator
-      case 54: // compound_statement
-      case 55: // statement_list
-      case 56: // statement
-      case 57: // assignment_expression
-      case 58: // assignment_statement
-      case 59: // procedure_call
-      case 60: // expression
-      case 61: // logical_and_expression
-      case 62: // equality_expression
-      case 63: // relational_expression
-      case 64: // additive_expression
-      case 65: // unary_expression
-      case 66: // multiplicative_expression
-      case 67: // postfix_expression
-      case 68: // primary_expression
-      case 69: // expression_list
+      case 48: // fun_declarator
+      case 49: // parameter_list
+      case 50: // parameter_declaration
+      case 51: // declarator_arr
+      case 52: // declarator
+      case 53: // procedure_call
+      case 54: // declaration_list
+      case 55: // declaration
+      case 56: // declarator_list
+        value.copy< abstract_astnode* > (that.value);
+        break;
+
+      case 67: // assignment_expression
+        value.copy< assignE_astnode* > (that.value);
+        break;
+
+      case 57: // expression
+      case 58: // logical_and_expression
+      case 59: // equality_expression
+      case 60: // relational_expression
+      case 61: // additive_expression
+      case 62: // unary_expression
+      case 63: // multiplicative_expression
+      case 64: // postfix_expression
+      case 65: // primary_expression
+      case 66: // expression_list
+        value.copy< exp_astnode* > (that.value);
+        break;
+
+      case 68: // function_definition
+      case 69: // statement
       case 70: // selection_statement
       case 71: // iteration_statement
-      case 72: // declaration_list
-      case 73: // declaration
-      case 74: // declarator_list
-        value.copy< abstract_astnode* > (that.value);
+      case 72: // assignment_statement
+        value.copy< statement_astnode* > (that.value);
         break;
 
       case 3: // VOID
@@ -696,6 +763,11 @@ namespace IPL {
         value.copy< std::string > (that.value);
         break;
 
+      case 73: // compound_statement
+      case 74: // statement_list
+        value.copy< std::vector<statement_astnode*> > (that.value);
+        break;
+
       default:
         break;
     }
@@ -713,34 +785,41 @@ namespace IPL {
       case 45: // begin_nterm
       case 46: // translation_unit
       case 47: // struct_specifier
-      case 48: // function_definition
-      case 49: // fun_declarator
-      case 50: // parameter_list
-      case 51: // parameter_declaration
-      case 52: // declarator_arr
-      case 53: // declarator
-      case 54: // compound_statement
-      case 55: // statement_list
-      case 56: // statement
-      case 57: // assignment_expression
-      case 58: // assignment_statement
-      case 59: // procedure_call
-      case 60: // expression
-      case 61: // logical_and_expression
-      case 62: // equality_expression
-      case 63: // relational_expression
-      case 64: // additive_expression
-      case 65: // unary_expression
-      case 66: // multiplicative_expression
-      case 67: // postfix_expression
-      case 68: // primary_expression
-      case 69: // expression_list
+      case 48: // fun_declarator
+      case 49: // parameter_list
+      case 50: // parameter_declaration
+      case 51: // declarator_arr
+      case 52: // declarator
+      case 53: // procedure_call
+      case 54: // declaration_list
+      case 55: // declaration
+      case 56: // declarator_list
+        value.move< abstract_astnode* > (that.value);
+        break;
+
+      case 67: // assignment_expression
+        value.move< assignE_astnode* > (that.value);
+        break;
+
+      case 57: // expression
+      case 58: // logical_and_expression
+      case 59: // equality_expression
+      case 60: // relational_expression
+      case 61: // additive_expression
+      case 62: // unary_expression
+      case 63: // multiplicative_expression
+      case 64: // postfix_expression
+      case 65: // primary_expression
+      case 66: // expression_list
+        value.move< exp_astnode* > (that.value);
+        break;
+
+      case 68: // function_definition
+      case 69: // statement
       case 70: // selection_statement
       case 71: // iteration_statement
-      case 72: // declaration_list
-      case 73: // declaration
-      case 74: // declarator_list
-        value.move< abstract_astnode* > (that.value);
+      case 72: // assignment_statement
+        value.move< statement_astnode* > (that.value);
         break;
 
       case 3: // VOID
@@ -768,6 +847,11 @@ namespace IPL {
       case 75: // type_specifier
       case 76: // unary_operator
         value.move< std::string > (that.value);
+        break;
+
+      case 73: // compound_statement
+      case 74: // statement_list
+        value.move< std::vector<statement_astnode*> > (that.value);
         break;
 
       default:
@@ -812,133 +896,133 @@ namespace IPL {
       case 3: // VOID
 #line 16 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 816 "parser.tab.cc"
+#line 900 "parser.tab.cc"
         break;
 
       case 4: // INT
 #line 17 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 822 "parser.tab.cc"
+#line 906 "parser.tab.cc"
         break;
 
       case 5: // FLOAT
 #line 18 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 828 "parser.tab.cc"
+#line 912 "parser.tab.cc"
         break;
 
       case 6: // STRUCT
 #line 19 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 834 "parser.tab.cc"
+#line 918 "parser.tab.cc"
         break;
 
       case 7: // IDENTIFIER
 #line 20 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 840 "parser.tab.cc"
+#line 924 "parser.tab.cc"
         break;
 
       case 8: // INT_CONSTANT
 #line 21 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 846 "parser.tab.cc"
+#line 930 "parser.tab.cc"
         break;
 
       case 9: // FLOAT_CONSTANT
 #line 22 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 852 "parser.tab.cc"
+#line 936 "parser.tab.cc"
         break;
 
       case 10: // STRING_LITERAL
 #line 23 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 858 "parser.tab.cc"
+#line 942 "parser.tab.cc"
         break;
 
       case 11: // OR_OP
 #line 24 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 864 "parser.tab.cc"
+#line 948 "parser.tab.cc"
         break;
 
       case 12: // AND_OP
 #line 25 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 870 "parser.tab.cc"
+#line 954 "parser.tab.cc"
         break;
 
       case 13: // EQ_OP
 #line 26 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 876 "parser.tab.cc"
+#line 960 "parser.tab.cc"
         break;
 
       case 14: // NE_OP
 #line 27 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 882 "parser.tab.cc"
+#line 966 "parser.tab.cc"
         break;
 
       case 15: // LE_OP
 #line 28 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 888 "parser.tab.cc"
+#line 972 "parser.tab.cc"
         break;
 
       case 16: // GE_OP
 #line 29 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 894 "parser.tab.cc"
+#line 978 "parser.tab.cc"
         break;
 
       case 17: // INC_OP
 #line 30 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 900 "parser.tab.cc"
+#line 984 "parser.tab.cc"
         break;
 
       case 18: // PTR_OP
 #line 31 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 906 "parser.tab.cc"
+#line 990 "parser.tab.cc"
         break;
 
       case 19: // IF
 #line 32 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 912 "parser.tab.cc"
+#line 996 "parser.tab.cc"
         break;
 
       case 20: // ELSE
 #line 33 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 918 "parser.tab.cc"
+#line 1002 "parser.tab.cc"
         break;
 
       case 21: // WHILE
 #line 34 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 924 "parser.tab.cc"
+#line 1008 "parser.tab.cc"
         break;
 
       case 22: // FOR
 #line 35 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 930 "parser.tab.cc"
+#line 1014 "parser.tab.cc"
         break;
 
       case 23: // RETURN
 #line 36 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 936 "parser.tab.cc"
+#line 1020 "parser.tab.cc"
         break;
 
       case 24: // OTHERS
 #line 37 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 942 "parser.tab.cc"
+#line 1026 "parser.tab.cc"
         break;
 
       default:
@@ -1158,34 +1242,41 @@ namespace IPL {
       case 45: // begin_nterm
       case 46: // translation_unit
       case 47: // struct_specifier
-      case 48: // function_definition
-      case 49: // fun_declarator
-      case 50: // parameter_list
-      case 51: // parameter_declaration
-      case 52: // declarator_arr
-      case 53: // declarator
-      case 54: // compound_statement
-      case 55: // statement_list
-      case 56: // statement
-      case 57: // assignment_expression
-      case 58: // assignment_statement
-      case 59: // procedure_call
-      case 60: // expression
-      case 61: // logical_and_expression
-      case 62: // equality_expression
-      case 63: // relational_expression
-      case 64: // additive_expression
-      case 65: // unary_expression
-      case 66: // multiplicative_expression
-      case 67: // postfix_expression
-      case 68: // primary_expression
-      case 69: // expression_list
+      case 48: // fun_declarator
+      case 49: // parameter_list
+      case 50: // parameter_declaration
+      case 51: // declarator_arr
+      case 52: // declarator
+      case 53: // procedure_call
+      case 54: // declaration_list
+      case 55: // declaration
+      case 56: // declarator_list
+        yylhs.value.emplace< abstract_astnode* > ();
+        break;
+
+      case 67: // assignment_expression
+        yylhs.value.emplace< assignE_astnode* > ();
+        break;
+
+      case 57: // expression
+      case 58: // logical_and_expression
+      case 59: // equality_expression
+      case 60: // relational_expression
+      case 61: // additive_expression
+      case 62: // unary_expression
+      case 63: // multiplicative_expression
+      case 64: // postfix_expression
+      case 65: // primary_expression
+      case 66: // expression_list
+        yylhs.value.emplace< exp_astnode* > ();
+        break;
+
+      case 68: // function_definition
+      case 69: // statement
       case 70: // selection_statement
       case 71: // iteration_statement
-      case 72: // declaration_list
-      case 73: // declaration
-      case 74: // declarator_list
-        yylhs.value.emplace< abstract_astnode* > ();
+      case 72: // assignment_statement
+        yylhs.value.emplace< statement_astnode* > ();
         break;
 
       case 3: // VOID
@@ -1215,6 +1306,11 @@ namespace IPL {
         yylhs.value.emplace< std::string > ();
         break;
 
+      case 73: // compound_statement
+      case 74: // statement_list
+        yylhs.value.emplace< std::vector<statement_astnode*> > ();
+        break;
+
       default:
         break;
     }
@@ -1236,609 +1332,640 @@ namespace IPL {
           switch (yyn)
             {
   case 2:
-#line 88 "parser.yy"
+#line 96 "parser.yy"
                               {
+    std::cout << "about to begin printing\n";
     yystack_[0].value.as < abstract_astnode* > ()->print();
 }
-#line 1244 "parser.tab.cc"
+#line 1341 "parser.tab.cc"
     break;
 
   case 3:
-#line 92 "parser.yy"
+#line 101 "parser.yy"
                                   {
 }
-#line 1251 "parser.tab.cc"
+#line 1348 "parser.tab.cc"
     break;
 
   case 4:
-#line 94 "parser.yy"
+#line 103 "parser.yy"
                      {
-}
-#line 1258 "parser.tab.cc"
-    break;
-
-  case 5:
-#line 96 "parser.yy"
-                                   {
-}
-#line 1265 "parser.tab.cc"
-    break;
-
-  case 6:
-#line 98 "parser.yy"
-                                      {
-}
-#line 1272 "parser.tab.cc"
-    break;
-
-  case 7:
-#line 102 "parser.yy"
-                                                                {
-}
-#line 1279 "parser.tab.cc"
-    break;
-
-  case 8:
-#line 105 "parser.yy"
-                                                                     {
-}
-#line 1286 "parser.tab.cc"
-    break;
-
-  case 9:
-#line 108 "parser.yy"
-                    {
-}
-#line 1293 "parser.tab.cc"
-    break;
-
-  case 10:
-#line 110 "parser.yy"
-     {
-}
-#line 1300 "parser.tab.cc"
-    break;
-
-  case 11:
-#line 112 "parser.yy"
-       {
-}
-#line 1307 "parser.tab.cc"
-    break;
-
-  case 12:
-#line 114 "parser.yy"
-                   {
-}
-#line 1314 "parser.tab.cc"
-    break;
-
-  case 13:
-#line 118 "parser.yy"
-                                                 {
-}
-#line 1321 "parser.tab.cc"
-    break;
-
-  case 14:
-#line 120 "parser.yy"
-                    {
-}
-#line 1328 "parser.tab.cc"
-    break;
-
-  case 15:
-#line 124 "parser.yy"
-                                     {
-}
-#line 1335 "parser.tab.cc"
-    break;
-
-  case 16:
-#line 126 "parser.yy"
-                                          {
-}
-#line 1342 "parser.tab.cc"
-    break;
-
-  case 17:
-#line 130 "parser.yy"
-                                                {
-}
-#line 1349 "parser.tab.cc"
-    break;
-
-  case 18:
-#line 134 "parser.yy"
-                          {
+    yylhs.value.as < abstract_astnode* > () = yystack_[0].value.as < statement_astnode* > ();
 }
 #line 1356 "parser.tab.cc"
     break;
 
-  case 19:
-#line 136 "parser.yy"
-                                     {
+  case 5:
+#line 106 "parser.yy"
+                                   {
 }
 #line 1363 "parser.tab.cc"
     break;
 
-  case 20:
-#line 140 "parser.yy"
-                          {
+  case 6:
+#line 108 "parser.yy"
+                                      {
 }
 #line 1370 "parser.tab.cc"
     break;
 
-  case 21:
-#line 142 "parser.yy"
-                {
+  case 7:
+#line 112 "parser.yy"
+                                                                {
 }
 #line 1377 "parser.tab.cc"
     break;
 
+  case 8:
+#line 115 "parser.yy"
+                                                                     {
+    yylhs.value.as < statement_astnode* > () = new seq_astnode(yystack_[0].value.as < std::vector<statement_astnode*> > ());
+}
+#line 1385 "parser.tab.cc"
+    break;
+
+  case 9:
+#line 119 "parser.yy"
+                    {
+}
+#line 1392 "parser.tab.cc"
+    break;
+
+  case 10:
+#line 121 "parser.yy"
+     {
+}
+#line 1399 "parser.tab.cc"
+    break;
+
+  case 11:
+#line 123 "parser.yy"
+       {
+}
+#line 1406 "parser.tab.cc"
+    break;
+
+  case 12:
+#line 125 "parser.yy"
+                   {
+}
+#line 1413 "parser.tab.cc"
+    break;
+
+  case 13:
+#line 129 "parser.yy"
+                                                 {
+}
+#line 1420 "parser.tab.cc"
+    break;
+
+  case 14:
+#line 131 "parser.yy"
+                    {
+}
+#line 1427 "parser.tab.cc"
+    break;
+
+  case 15:
+#line 135 "parser.yy"
+                                     {
+}
+#line 1434 "parser.tab.cc"
+    break;
+
+  case 16:
+#line 137 "parser.yy"
+                                          {
+}
+#line 1441 "parser.tab.cc"
+    break;
+
+  case 17:
+#line 141 "parser.yy"
+                                                {
+}
+#line 1448 "parser.tab.cc"
+    break;
+
+  case 18:
+#line 145 "parser.yy"
+                          {
+}
+#line 1455 "parser.tab.cc"
+    break;
+
+  case 19:
+#line 147 "parser.yy"
+                                     {
+}
+#line 1462 "parser.tab.cc"
+    break;
+
+  case 20:
+#line 151 "parser.yy"
+                          {
+}
+#line 1469 "parser.tab.cc"
+    break;
+
+  case 21:
+#line 153 "parser.yy"
+                {
+}
+#line 1476 "parser.tab.cc"
+    break;
+
   case 22:
-#line 146 "parser.yy"
+#line 157 "parser.yy"
                            {
 }
-#line 1384 "parser.tab.cc"
+#line 1483 "parser.tab.cc"
     break;
 
   case 23:
-#line 148 "parser.yy"
+#line 159 "parser.yy"
                         {
+    yylhs.value.as < std::vector<statement_astnode*> > () = yystack_[1].value.as < std::vector<statement_astnode*> > ();
 }
-#line 1391 "parser.tab.cc"
+#line 1491 "parser.tab.cc"
     break;
 
   case 24:
-#line 150 "parser.yy"
+#line 162 "parser.yy"
                            {
 }
-#line 1398 "parser.tab.cc"
+#line 1498 "parser.tab.cc"
     break;
 
   case 25:
-#line 152 "parser.yy"
+#line 164 "parser.yy"
                                          {
+    yylhs.value.as < std::vector<statement_astnode*> > () = yystack_[1].value.as < std::vector<statement_astnode*> > ();
 }
-#line 1405 "parser.tab.cc"
+#line 1506 "parser.tab.cc"
     break;
 
   case 26:
-#line 156 "parser.yy"
-                         {
+#line 169 "parser.yy"
+                          {
+    std::vector<statement_astnode*> temp;
+    temp.push_back(yystack_[0].value.as < statement_astnode* > ());
+    yylhs.value.as < std::vector<statement_astnode*> > () = temp;
 }
-#line 1412 "parser.tab.cc"
+#line 1516 "parser.tab.cc"
     break;
 
   case 27:
-#line 158 "parser.yy"
+#line 174 "parser.yy"
                           {
+    yystack_[1].value.as < std::vector<statement_astnode*> > ().push_back(yystack_[0].value.as < statement_astnode* > ());
+    yylhs.value.as < std::vector<statement_astnode*> > () = yystack_[1].value.as < std::vector<statement_astnode*> > ();
 }
-#line 1419 "parser.tab.cc"
+#line 1525 "parser.tab.cc"
     break;
 
   case 28:
-#line 162 "parser.yy"
+#line 180 "parser.yy"
               {
 }
-#line 1426 "parser.tab.cc"
+#line 1532 "parser.tab.cc"
     break;
 
   case 29:
-#line 164 "parser.yy"
+#line 182 "parser.yy"
                         {
+    yylhs.value.as < statement_astnode* > () = new seq_astnode(yystack_[1].value.as < std::vector<statement_astnode*> > ());
 }
-#line 1433 "parser.tab.cc"
+#line 1540 "parser.tab.cc"
     break;
 
   case 30:
-#line 166 "parser.yy"
+#line 185 "parser.yy"
                      {
+    yylhs.value.as < statement_astnode* > () = yystack_[0].value.as < statement_astnode* > ();
 }
-#line 1440 "parser.tab.cc"
+#line 1548 "parser.tab.cc"
     break;
 
   case 31:
-#line 168 "parser.yy"
+#line 188 "parser.yy"
                      {
+    yylhs.value.as < statement_astnode* > () = yystack_[0].value.as < statement_astnode* > ();
 }
-#line 1447 "parser.tab.cc"
+#line 1556 "parser.tab.cc"
     break;
 
   case 32:
-#line 170 "parser.yy"
+#line 191 "parser.yy"
                       {
+    yylhs.value.as < statement_astnode* > () = yystack_[0].value.as < statement_astnode* > ();
 }
-#line 1454 "parser.tab.cc"
+#line 1564 "parser.tab.cc"
     break;
 
   case 33:
-#line 172 "parser.yy"
+#line 194 "parser.yy"
                 {
 }
-#line 1461 "parser.tab.cc"
+#line 1571 "parser.tab.cc"
     break;
 
   case 34:
-#line 174 "parser.yy"
+#line 196 "parser.yy"
                        {
-}
-#line 1468 "parser.tab.cc"
-    break;
-
-  case 35:
-#line 178 "parser.yy"
-                                                      {
-}
-#line 1475 "parser.tab.cc"
-    break;
-
-  case 36:
-#line 182 "parser.yy"
-                                               {
-}
-#line 1482 "parser.tab.cc"
-    break;
-
-  case 37:
-#line 186 "parser.yy"
-                                      {
-}
-#line 1489 "parser.tab.cc"
-    break;
-
-  case 38:
-#line 188 "parser.yy"
-                                        {
-}
-#line 1496 "parser.tab.cc"
-    break;
-
-  case 39:
-#line 192 "parser.yy"
-                                  {
-}
-#line 1503 "parser.tab.cc"
-    break;
-
-  case 40:
-#line 194 "parser.yy"
-                                         {
-}
-#line 1510 "parser.tab.cc"
-    break;
-
-  case 41:
-#line 198 "parser.yy"
-                                           {
-}
-#line 1517 "parser.tab.cc"
-    break;
-
-  case 42:
-#line 200 "parser.yy"
-                                                   {
-}
-#line 1524 "parser.tab.cc"
-    break;
-
-  case 43:
-#line 204 "parser.yy"
-                                          {
-}
-#line 1531 "parser.tab.cc"
-    break;
-
-  case 44:
-#line 206 "parser.yy"
-                                                  {
-    yylhs.value.as < abstract_astnode* > () = new op_binary_astnode("EQ?", yystack_[2].value.as < abstract_astnode* > (), yystack_[0].value.as < abstract_astnode* > ());
-}
-#line 1539 "parser.tab.cc"
-    break;
-
-  case 45:
-#line 209 "parser.yy"
-                                                 {
-    yylhs.value.as < abstract_astnode* > () = new op_binary_astnode("NE?", yystack_[2].value.as < abstract_astnode* > (), yystack_[0].value.as < abstract_astnode* > ());
-}
-#line 1547 "parser.tab.cc"
-    break;
-
-  case 46:
-#line 214 "parser.yy"
-                                          {
-}
-#line 1554 "parser.tab.cc"
-    break;
-
-  case 47:
-#line 216 "parser.yy"
-                                               {
-    yylhs.value.as < abstract_astnode* > () = new op_binary_astnode("LT?", yystack_[2].value.as < abstract_astnode* > (), yystack_[0].value.as < abstract_astnode* > ());
-}
-#line 1562 "parser.tab.cc"
-    break;
-
-  case 48:
-#line 219 "parser.yy"
-                                               {
-    yylhs.value.as < abstract_astnode* > () = new op_binary_astnode("GT?", yystack_[2].value.as < abstract_astnode* > (), yystack_[0].value.as < abstract_astnode* > ());
-}
-#line 1570 "parser.tab.cc"
-    break;
-
-  case 49:
-#line 222 "parser.yy"
-                                                 {
-    yylhs.value.as < abstract_astnode* > () = new op_binary_astnode("LE?", yystack_[2].value.as < abstract_astnode* > (), yystack_[0].value.as < abstract_astnode* > ());
 }
 #line 1578 "parser.tab.cc"
     break;
 
-  case 50:
-#line 225 "parser.yy"
-                                                 {
-    yylhs.value.as < abstract_astnode* > () = new op_binary_astnode("GE?", yystack_[2].value.as < abstract_astnode* > (), yystack_[0].value.as < abstract_astnode* > ());
+  case 35:
+#line 200 "parser.yy"
+                                                      {
+    yylhs.value.as < assignE_astnode* > () = new assignE_astnode(yystack_[2].value.as < exp_astnode* > (), yystack_[0].value.as < exp_astnode* > ());
 }
 #line 1586 "parser.tab.cc"
     break;
 
-  case 51:
-#line 230 "parser.yy"
-                                              {
+  case 36:
+#line 205 "parser.yy"
+                                               {
+    yylhs.value.as < statement_astnode* > () = new assignS_astnode(yystack_[1].value.as < assignE_astnode* > ()->exp1, yystack_[1].value.as < assignE_astnode* > ()->exp2);
 }
-#line 1593 "parser.tab.cc"
+#line 1594 "parser.tab.cc"
     break;
 
-  case 52:
-#line 232 "parser.yy"
-                                                   {
-    yylhs.value.as < abstract_astnode* > () = new op_binary_astnode("PLUS?", yystack_[2].value.as < abstract_astnode* > (), yystack_[0].value.as < abstract_astnode* > ());
+  case 37:
+#line 210 "parser.yy"
+                                      {
 }
 #line 1601 "parser.tab.cc"
     break;
 
-  case 53:
-#line 235 "parser.yy"
-                                                   {
-    yylhs.value.as < abstract_astnode* > () = new op_binary_astnode("MINUS?", yystack_[2].value.as < abstract_astnode* > (), yystack_[0].value.as < abstract_astnode* > ());
+  case 38:
+#line 212 "parser.yy"
+                                        {
 }
-#line 1609 "parser.tab.cc"
+#line 1608 "parser.tab.cc"
     break;
 
-  case 54:
-#line 240 "parser.yy"
-                                    {
+  case 39:
+#line 216 "parser.yy"
+                                  {
+    yylhs.value.as < exp_astnode* > () = yystack_[0].value.as < exp_astnode* > ();
 }
 #line 1616 "parser.tab.cc"
     break;
 
-  case 55:
-#line 242 "parser.yy"
-                                 {
-    yylhs.value.as < abstract_astnode* > () = new op_unary_astnode(yystack_[1].value.as < std::string > (), yystack_[0].value.as < abstract_astnode* > ());
+  case 40:
+#line 219 "parser.yy"
+                                         {
 }
-#line 1624 "parser.tab.cc"
+#line 1623 "parser.tab.cc"
     break;
 
-  case 56:
-#line 247 "parser.yy"
+  case 41:
+#line 223 "parser.yy"
                                            {
+    yylhs.value.as < exp_astnode* > () = yystack_[0].value.as < exp_astnode* > ();
 }
 #line 1631 "parser.tab.cc"
     break;
 
-  case 57:
-#line 249 "parser.yy"
-                                                {
-    yylhs.value.as < abstract_astnode* > () = new op_binary_astnode("MULT?", yystack_[2].value.as < abstract_astnode* > (), yystack_[0].value.as < abstract_astnode* > ());
+  case 42:
+#line 226 "parser.yy"
+                                                   {
+    yylhs.value.as < exp_astnode* > () = new op_binary_astnode("AND?", yystack_[2].value.as < exp_astnode* > (), yystack_[0].value.as < exp_astnode* > ());
 }
 #line 1639 "parser.tab.cc"
     break;
 
-  case 58:
-#line 252 "parser.yy"
-                                                {
-    yylhs.value.as < abstract_astnode* > () = new op_binary_astnode("DIV?", yystack_[2].value.as < abstract_astnode* > (), yystack_[0].value.as < abstract_astnode* > ());
+  case 43:
+#line 231 "parser.yy"
+                                          {
+    yylhs.value.as < exp_astnode* > () = yystack_[0].value.as < exp_astnode* > ();
 }
 #line 1647 "parser.tab.cc"
     break;
 
-  case 59:
-#line 257 "parser.yy"
-                                      {
+  case 44:
+#line 234 "parser.yy"
+                                                  {
+    yylhs.value.as < exp_astnode* > () = new op_binary_astnode("EQ?", yystack_[2].value.as < exp_astnode* > (), yystack_[0].value.as < exp_astnode* > ());
 }
-#line 1654 "parser.tab.cc"
+#line 1655 "parser.tab.cc"
     break;
 
-  case 60:
+  case 45:
+#line 237 "parser.yy"
+                                                 {
+    yylhs.value.as < exp_astnode* > () = new op_binary_astnode("NE?", yystack_[2].value.as < exp_astnode* > (), yystack_[0].value.as < exp_astnode* > ());
+}
+#line 1663 "parser.tab.cc"
+    break;
+
+  case 46:
+#line 242 "parser.yy"
+                                          {
+    yylhs.value.as < exp_astnode* > () = yystack_[0].value.as < exp_astnode* > ();
+}
+#line 1671 "parser.tab.cc"
+    break;
+
+  case 47:
+#line 245 "parser.yy"
+                                               {
+    yylhs.value.as < exp_astnode* > () = new op_binary_astnode("LT?", yystack_[2].value.as < exp_astnode* > (), yystack_[0].value.as < exp_astnode* > ());
+}
+#line 1679 "parser.tab.cc"
+    break;
+
+  case 48:
+#line 248 "parser.yy"
+                                               {
+    yylhs.value.as < exp_astnode* > () = new op_binary_astnode("GT?", yystack_[2].value.as < exp_astnode* > (), yystack_[0].value.as < exp_astnode* > ());
+}
+#line 1687 "parser.tab.cc"
+    break;
+
+  case 49:
+#line 251 "parser.yy"
+                                                 {
+    yylhs.value.as < exp_astnode* > () = new op_binary_astnode("LE?", yystack_[2].value.as < exp_astnode* > (), yystack_[0].value.as < exp_astnode* > ());
+}
+#line 1695 "parser.tab.cc"
+    break;
+
+  case 50:
+#line 254 "parser.yy"
+                                                 {
+    yylhs.value.as < exp_astnode* > () = new op_binary_astnode("GE?", yystack_[2].value.as < exp_astnode* > (), yystack_[0].value.as < exp_astnode* > ());
+}
+#line 1703 "parser.tab.cc"
+    break;
+
+  case 51:
 #line 259 "parser.yy"
-                                       {
+                                              {
+    yylhs.value.as < exp_astnode* > () = yystack_[0].value.as < exp_astnode* > ();
 }
-#line 1661 "parser.tab.cc"
+#line 1711 "parser.tab.cc"
     break;
 
-  case 61:
-#line 261 "parser.yy"
-                    {
+  case 52:
+#line 262 "parser.yy"
+                                                   {
+    yylhs.value.as < exp_astnode* > () = new op_binary_astnode("PLUS?", yystack_[2].value.as < exp_astnode* > (), yystack_[0].value.as < exp_astnode* > ());
 }
-#line 1668 "parser.tab.cc"
+#line 1719 "parser.tab.cc"
     break;
 
-  case 62:
-#line 263 "parser.yy"
-                                    {
-}
-#line 1675 "parser.tab.cc"
-    break;
-
-  case 63:
+  case 53:
 #line 265 "parser.yy"
-                                   {
+                                                   {
+    yylhs.value.as < exp_astnode* > () = new op_binary_astnode("MINUS?", yystack_[2].value.as < exp_astnode* > (), yystack_[0].value.as < exp_astnode* > ());
 }
-#line 1682 "parser.tab.cc"
+#line 1727 "parser.tab.cc"
     break;
 
-  case 64:
-#line 267 "parser.yy"
-                                      {
+  case 54:
+#line 270 "parser.yy"
+                                    {
+    yylhs.value.as < exp_astnode* > () = yystack_[0].value.as < exp_astnode* > ();
 }
-#line 1689 "parser.tab.cc"
+#line 1735 "parser.tab.cc"
     break;
 
-  case 65:
-#line 269 "parser.yy"
-                           {
-}
-#line 1696 "parser.tab.cc"
-    break;
-
-  case 66:
+  case 55:
 #line 273 "parser.yy"
-                              {
-    yylhs.value.as < abstract_astnode* > () = new identifier_astnode(yystack_[0].value.as < std::string > ());
-}
-#line 1704 "parser.tab.cc"
-    break;
-
-  case 67:
-#line 276 "parser.yy"
-              {
-    yylhs.value.as < abstract_astnode* > () = new intconst_astnode(yystack_[0].value.as < std::string > ());
-}
-#line 1712 "parser.tab.cc"
-    break;
-
-  case 68:
-#line 279 "parser.yy"
-                {
-    yylhs.value.as < abstract_astnode* > () = new floatconst_astnode(yystack_[0].value.as < std::string > ());
-}
-#line 1720 "parser.tab.cc"
-    break;
-
-  case 69:
-#line 282 "parser.yy"
-                {
-    yylhs.value.as < abstract_astnode* > () = new stringconst_astnode(yystack_[0].value.as < std::string > ());
-    yylhs.value.as < abstract_astnode* > ()->print();
-}
-#line 1729 "parser.tab.cc"
-    break;
-
-  case 70:
-#line 286 "parser.yy"
-                    {
-}
-#line 1736 "parser.tab.cc"
-    break;
-
-  case 71:
-#line 290 "parser.yy"
-                           {
+                                 {
+    yylhs.value.as < exp_astnode* > () = new op_unary_astnode(yystack_[1].value.as < std::string > (), yystack_[0].value.as < exp_astnode* > ());
 }
 #line 1743 "parser.tab.cc"
     break;
 
-  case 72:
+  case 56:
+#line 278 "parser.yy"
+                                           {
+    yylhs.value.as < exp_astnode* > () = yystack_[0].value.as < exp_astnode* > ();
+}
+#line 1751 "parser.tab.cc"
+    break;
+
+  case 57:
+#line 281 "parser.yy"
+                                                {
+    yylhs.value.as < exp_astnode* > () = new op_binary_astnode("MULT?", yystack_[2].value.as < exp_astnode* > (), yystack_[0].value.as < exp_astnode* > ());
+}
+#line 1759 "parser.tab.cc"
+    break;
+
+  case 58:
+#line 284 "parser.yy"
+                                                {
+    yylhs.value.as < exp_astnode* > () = new op_binary_astnode("DIV?", yystack_[2].value.as < exp_astnode* > (), yystack_[0].value.as < exp_astnode* > ());
+}
+#line 1767 "parser.tab.cc"
+    break;
+
+  case 59:
+#line 289 "parser.yy"
+                                      {
+    yylhs.value.as < exp_astnode* > () = yystack_[0].value.as < exp_astnode* > ();
+}
+#line 1775 "parser.tab.cc"
+    break;
+
+  case 60:
 #line 292 "parser.yy"
+                                       {
+    yylhs.value.as < exp_astnode* > () = new arrayref_astnode(yystack_[3].value.as < exp_astnode* > (), yystack_[1].value.as < exp_astnode* > ());
+}
+#line 1783 "parser.tab.cc"
+    break;
+
+  case 61:
+#line 295 "parser.yy"
+                    {
+}
+#line 1790 "parser.tab.cc"
+    break;
+
+  case 62:
+#line 297 "parser.yy"
+                                    {
+}
+#line 1797 "parser.tab.cc"
+    break;
+
+  case 63:
+#line 299 "parser.yy"
+                                   {
+    yylhs.value.as < exp_astnode* > () = new member_astnode(yystack_[2].value.as < exp_astnode* > (), new identifier_astnode(yystack_[0].value.as < std::string > ()));
+}
+#line 1805 "parser.tab.cc"
+    break;
+
+  case 64:
+#line 302 "parser.yy"
+                                      {
+    yylhs.value.as < exp_astnode* > () = new arrow_astnode(yystack_[2].value.as < exp_astnode* > (), new identifier_astnode(yystack_[0].value.as < std::string > ()));
+}
+#line 1813 "parser.tab.cc"
+    break;
+
+  case 65:
+#line 305 "parser.yy"
+                           {
+}
+#line 1820 "parser.tab.cc"
+    break;
+
+  case 66:
+#line 309 "parser.yy"
+                              {
+    yylhs.value.as < exp_astnode* > () = new identifier_astnode(yystack_[0].value.as < std::string > ());
+}
+#line 1828 "parser.tab.cc"
+    break;
+
+  case 67:
+#line 312 "parser.yy"
+              {
+    yylhs.value.as < exp_astnode* > () = new intconst_astnode(yystack_[0].value.as < std::string > ());
+}
+#line 1836 "parser.tab.cc"
+    break;
+
+  case 68:
+#line 315 "parser.yy"
+                {
+    yylhs.value.as < exp_astnode* > () = new floatconst_astnode(yystack_[0].value.as < std::string > ());
+}
+#line 1844 "parser.tab.cc"
+    break;
+
+  case 69:
+#line 318 "parser.yy"
+                {
+    yylhs.value.as < exp_astnode* > () = new stringconst_astnode(yystack_[0].value.as < std::string > ());
+    yylhs.value.as < exp_astnode* > ()->print();
+}
+#line 1853 "parser.tab.cc"
+    break;
+
+  case 70:
+#line 322 "parser.yy"
+                    {
+}
+#line 1860 "parser.tab.cc"
+    break;
+
+  case 71:
+#line 326 "parser.yy"
+                           {
+}
+#line 1867 "parser.tab.cc"
+    break;
+
+  case 72:
+#line 328 "parser.yy"
                                 {
 }
-#line 1750 "parser.tab.cc"
+#line 1874 "parser.tab.cc"
     break;
 
   case 73:
-#line 296 "parser.yy"
+#line 332 "parser.yy"
                    {
     yylhs.value.as < std::string > () = std::string("UMINUS?");
 }
-#line 1758 "parser.tab.cc"
+#line 1882 "parser.tab.cc"
     break;
 
   case 74:
-#line 299 "parser.yy"
+#line 335 "parser.yy"
      {
     yylhs.value.as < std::string > () = std::string("NOT");
 }
-#line 1766 "parser.tab.cc"
+#line 1890 "parser.tab.cc"
     break;
 
   case 75:
-#line 302 "parser.yy"
+#line 338 "parser.yy"
      {
     yylhs.value.as < std::string > () = std::string("ADDRESS");
 }
-#line 1774 "parser.tab.cc"
+#line 1898 "parser.tab.cc"
     break;
 
   case 76:
-#line 305 "parser.yy"
+#line 341 "parser.yy"
      {
     yylhs.value.as < std::string > () = std::string("DEREF");
 }
-#line 1782 "parser.tab.cc"
+#line 1906 "parser.tab.cc"
     break;
 
   case 77:
-#line 310 "parser.yy"
+#line 346 "parser.yy"
                                                                    {
+    yylhs.value.as < statement_astnode* > () = new if_astnode(yystack_[4].value.as < exp_astnode* > (), yystack_[2].value.as < statement_astnode* > (), yystack_[0].value.as < statement_astnode* > ());
 }
-#line 1789 "parser.tab.cc"
+#line 1914 "parser.tab.cc"
     break;
 
   case 78:
-#line 314 "parser.yy"
+#line 351 "parser.yy"
                                                        {
+    yylhs.value.as < statement_astnode* > () = new while_astnode(yystack_[2].value.as < exp_astnode* > (), yystack_[0].value.as < statement_astnode* > ());
 }
-#line 1796 "parser.tab.cc"
+#line 1922 "parser.tab.cc"
     break;
 
   case 79:
-#line 316 "parser.yy"
+#line 354 "parser.yy"
                                                                                       {
+    yylhs.value.as < statement_astnode* > () = new for_astnode(yystack_[6].value.as < assignE_astnode* > (), yystack_[4].value.as < exp_astnode* > (), yystack_[2].value.as < assignE_astnode* > (), yystack_[0].value.as < statement_astnode* > ());
 }
-#line 1803 "parser.tab.cc"
+#line 1930 "parser.tab.cc"
     break;
 
   case 80:
-#line 320 "parser.yy"
+#line 359 "parser.yy"
                              {
 }
-#line 1810 "parser.tab.cc"
+#line 1937 "parser.tab.cc"
     break;
 
   case 81:
-#line 322 "parser.yy"
+#line 361 "parser.yy"
                               {
 }
-#line 1817 "parser.tab.cc"
+#line 1944 "parser.tab.cc"
     break;
 
   case 82:
-#line 326 "parser.yy"
+#line 365 "parser.yy"
                                                {
 }
-#line 1824 "parser.tab.cc"
+#line 1951 "parser.tab.cc"
     break;
 
   case 83:
-#line 330 "parser.yy"
+#line 369 "parser.yy"
                            {
 }
-#line 1831 "parser.tab.cc"
+#line 1958 "parser.tab.cc"
     break;
 
   case 84:
-#line 332 "parser.yy"
+#line 371 "parser.yy"
                                 {
 }
-#line 1838 "parser.tab.cc"
+#line 1965 "parser.tab.cc"
     break;
 
 
-#line 1842 "parser.tab.cc"
+#line 1969 "parser.tab.cc"
 
             default:
               break;
@@ -2026,22 +2153,22 @@ namespace IPL {
   const short
   Parser::yypact_[] =
   {
-     102,   -70,   -70,   -70,    15,    17,   102,   -70,   -70,    60,
-      -1,   -70,   -70,   -70,    58,    36,   116,    71,   121,   -70,
-      73,    10,   -70,     4,   -70,   -12,   -70,     4,    62,   -70,
-     -70,   -70,    67,    81,    93,    56,   -70,   -70,    56,   300,
-     -70,   -70,   -70,   -70,   195,   -70,    74,   -70,   -70,   107,
-      25,   -70,   -70,   -70,   160,    56,   -70,    98,   -70,   -70,
-       4,    68,   -70,    59,   -70,   116,   -70,    20,    56,    56,
-      56,   126,    -7,   145,    82,    39,    84,   -70,    57,    14,
-     230,   -70,   -70,   -70,    56,   -70,   153,    56,   154,   -70,
-     265,   -70,   -70,   -70,   163,     4,   -70,   -70,   131,   162,
-      85,    42,    50,   133,   305,    56,   -70,    56,    56,    56,
-      56,    56,    56,    56,    56,    56,    56,    56,   -70,   -70,
-     162,   -70,    -3,   -70,   -70,   139,   -70,   -70,   135,    56,
-     300,   300,    56,   -70,   114,   145,    82,    39,    39,    84,
-      84,    84,    84,    57,    57,   -70,   -70,   -70,   -70,   -70,
-     162,   157,   -70,     7,   -70,   300,    56,   -70,   147,   300,
+      80,   -70,   -70,   -70,    15,    17,    80,   -70,   -70,    22,
+      26,   -70,   -70,   -70,    31,    44,    89,    66,   113,   -70,
+      56,    10,   -70,    12,   -70,    57,   -70,    12,    51,   -70,
+     -70,   -70,    60,    70,    72,   329,   -70,   -70,   329,   292,
+     -70,   -70,   -70,   -70,   -70,   152,    67,    14,   -70,    90,
+     -70,   -70,   -70,   -70,   187,   329,   -70,    92,   -70,   -70,
+      12,   107,   -70,    50,   -70,    89,   -70,    16,   329,   329,
+     329,   100,    -7,   136,    53,    35,    99,   -70,    78,    34,
+     222,   -70,   257,   329,   -70,   142,   329,   145,   -70,   -70,
+     -70,   -70,   -70,   -70,   155,    12,   -70,   -70,   112,   153,
+      83,    45,    49,   124,   297,   329,   -70,   329,   329,   329,
+     329,   329,   329,   329,   329,   329,   329,   329,   -70,   -70,
+     -70,   153,   -70,    -3,   -70,   130,   -70,   -70,   126,   329,
+     292,   292,   329,   -70,    95,   136,    53,    35,    35,    99,
+      99,    99,    99,    78,    78,   -70,   -70,   -70,   -70,   -70,
+     153,   148,   -70,     7,   -70,   292,   329,   -70,   138,   292,
      -70
   };
 
@@ -2052,15 +2179,15 @@ namespace IPL {
       12,     1,     5,     6,     0,     0,     0,     0,     0,     8,
        0,     0,    80,     0,    14,     0,    15,     0,    66,    67,
       68,    69,     0,     0,     0,     0,    73,    76,     0,     0,
-      22,    74,    75,    28,     0,    26,     0,    32,    33,     0,
-      54,    59,    30,    31,     0,     0,    12,     0,    81,    18,
+      22,    74,    75,    28,    33,     0,     0,    54,    59,     0,
+      26,    30,    31,    32,     0,     0,    12,     0,    81,    18,
        0,    20,    83,     0,    13,     0,    17,     0,     0,     0,
        0,    66,     0,    39,    41,    43,    46,    56,    51,     0,
-       0,    23,    27,    36,     0,    65,     0,     0,     0,    24,
-       0,    55,     7,    21,     0,     0,    82,    16,    61,    71,
+       0,    24,     0,     0,    65,     0,     0,     0,    36,    23,
+      27,    55,     7,    21,     0,     0,    82,    16,    61,    71,
        0,     0,     0,     0,     0,     0,    34,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,    70,    29,
-      35,    64,     0,    63,    25,     0,    84,    37,    62,     0,
+      25,    35,    64,     0,    63,     0,    84,    37,    62,     0,
        0,     0,     0,    61,     0,    40,    42,    44,    45,    49,
       50,    47,    48,    52,    53,    57,    58,    60,    19,    38,
       72,     0,    78,     0,    62,     0,     0,    77,     0,     0,
@@ -2070,135 +2197,139 @@ namespace IPL {
   const short
   Parser::yypgoto_[] =
   {
-     -70,   -70,   -70,   174,   178,   -70,   -70,   120,   -70,   -25,
-     -70,   -30,   -41,   -69,   -70,   -70,   -28,    83,    88,    41,
-      22,   -18,    38,   -70,   -70,    87,   -70,   -70,   171,   -16,
-     -70,     6,   -70
+     -70,   -70,   -70,   164,   -70,   -70,   111,   -70,   -22,   -70,
+     154,   -10,   -70,   -28,    75,    74,    20,    -2,   -18,    30,
+     -70,   -70,    73,   -69,   177,   -52,   -70,   -70,   -70,   -70,
+     -33,     3,   -70
   };
 
   const signed char
   Parser::yydefgoto_[] =
   {
-      -1,     5,     6,     7,     8,    15,    25,    26,    61,    62,
-      19,    44,    45,    46,    47,    48,    99,    73,    74,    75,
-      76,    77,    78,    50,    51,   100,    52,    53,    21,    22,
-      63,    23,    55
+      -1,     5,     6,     7,    15,    25,    26,    61,    62,    44,
+      21,    22,    63,    99,    73,    74,    75,    76,    77,    78,
+      47,    48,   100,    49,     8,    50,    51,    52,    53,    19,
+      54,    23,    55
   };
 
   const unsigned char
   Parser::yytable_[] =
   {
-      49,   103,    66,    82,   105,    58,     9,    72,   105,    80,
-      79,    59,     9,     1,     2,     3,    20,    11,   105,    64,
-      65,    49,    10,    27,    90,   105,    49,    71,    29,    30,
-      31,    60,    16,   147,   106,    93,    49,    91,    58,    82,
-     101,   102,    85,    86,    57,   118,    36,    37,   156,    82,
-      38,    98,    49,   105,   110,   111,   120,    41,    42,   122,
-      87,   105,    49,    71,    29,    30,    31,    14,    88,    18,
-     126,    27,    49,   130,     1,     2,     3,    20,   112,   113,
-      56,   131,    36,    37,   116,   117,    38,   158,    17,   151,
-     152,    95,    67,    41,    42,   108,   109,    68,   145,   146,
-      96,   150,    24,    94,   153,     1,     2,     3,     4,   114,
-     115,    69,    49,    49,   157,    83,   128,   129,   160,     1,
-       2,     3,    20,    70,     1,     2,     3,    20,    28,    29,
-      30,    31,   139,   140,   141,   142,    84,    49,    49,    92,
-      32,    49,    33,    34,    35,   154,   129,    36,    37,   137,
-     138,    38,   143,   144,    39,    40,   104,   107,    41,    42,
-     121,   123,    43,     1,     2,     3,    20,    28,    29,    30,
-      31,   125,   127,   105,   132,   148,   149,   155,   159,    32,
-      12,    33,    34,    35,    13,    97,    36,    37,   135,    54,
-      38,   134,     0,    39,    89,   136,     0,    41,    42,     0,
-       0,    43,    28,    29,    30,    31,     0,     0,     0,     0,
-       0,     0,     0,     0,    32,     0,    33,    34,    35,     0,
-       0,    36,    37,     0,     0,    38,     0,     0,    39,    81,
-       0,     0,    41,    42,     0,     0,    43,    28,    29,    30,
-      31,     0,     0,     0,     0,     0,     0,     0,     0,    32,
-       0,    33,    34,    35,     0,     0,    36,    37,     0,     0,
-      38,     0,     0,    39,   119,     0,     0,    41,    42,     0,
-       0,    43,    28,    29,    30,    31,     0,     0,     0,     0,
-       0,     0,     0,     0,    32,     0,    33,    34,    35,     0,
-       0,    36,    37,     0,     0,    38,     0,     0,    39,   124,
-       0,     0,    41,    42,     0,     0,    43,    28,    29,    30,
-      31,     0,    71,    29,    30,    31,     0,     0,     0,    32,
-       0,    33,    34,    35,     0,     0,    36,    37,     0,     0,
-      38,    36,    37,    39,     0,    38,   133,    41,    42,     0,
-       0,    43,    41,    42
+      46,   103,    90,     9,   105,    66,    80,    72,   105,     9,
+      79,    58,    82,     1,     2,     3,    20,    11,   105,    59,
+      27,    46,    10,    71,    29,    30,    31,    46,    90,    14,
+      90,    84,    85,   147,   106,    58,    46,    91,    93,    60,
+     101,   102,    36,    37,    57,   105,    38,    98,   156,    86,
+     110,   111,    46,    41,    42,   121,   105,    87,   123,    16,
+     105,    17,    46,    56,    46,   118,   108,   109,    27,     1,
+       2,     3,    20,   126,   112,   113,   130,    18,   151,   152,
+     131,    67,    95,     1,     2,     3,     4,   158,    64,    65,
+      68,    96,     1,     2,     3,    20,    83,    24,   145,   146,
+      69,   150,    70,   157,   153,   116,   117,   160,   139,   140,
+     141,   142,    46,    46,   128,   129,     1,     2,     3,    20,
+      28,    29,    30,    31,   114,   115,   154,   129,   137,   138,
+     104,    88,    32,    92,    33,    34,    35,    46,    46,    36,
+      37,    46,    94,    38,   143,   144,    39,    40,   107,   122,
+      41,    42,   124,   127,    43,     1,     2,     3,    20,    28,
+      29,    30,    31,   125,   105,   132,   148,   149,   155,   159,
+      12,    32,    45,    33,    34,    35,    97,   134,    36,    37,
+     135,   136,    38,    13,     0,    39,    81,     0,     0,    41,
+      42,     0,     0,    43,    28,    29,    30,    31,     0,     0,
+       0,     0,     0,     0,     0,     0,    32,     0,    33,    34,
+      35,     0,     0,    36,    37,     0,     0,    38,     0,     0,
+      39,    89,     0,     0,    41,    42,     0,     0,    43,    28,
+      29,    30,    31,     0,     0,     0,     0,     0,     0,     0,
+       0,    32,     0,    33,    34,    35,     0,     0,    36,    37,
+       0,     0,    38,     0,     0,    39,   119,     0,     0,    41,
+      42,     0,     0,    43,    28,    29,    30,    31,     0,     0,
+       0,     0,     0,     0,     0,     0,    32,     0,    33,    34,
+      35,     0,     0,    36,    37,     0,     0,    38,     0,     0,
+      39,   120,     0,     0,    41,    42,     0,     0,    43,    28,
+      29,    30,    31,     0,    71,    29,    30,    31,     0,     0,
+       0,    32,     0,    33,    34,    35,     0,     0,    36,    37,
+       0,     0,    38,    36,    37,    39,     0,    38,   133,    41,
+      42,     0,     0,    43,    41,    42,    71,    29,    30,    31,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,    36,    37,     0,     0,    38,
+       0,     0,     0,     0,     0,     0,    41,    42
   };
 
   const short
   Parser::yycheck_[] =
   {
-      18,    70,    27,    44,    11,    21,     0,    35,    11,    39,
-      38,     7,     6,     3,     4,     5,     6,     0,    11,    31,
-      32,    39,     7,    17,    54,    11,    44,     7,     8,     9,
-      10,    27,    33,    36,    41,    60,    54,    55,    54,    80,
-      68,    69,    17,    18,    34,    31,    26,    27,    41,    90,
-      30,    31,    70,    11,    15,    16,    84,    37,    38,    87,
-      35,    11,    80,     7,     8,     9,    10,     7,    43,    33,
-      95,    65,    90,    31,     3,     4,     5,     6,    39,    40,
-       7,    31,    26,    27,    27,    28,    30,   156,    30,   130,
-     131,    32,    30,    37,    38,    13,    14,    30,   116,   117,
-      41,   129,    31,    35,   132,     3,     4,     5,     6,    25,
-      26,    30,   130,   131,   155,    41,    31,    32,   159,     3,
-       4,     5,     6,    30,     3,     4,     5,     6,     7,     8,
-       9,    10,   110,   111,   112,   113,    29,   155,   156,    41,
-      19,   159,    21,    22,    23,    31,    32,    26,    27,   108,
-     109,    30,   114,   115,    33,    34,    30,    12,    37,    38,
-       7,     7,    41,     3,     4,     5,     6,     7,     8,     9,
-      10,     8,    41,    11,    41,    36,    41,    20,    31,    19,
-       6,    21,    22,    23,     6,    65,    26,    27,   105,    18,
-      30,   104,    -1,    33,    34,   107,    -1,    37,    38,    -1,
-      -1,    41,     7,     8,     9,    10,    -1,    -1,    -1,    -1,
-      -1,    -1,    -1,    -1,    19,    -1,    21,    22,    23,    -1,
-      -1,    26,    27,    -1,    -1,    30,    -1,    -1,    33,    34,
-      -1,    -1,    37,    38,    -1,    -1,    41,     7,     8,     9,
-      10,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    19,
-      -1,    21,    22,    23,    -1,    -1,    26,    27,    -1,    -1,
-      30,    -1,    -1,    33,    34,    -1,    -1,    37,    38,    -1,
-      -1,    41,     7,     8,     9,    10,    -1,    -1,    -1,    -1,
-      -1,    -1,    -1,    -1,    19,    -1,    21,    22,    23,    -1,
-      -1,    26,    27,    -1,    -1,    30,    -1,    -1,    33,    34,
-      -1,    -1,    37,    38,    -1,    -1,    41,     7,     8,     9,
-      10,    -1,     7,     8,     9,    10,    -1,    -1,    -1,    19,
-      -1,    21,    22,    23,    -1,    -1,    26,    27,    -1,    -1,
-      30,    26,    27,    33,    -1,    30,    31,    37,    38,    -1,
-      -1,    41,    37,    38
+      18,    70,    54,     0,    11,    27,    39,    35,    11,     6,
+      38,    21,    45,     3,     4,     5,     6,     0,    11,     7,
+      17,    39,     7,     7,     8,     9,    10,    45,    80,     7,
+      82,    17,    18,    36,    41,    45,    54,    55,    60,    27,
+      68,    69,    26,    27,    34,    11,    30,    31,    41,    35,
+      15,    16,    70,    37,    38,    83,    11,    43,    86,    33,
+      11,    30,    80,     7,    82,    31,    13,    14,    65,     3,
+       4,     5,     6,    95,    39,    40,    31,    33,   130,   131,
+      31,    30,    32,     3,     4,     5,     6,   156,    31,    32,
+      30,    41,     3,     4,     5,     6,    29,    31,   116,   117,
+      30,   129,    30,   155,   132,    27,    28,   159,   110,   111,
+     112,   113,   130,   131,    31,    32,     3,     4,     5,     6,
+       7,     8,     9,    10,    25,    26,    31,    32,   108,   109,
+      30,    41,    19,    41,    21,    22,    23,   155,   156,    26,
+      27,   159,    35,    30,   114,   115,    33,    34,    12,     7,
+      37,    38,     7,    41,    41,     3,     4,     5,     6,     7,
+       8,     9,    10,     8,    11,    41,    36,    41,    20,    31,
+       6,    19,    18,    21,    22,    23,    65,   104,    26,    27,
+     105,   107,    30,     6,    -1,    33,    34,    -1,    -1,    37,
+      38,    -1,    -1,    41,     7,     8,     9,    10,    -1,    -1,
+      -1,    -1,    -1,    -1,    -1,    -1,    19,    -1,    21,    22,
+      23,    -1,    -1,    26,    27,    -1,    -1,    30,    -1,    -1,
+      33,    34,    -1,    -1,    37,    38,    -1,    -1,    41,     7,
+       8,     9,    10,    -1,    -1,    -1,    -1,    -1,    -1,    -1,
+      -1,    19,    -1,    21,    22,    23,    -1,    -1,    26,    27,
+      -1,    -1,    30,    -1,    -1,    33,    34,    -1,    -1,    37,
+      38,    -1,    -1,    41,     7,     8,     9,    10,    -1,    -1,
+      -1,    -1,    -1,    -1,    -1,    -1,    19,    -1,    21,    22,
+      23,    -1,    -1,    26,    27,    -1,    -1,    30,    -1,    -1,
+      33,    34,    -1,    -1,    37,    38,    -1,    -1,    41,     7,
+       8,     9,    10,    -1,     7,     8,     9,    10,    -1,    -1,
+      -1,    19,    -1,    21,    22,    23,    -1,    -1,    26,    27,
+      -1,    -1,    30,    26,    27,    33,    -1,    30,    31,    37,
+      38,    -1,    -1,    41,    37,    38,     7,     8,     9,    10,
+      -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,
+      -1,    -1,    -1,    -1,    -1,    26,    27,    -1,    -1,    30,
+      -1,    -1,    -1,    -1,    -1,    -1,    37,    38
   };
 
   const signed char
   Parser::yystos_[] =
   {
-       0,     3,     4,     5,     6,    45,    46,    47,    48,    75,
-       7,     0,    47,    48,     7,    49,    33,    30,    33,    54,
-       6,    72,    73,    75,    31,    50,    51,    75,     7,     8,
+       0,     3,     4,     5,     6,    45,    46,    47,    68,    75,
+       7,     0,    47,    68,     7,    48,    33,    30,    33,    73,
+       6,    54,    55,    75,    31,    49,    50,    75,     7,     8,
        9,    10,    19,    21,    22,    23,    26,    27,    30,    33,
-      34,    37,    38,    41,    55,    56,    57,    58,    59,    65,
-      67,    68,    70,    71,    72,    76,     7,    34,    73,     7,
-      27,    52,    53,    74,    31,    32,    53,    30,    30,    30,
-      30,     7,    60,    61,    62,    63,    64,    65,    66,    60,
-      55,    34,    56,    41,    29,    17,    18,    35,    43,    34,
-      55,    65,    41,    53,    35,    32,    41,    51,    31,    60,
-      69,    60,    60,    57,    30,    11,    41,    12,    13,    14,
+      34,    37,    38,    41,    53,    54,    62,    64,    65,    67,
+      69,    70,    71,    72,    74,    76,     7,    34,    55,     7,
+      27,    51,    52,    56,    31,    32,    52,    30,    30,    30,
+      30,     7,    57,    58,    59,    60,    61,    62,    63,    57,
+      74,    34,    74,    29,    17,    18,    35,    43,    41,    34,
+      69,    62,    41,    52,    35,    32,    41,    50,    31,    57,
+      66,    57,    57,    67,    30,    11,    41,    12,    13,    14,
       15,    16,    39,    40,    25,    26,    27,    28,    31,    34,
-      60,     7,    60,     7,    34,     8,    53,    41,    31,    32,
-      31,    31,    41,    31,    69,    61,    62,    63,    63,    64,
-      64,    64,    64,    66,    66,    65,    65,    36,    36,    41,
-      60,    56,    56,    60,    31,    20,    41,    56,    57,    31,
-      56
+      34,    57,     7,    57,     7,     8,    52,    41,    31,    32,
+      31,    31,    41,    31,    66,    58,    59,    60,    60,    61,
+      61,    61,    61,    63,    63,    62,    62,    36,    36,    41,
+      57,    69,    69,    57,    31,    20,    41,    69,    67,    31,
+      69
   };
 
   const signed char
   Parser::yyr1_[] =
   {
-       0,    44,    45,    46,    46,    46,    46,    47,    48,    75,
-      75,    75,    75,    49,    49,    50,    50,    51,    52,    52,
-      53,    53,    54,    54,    54,    54,    55,    55,    56,    56,
-      56,    56,    56,    56,    56,    57,    58,    59,    59,    60,
-      60,    61,    61,    62,    62,    62,    63,    63,    63,    63,
-      63,    64,    64,    64,    65,    65,    66,    66,    66,    67,
-      67,    67,    67,    67,    67,    67,    68,    68,    68,    68,
-      68,    69,    69,    76,    76,    76,    76,    70,    71,    71,
-      72,    72,    73,    74,    74
+       0,    44,    45,    46,    46,    46,    46,    47,    68,    75,
+      75,    75,    75,    48,    48,    49,    49,    50,    51,    51,
+      52,    52,    73,    73,    73,    73,    74,    74,    69,    69,
+      69,    69,    69,    69,    69,    67,    72,    53,    53,    57,
+      57,    58,    58,    59,    59,    59,    60,    60,    60,    60,
+      60,    61,    61,    61,    62,    62,    63,    63,    63,    64,
+      64,    64,    64,    64,    64,    64,    65,    65,    65,    65,
+      65,    66,    66,    76,    76,    76,    76,    70,    71,    71,
+      54,    54,    55,    56,    56
   };
 
   const signed char
@@ -2228,32 +2359,31 @@ namespace IPL {
   "PTR_OP", "IF", "ELSE", "WHILE", "FOR", "RETURN", "OTHERS", "'+'", "'-'",
   "'*'", "'/'", "'='", "'('", "')'", "','", "'{'", "'}'", "'['", "']'",
   "'!'", "'&'", "'<'", "'>'", "';'", "'\\n'", "'.'", "$accept",
-  "begin_nterm", "translation_unit", "struct_specifier",
-  "function_definition", "fun_declarator", "parameter_list",
-  "parameter_declaration", "declarator_arr", "declarator",
-  "compound_statement", "statement_list", "statement",
-  "assignment_expression", "assignment_statement", "procedure_call",
-  "expression", "logical_and_expression", "equality_expression",
-  "relational_expression", "additive_expression", "unary_expression",
-  "multiplicative_expression", "postfix_expression", "primary_expression",
-  "expression_list", "selection_statement", "iteration_statement",
-  "declaration_list", "declaration", "declarator_list", "type_specifier",
-  "unary_operator", YY_NULLPTR
+  "begin_nterm", "translation_unit", "struct_specifier", "fun_declarator",
+  "parameter_list", "parameter_declaration", "declarator_arr",
+  "declarator", "procedure_call", "declaration_list", "declaration",
+  "declarator_list", "expression", "logical_and_expression",
+  "equality_expression", "relational_expression", "additive_expression",
+  "unary_expression", "multiplicative_expression", "postfix_expression",
+  "primary_expression", "expression_list", "assignment_expression",
+  "function_definition", "statement", "selection_statement",
+  "iteration_statement", "assignment_statement", "compound_statement",
+  "statement_list", "type_specifier", "unary_operator", YY_NULLPTR
   };
 
 
   const short
   Parser::yyrline_[] =
   {
-       0,    88,    88,    92,    94,    96,    98,   102,   105,   108,
-     110,   112,   114,   118,   120,   124,   126,   130,   134,   136,
-     140,   142,   146,   148,   150,   152,   156,   158,   162,   164,
-     166,   168,   170,   172,   174,   178,   182,   186,   188,   192,
-     194,   198,   200,   204,   206,   209,   214,   216,   219,   222,
-     225,   230,   232,   235,   240,   242,   247,   249,   252,   257,
-     259,   261,   263,   265,   267,   269,   273,   276,   279,   282,
-     286,   290,   292,   296,   299,   302,   305,   310,   314,   316,
-     320,   322,   326,   330,   332
+       0,    96,    96,   101,   103,   106,   108,   112,   115,   119,
+     121,   123,   125,   129,   131,   135,   137,   141,   145,   147,
+     151,   153,   157,   159,   162,   164,   169,   174,   180,   182,
+     185,   188,   191,   194,   196,   200,   205,   210,   212,   216,
+     219,   223,   226,   231,   234,   237,   242,   245,   248,   251,
+     254,   259,   262,   265,   270,   273,   278,   281,   284,   289,
+     292,   295,   297,   299,   302,   305,   309,   312,   315,   318,
+     322,   326,   328,   332,   335,   338,   341,   346,   351,   354,
+     359,   361,   365,   369,   371
   };
 
   // Print the state stack on the debug stream.
@@ -2335,9 +2465,9 @@ namespace IPL {
 
 #line 5 "parser.yy"
 } // IPL
-#line 2339 "parser.tab.cc"
+#line 2469 "parser.tab.cc"
 
-#line 336 "parser.yy"
+#line 375 "parser.yy"
 
 //grammar definition.
 void IPL::Parser::error( const location_type &l, const std::string &err_message )

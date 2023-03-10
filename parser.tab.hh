@@ -393,18 +393,20 @@ namespace IPL {
       // begin_nterm
       // translation_unit
       // struct_specifier
-      // function_definition
       // fun_declarator
       // parameter_list
       // parameter_declaration
       // declarator_arr
       // declarator
-      // compound_statement
-      // statement_list
-      // statement
-      // assignment_expression
-      // assignment_statement
       // procedure_call
+      // declaration_list
+      // declaration
+      // declarator_list
+      char dummy1[sizeof (abstract_astnode*)];
+
+      // assignment_expression
+      char dummy2[sizeof (assignE_astnode*)];
+
       // expression
       // logical_and_expression
       // equality_expression
@@ -415,12 +417,14 @@ namespace IPL {
       // postfix_expression
       // primary_expression
       // expression_list
+      char dummy3[sizeof (exp_astnode*)];
+
+      // function_definition
+      // statement
       // selection_statement
       // iteration_statement
-      // declaration_list
-      // declaration
-      // declarator_list
-      char dummy1[sizeof (abstract_astnode*)];
+      // assignment_statement
+      char dummy4[sizeof (statement_astnode*)];
 
       // VOID
       // INT
@@ -446,7 +450,11 @@ namespace IPL {
       // OTHERS
       // type_specifier
       // unary_operator
-      char dummy2[sizeof (std::string)];
+      char dummy5[sizeof (std::string)];
+
+      // compound_statement
+      // statement_list
+      char dummy6[sizeof (std::vector<statement_astnode*>)];
     };
 
     /// The size of the largest semantic type.
@@ -583,6 +591,45 @@ namespace IPL {
       {}
 #endif
 #if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, assignE_astnode*&& v, location_type&& l)
+        : Base (t)
+        , value (std::move (v))
+        , location (std::move (l))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const assignE_astnode*& v, const location_type& l)
+        : Base (t)
+        , value (v)
+        , location (l)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, exp_astnode*&& v, location_type&& l)
+        : Base (t)
+        , value (std::move (v))
+        , location (std::move (l))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const exp_astnode*& v, const location_type& l)
+        : Base (t)
+        , value (v)
+        , location (l)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, statement_astnode*&& v, location_type&& l)
+        : Base (t)
+        , value (std::move (v))
+        , location (std::move (l))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const statement_astnode*& v, const location_type& l)
+        : Base (t)
+        , value (v)
+        , location (l)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
       basic_symbol (typename Base::kind_type t, std::string&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
@@ -590,6 +637,19 @@ namespace IPL {
       {}
 #else
       basic_symbol (typename Base::kind_type t, const std::string& v, const location_type& l)
+        : Base (t)
+        , value (v)
+        , location (l)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, std::vector<statement_astnode*>&& v, location_type&& l)
+        : Base (t)
+        , value (std::move (v))
+        , location (std::move (l))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const std::vector<statement_astnode*>& v, const location_type& l)
         : Base (t)
         , value (v)
         , location (l)
@@ -621,34 +681,41 @@ switch (yytype)
       case 45: // begin_nterm
       case 46: // translation_unit
       case 47: // struct_specifier
-      case 48: // function_definition
-      case 49: // fun_declarator
-      case 50: // parameter_list
-      case 51: // parameter_declaration
-      case 52: // declarator_arr
-      case 53: // declarator
-      case 54: // compound_statement
-      case 55: // statement_list
-      case 56: // statement
-      case 57: // assignment_expression
-      case 58: // assignment_statement
-      case 59: // procedure_call
-      case 60: // expression
-      case 61: // logical_and_expression
-      case 62: // equality_expression
-      case 63: // relational_expression
-      case 64: // additive_expression
-      case 65: // unary_expression
-      case 66: // multiplicative_expression
-      case 67: // postfix_expression
-      case 68: // primary_expression
-      case 69: // expression_list
+      case 48: // fun_declarator
+      case 49: // parameter_list
+      case 50: // parameter_declaration
+      case 51: // declarator_arr
+      case 52: // declarator
+      case 53: // procedure_call
+      case 54: // declaration_list
+      case 55: // declaration
+      case 56: // declarator_list
+        value.template destroy< abstract_astnode* > ();
+        break;
+
+      case 67: // assignment_expression
+        value.template destroy< assignE_astnode* > ();
+        break;
+
+      case 57: // expression
+      case 58: // logical_and_expression
+      case 59: // equality_expression
+      case 60: // relational_expression
+      case 61: // additive_expression
+      case 62: // unary_expression
+      case 63: // multiplicative_expression
+      case 64: // postfix_expression
+      case 65: // primary_expression
+      case 66: // expression_list
+        value.template destroy< exp_astnode* > ();
+        break;
+
+      case 68: // function_definition
+      case 69: // statement
       case 70: // selection_statement
       case 71: // iteration_statement
-      case 72: // declaration_list
-      case 73: // declaration
-      case 74: // declarator_list
-        value.template destroy< abstract_astnode* > ();
+      case 72: // assignment_statement
+        value.template destroy< statement_astnode* > ();
         break;
 
       case 3: // VOID
@@ -676,6 +743,11 @@ switch (yytype)
       case 75: // type_specifier
       case 76: // unary_operator
         value.template destroy< std::string > ();
+        break;
+
+      case 73: // compound_statement
+      case 74: // statement_list
+        value.template destroy< std::vector<statement_astnode*> > ();
         break;
 
       default:
@@ -1446,7 +1518,7 @@ switch (yytype)
     enum
     {
       yyeof_ = 0,
-      yylast_ = 343,     ///< Last index in yytable_.
+      yylast_ = 367,     ///< Last index in yytable_.
       yynnts_ = 33,  ///< Number of nonterminal symbols.
       yyfinal_ = 11, ///< Termination state number.
       yyntokens_ = 44  ///< Number of tokens.
@@ -1460,7 +1532,7 @@ switch (yytype)
 
 #line 5 "parser.yy"
 } // IPL
-#line 1464 "parser.tab.hh"
+#line 1536 "parser.tab.hh"
 
 
 
