@@ -7,7 +7,6 @@
 #include "scanner.hh"
 #include "parser.tab.hh"
 #include "symtab.h"
-
 int main(const int argc, const char **argv)
 {
 

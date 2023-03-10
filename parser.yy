@@ -44,12 +44,12 @@
    #include <cstdlib>
    #include <fstream>
    #include <string>
+   #include <stack>
    #include "scanner.hh"
    #include "symtab.h"
 #undef yylex
 #define yylex IPL::Parser::scanner.yylex
-    SymTab* currst; 
-    currst = Symbols::gst;
+stack<SymTab*> ststack;
 }
 
 %define api.value.type variant
@@ -95,12 +95,15 @@
 
 %nterm <std::string> type_specifier unary_operator
 %%
-begin_nterm: translation_unit {
+begin_nterm: {
+    ststack.push(Symbols::gst);
+} translation_unit {
     std::cout << "about to begin printing\n";
-    $1->print();
+    $2->print();
 }
 
 translation_unit: struct_specifier{
+    
 }
 | function_definition{
     $$ = $1;
@@ -112,6 +115,7 @@ translation_unit: struct_specifier{
 ;
 
 struct_specifier: STRUCT IDENTIFIER '{' declaration_list '}' ';'{
+
 };
 
 function_definition: type_specifier fun_declarator compound_statement{

@@ -1519,8 +1519,8 @@ switch (yytype)
     {
       yyeof_ = 0,
       yylast_ = 367,     ///< Last index in yytable_.
-      yynnts_ = 33,  ///< Number of nonterminal symbols.
-      yyfinal_ = 11, ///< Termination state number.
+      yynnts_ = 34,  ///< Number of nonterminal symbols.
+      yyfinal_ = 3, ///< Termination state number.
       yyntokens_ = 44  ///< Number of tokens.
     };
 
