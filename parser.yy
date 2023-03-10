@@ -300,9 +300,10 @@ postfix_expression: primary_expression{
     $$ = new member_astnode($1, new identifier_astnode($3));
 }
 | postfix_expression PTR_OP IDENTIFIER{
-    $$ = new arrow_astnode($1, $3);
+    $$ = new arrow_astnode($1, new identifier_astnode($3));
 }
 | postfix_expression INC_OP{
+    
 }
 ;
 

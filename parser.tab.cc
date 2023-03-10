@@ -1807,164 +1807,165 @@ namespace IPL {
   case 64:
 #line 302 "parser.yy"
                                       {
+    yylhs.value.as < exp_astnode* > () = new arrow_astnode(yystack_[2].value.as < exp_astnode* > (), new identifier_astnode(yystack_[0].value.as < std::string > ()));
 }
-#line 1812 "parser.tab.cc"
+#line 1813 "parser.tab.cc"
     break;
 
   case 65:
-#line 304 "parser.yy"
+#line 305 "parser.yy"
                            {
 }
-#line 1819 "parser.tab.cc"
+#line 1820 "parser.tab.cc"
     break;
 
   case 66:
-#line 308 "parser.yy"
+#line 309 "parser.yy"
                               {
     yylhs.value.as < exp_astnode* > () = new identifier_astnode(yystack_[0].value.as < std::string > ());
 }
-#line 1827 "parser.tab.cc"
+#line 1828 "parser.tab.cc"
     break;
 
   case 67:
-#line 311 "parser.yy"
+#line 312 "parser.yy"
               {
     yylhs.value.as < exp_astnode* > () = new intconst_astnode(yystack_[0].value.as < std::string > ());
 }
-#line 1835 "parser.tab.cc"
+#line 1836 "parser.tab.cc"
     break;
 
   case 68:
-#line 314 "parser.yy"
+#line 315 "parser.yy"
                 {
     yylhs.value.as < exp_astnode* > () = new floatconst_astnode(yystack_[0].value.as < std::string > ());
 }
-#line 1843 "parser.tab.cc"
+#line 1844 "parser.tab.cc"
     break;
 
   case 69:
-#line 317 "parser.yy"
+#line 318 "parser.yy"
                 {
     yylhs.value.as < exp_astnode* > () = new stringconst_astnode(yystack_[0].value.as < std::string > ());
     yylhs.value.as < exp_astnode* > ()->print();
 }
-#line 1852 "parser.tab.cc"
+#line 1853 "parser.tab.cc"
     break;
 
   case 70:
-#line 321 "parser.yy"
+#line 322 "parser.yy"
                     {
 }
-#line 1859 "parser.tab.cc"
+#line 1860 "parser.tab.cc"
     break;
 
   case 71:
-#line 325 "parser.yy"
+#line 326 "parser.yy"
                            {
 }
-#line 1866 "parser.tab.cc"
+#line 1867 "parser.tab.cc"
     break;
 
   case 72:
-#line 327 "parser.yy"
+#line 328 "parser.yy"
                                 {
 }
-#line 1873 "parser.tab.cc"
+#line 1874 "parser.tab.cc"
     break;
 
   case 73:
-#line 331 "parser.yy"
+#line 332 "parser.yy"
                    {
     yylhs.value.as < std::string > () = std::string("UMINUS?");
 }
-#line 1881 "parser.tab.cc"
+#line 1882 "parser.tab.cc"
     break;
 
   case 74:
-#line 334 "parser.yy"
+#line 335 "parser.yy"
      {
     yylhs.value.as < std::string > () = std::string("NOT");
 }
-#line 1889 "parser.tab.cc"
+#line 1890 "parser.tab.cc"
     break;
 
   case 75:
-#line 337 "parser.yy"
+#line 338 "parser.yy"
      {
     yylhs.value.as < std::string > () = std::string("ADDRESS");
 }
-#line 1897 "parser.tab.cc"
+#line 1898 "parser.tab.cc"
     break;
 
   case 76:
-#line 340 "parser.yy"
+#line 341 "parser.yy"
      {
     yylhs.value.as < std::string > () = std::string("DEREF");
 }
-#line 1905 "parser.tab.cc"
+#line 1906 "parser.tab.cc"
     break;
 
   case 77:
-#line 345 "parser.yy"
+#line 346 "parser.yy"
                                                                    {
     yylhs.value.as < statement_astnode* > () = new if_astnode(yystack_[4].value.as < exp_astnode* > (), yystack_[2].value.as < statement_astnode* > (), yystack_[0].value.as < statement_astnode* > ());
 }
-#line 1913 "parser.tab.cc"
+#line 1914 "parser.tab.cc"
     break;
 
   case 78:
-#line 350 "parser.yy"
+#line 351 "parser.yy"
                                                        {
     yylhs.value.as < statement_astnode* > () = new while_astnode(yystack_[2].value.as < exp_astnode* > (), yystack_[0].value.as < statement_astnode* > ());
 }
-#line 1921 "parser.tab.cc"
+#line 1922 "parser.tab.cc"
     break;
 
   case 79:
-#line 353 "parser.yy"
+#line 354 "parser.yy"
                                                                                       {
     yylhs.value.as < statement_astnode* > () = new for_astnode(yystack_[6].value.as < assignE_astnode* > (), yystack_[4].value.as < exp_astnode* > (), yystack_[2].value.as < assignE_astnode* > (), yystack_[0].value.as < statement_astnode* > ());
 }
-#line 1929 "parser.tab.cc"
+#line 1930 "parser.tab.cc"
     break;
 
   case 80:
-#line 358 "parser.yy"
+#line 359 "parser.yy"
                              {
 }
-#line 1936 "parser.tab.cc"
+#line 1937 "parser.tab.cc"
     break;
 
   case 81:
-#line 360 "parser.yy"
+#line 361 "parser.yy"
                               {
 }
-#line 1943 "parser.tab.cc"
+#line 1944 "parser.tab.cc"
     break;
 
   case 82:
-#line 364 "parser.yy"
+#line 365 "parser.yy"
                                                {
 }
-#line 1950 "parser.tab.cc"
+#line 1951 "parser.tab.cc"
     break;
 
   case 83:
-#line 368 "parser.yy"
+#line 369 "parser.yy"
                            {
 }
-#line 1957 "parser.tab.cc"
+#line 1958 "parser.tab.cc"
     break;
 
   case 84:
-#line 370 "parser.yy"
+#line 371 "parser.yy"
                                 {
 }
-#line 1964 "parser.tab.cc"
+#line 1965 "parser.tab.cc"
     break;
 
 
-#line 1968 "parser.tab.cc"
+#line 1969 "parser.tab.cc"
 
             default:
               break;
@@ -2380,9 +2381,9 @@ namespace IPL {
      185,   188,   191,   194,   196,   200,   205,   210,   212,   216,
      219,   223,   226,   231,   234,   237,   242,   245,   248,   251,
      254,   259,   262,   265,   270,   273,   278,   281,   284,   289,
-     292,   295,   297,   299,   302,   304,   308,   311,   314,   317,
-     321,   325,   327,   331,   334,   337,   340,   345,   350,   353,
-     358,   360,   364,   368,   370
+     292,   295,   297,   299,   302,   305,   309,   312,   315,   318,
+     322,   326,   328,   332,   335,   338,   341,   346,   351,   354,
+     359,   361,   365,   369,   371
   };
 
   // Print the state stack on the debug stream.
@@ -2464,9 +2465,9 @@ namespace IPL {
 
 #line 5 "parser.yy"
 } // IPL
-#line 2468 "parser.tab.cc"
+#line 2469 "parser.tab.cc"
 
-#line 374 "parser.yy"
+#line 375 "parser.yy"
 
 //grammar definition.
 void IPL::Parser::error( const location_type &l, const std::string &err_message )
