@@ -396,12 +396,8 @@ namespace IPL {
       // fun_declarator
       // parameter_list
       // parameter_declaration
-      // declarator_arr
-      // declarator
       // procedure_call
       // declaration_list
-      // declaration
-      // declarator_list
       char dummy1[sizeof (abstract_astnode*)];
 
       // assignment_expression
@@ -448,13 +444,19 @@ namespace IPL {
       // FOR
       // RETURN
       // OTHERS
-      // type_specifier
       // unary_operator
       char dummy5[sizeof (std::string)];
 
       // compound_statement
       // statement_list
       char dummy6[sizeof (std::vector<statement_astnode*>)];
+
+      // type_specifier
+      // declaration
+      // declarator_list
+      // declarator
+      // declarator_arr
+      char dummy7[sizeof (typespec_astnode)];
     };
 
     /// The size of the largest semantic type.
@@ -655,6 +657,19 @@ namespace IPL {
         , location (l)
       {}
 #endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, typespec_astnode&& v, location_type&& l)
+        : Base (t)
+        , value (std::move (v))
+        , location (std::move (l))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const typespec_astnode& v, const location_type& l)
+        : Base (t)
+        , value (v)
+        , location (l)
+      {}
+#endif
 
       /// Destroy the symbol.
       ~basic_symbol ()
@@ -684,37 +699,33 @@ switch (yytype)
       case 48: // fun_declarator
       case 49: // parameter_list
       case 50: // parameter_declaration
-      case 51: // declarator_arr
-      case 52: // declarator
-      case 53: // procedure_call
-      case 54: // declaration_list
-      case 55: // declaration
-      case 56: // declarator_list
+      case 51: // procedure_call
+      case 52: // declaration_list
         value.template destroy< abstract_astnode* > ();
         break;
 
-      case 67: // assignment_expression
+      case 63: // assignment_expression
         value.template destroy< assignE_astnode* > ();
         break;
 
-      case 57: // expression
-      case 58: // logical_and_expression
-      case 59: // equality_expression
-      case 60: // relational_expression
-      case 61: // additive_expression
-      case 62: // unary_expression
-      case 63: // multiplicative_expression
-      case 64: // postfix_expression
-      case 65: // primary_expression
-      case 66: // expression_list
+      case 53: // expression
+      case 54: // logical_and_expression
+      case 55: // equality_expression
+      case 56: // relational_expression
+      case 57: // additive_expression
+      case 58: // unary_expression
+      case 59: // multiplicative_expression
+      case 60: // postfix_expression
+      case 61: // primary_expression
+      case 62: // expression_list
         value.template destroy< exp_astnode* > ();
         break;
 
-      case 68: // function_definition
-      case 69: // statement
-      case 70: // selection_statement
-      case 71: // iteration_statement
-      case 72: // assignment_statement
+      case 64: // function_definition
+      case 65: // statement
+      case 66: // selection_statement
+      case 67: // iteration_statement
+      case 68: // assignment_statement
         value.template destroy< statement_astnode* > ();
         break;
 
@@ -740,14 +751,21 @@ switch (yytype)
       case 22: // FOR
       case 23: // RETURN
       case 24: // OTHERS
-      case 75: // type_specifier
-      case 76: // unary_operator
+      case 71: // unary_operator
         value.template destroy< std::string > ();
         break;
 
-      case 73: // compound_statement
-      case 74: // statement_list
+      case 69: // compound_statement
+      case 70: // statement_list
         value.template destroy< std::vector<statement_astnode*> > ();
+        break;
+
+      case 72: // type_specifier
+      case 73: // declaration
+      case 74: // declarator_list
+      case 75: // declarator
+      case 76: // declarator_arr
+        value.template destroy< typespec_astnode > ();
         break;
 
       default:
@@ -1271,7 +1289,7 @@ switch (yytype)
     // YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
     // positive, shift that token.  If negative, reduce the rule whose
     // number is the opposite.  If YYTABLE_NINF, syntax error.
-    static const unsigned char yytable_[];
+    static const short yytable_[];
 
     static const short yycheck_[];
 
@@ -1518,8 +1536,8 @@ switch (yytype)
     enum
     {
       yyeof_ = 0,
-      yylast_ = 367,     ///< Last index in yytable_.
-      yynnts_ = 34,  ///< Number of nonterminal symbols.
+      yylast_ = 333,     ///< Last index in yytable_.
+      yynnts_ = 36,  ///< Number of nonterminal symbols.
       yyfinal_ = 3, ///< Termination state number.
       yyntokens_ = 44  ///< Number of tokens.
     };
@@ -1532,7 +1550,7 @@ switch (yytype)
 
 #line 5 "parser.yy"
 } // IPL
-#line 1536 "parser.tab.hh"
+#line 1554 "parser.tab.hh"
 
 
 

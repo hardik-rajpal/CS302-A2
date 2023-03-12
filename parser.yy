@@ -50,6 +50,9 @@
 #undef yylex
 #define yylex IPL::Parser::scanner.yylex
 stack<SymTab*> ststack;
+int retType;
+typespec_astnode toptype;
+string topvarname;
 }
 
 %define api.value.type variant
@@ -83,7 +86,7 @@ stack<SymTab*> ststack;
 %left '*' '/'
 %token '=' '(' ')' ',' '{' '}' '[' ']' '!' '&' '<' '>' ';' '\n'
 
-%nterm <abstract_astnode*> begin_nterm translation_unit struct_specifier fun_declarator parameter_list parameter_declaration declarator_arr declarator procedure_call   declaration_list declaration declarator_list 
+%nterm <abstract_astnode*> begin_nterm translation_unit struct_specifier fun_declarator parameter_list parameter_declaration procedure_call declaration_list
 
 %nterm <exp_astnode*> expression logical_and_expression equality_expression relational_expression additive_expression unary_expression multiplicative_expression postfix_expression primary_expression expression_list //assignment_expression
 
@@ -93,10 +96,12 @@ stack<SymTab*> ststack;
 
 %nterm <std::vector<statement_astnode*>> compound_statement statement_list
 
-%nterm <std::string> type_specifier unary_operator
+%nterm <std::string> unary_operator
+%nterm <typespec_astnode> type_specifier declaration declarator_list declarator declarator_arr
 %%
 begin_nterm: {
     ststack.push(Symbols::gst);
+    std::cout<<"pushed onto stack\n";
 } translation_unit {
     std::cout << "about to begin printing\n";
     $2->print();
@@ -114,7 +119,11 @@ translation_unit: struct_specifier{
 }
 ;
 
-struct_specifier: STRUCT IDENTIFIER '{' declaration_list '}' ';'{
+struct_specifier: STRUCT IDENTIFIER {
+    string structName = $2;
+    ststack.push(new SymTab());
+    Symbols::slsts[structName] = ststack.top();
+}'{' declaration_list '}' ';'{
 
 };
 
@@ -123,12 +132,32 @@ function_definition: type_specifier fun_declarator compound_statement{
 };
 
 type_specifier: VOID{
+    typespec_astnode ts;
+    ts.baseTypeWidth = 0;
+    ts.typeName = "void";
+    $$ = ts;
 }
 | INT{
+    // retType = SymTab::ST_type::INT;
+    typespec_astnode ts;
+    ts.baseTypeWidth = 4;
+    ts.typeName = "int";
+    $$ = ts;
 }
 | FLOAT{
+    // retType = SymTab::ST_type::FLOAT;
+    typespec_astnode ts;
+    ts.baseTypeWidth = 8;
+    ts.typeName = "float";
+    $$ = ts;
 }
 | STRUCT IDENTIFIER{
+    // retType = SymTab::ST_type::STRUCT_TYPE;
+    typespec_astnode ts;
+    string structname = $2;
+    ts.baseTypeWidth = Symbols::getStructBaseTypeWidth(structname);
+    ts.typeName = "struct "+($2);
+    $$ = ts;
 }
 ;
 
@@ -149,14 +178,27 @@ parameter_declaration: type_specifier declarator{
 ;
 
 declarator_arr: IDENTIFIER{
+    $$ = toptype;
+    $$.typeWidth = $$.baseTypeWidth;
+    topvarname = $1;
 }
 | declarator_arr '[' INT_CONSTANT ']'{
+    //TODO
+    $$ = toptype;
+    typespec_astnode tstmp = $1;
+    $$.typeWidth = ((tstmp).typeWidth) * (std::stoi($3));
+    $$.typeName = "array("+(tstmp).typeName+","+($3)+")";
+
 }
 ;
 
 declarator: declarator_arr{
+    $$ = $1;
 }
-| '*' declarator{
+| '*' declarator {
+    $$.typeWidth = 4;
+    $$.baseTypeWidth = $2.typeWidth;
+    $$.typeName = "pointer("+$2.typeName+")";
 }
 ;
 
@@ -369,13 +411,24 @@ declaration_list: declaration{
 }
 ;
 
-declaration: type_specifier declarator_list ';'{
+declaration: type_specifier declarator_list {toptype = $1;} ';'{
+    // ststack.top()->printJson();
 }
 ;
 
 declarator_list: declarator{
+    $$ = $1;
+    string type = $1.typeName;
+    int size = $1.typeWidth;
+    int offset = ststack.top()->getNewOffset();
+    // ststack.top()->rows[topvarname] = SymEntry(type,SymTab::ST_HL_type::VAR,SymTab::ST_LPG::LOCAL,size,offset);
 }
 | declarator_list ',' declarator{
+    $$ = $3;
+    string type = $3.typeName;
+    int size = $3.typeWidth;
+    int offset = ststack.top()->getNewOffset();
+    // ststack.top()->rows[topvarname] = SymEntry(type,SymTab::ST_HL_type::VAR,SymTab::ST_LPG::LOCAL,size,offset);
 }
 ;
 

@@ -12,7 +12,8 @@ public:
     enum ST_type
     {
         INT,
-        FLOAT
+        FLOAT,
+        STRUCT_TYPE,
     };
     enum ST_HL_type
     {
@@ -28,6 +29,7 @@ public:
     };
     map<string, SymEntry> rows;
     void printJson();
+    int getNewOffset();
     SymTab(){};
 };
 class SymEntry
@@ -35,12 +37,12 @@ class SymEntry
 public:
     size_t offset = 0;
     size_t size = 0;
-    SymTab::ST_type type;
+    string type;
     SymTab::ST_HL_type hltype;
     SymTab::ST_LPG lpgtype;
     SymTab *lst;
     void *astnodeptr;
-    SymEntry(SymTab::ST_type type, SymTab::ST_HL_type hltype, SymTab::ST_LPG lpgtype, size_t size, size_t offset) : type(type), hltype(hltype), lpgtype(lpgtype), size(size), offset(offset) {}
+    SymEntry(string type, SymTab::ST_HL_type hltype, SymTab::ST_LPG lpgtype, size_t size, size_t offset) : type(type), hltype(hltype), lpgtype(lpgtype), size(size), offset(offset) {}
     SymEntry(){};
     void printJson(string varname);
 };
@@ -49,5 +51,9 @@ public:
     static SymTab * gst;
     static map<string, SymTab *> flsts;
     static map<string, SymTab *> slsts;
+    static     int getStructBaseTypeWidth(string structname){
+        //TODO
+        return 4;
+    }
 };
 #endif

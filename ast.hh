@@ -190,3 +190,11 @@ private:
     exp_astnode* exp;
     identifier_astnode* identifier;
 };
+class typespec_astnode{
+public:
+    int baseTypeWidth;
+    std::string typeName;
+    int typeWidth;
+    typespec_astnode(){};
+    
+};

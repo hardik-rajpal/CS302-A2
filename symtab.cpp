@@ -31,15 +31,7 @@ void SymEntry::printJson(string varname)
     }
     cout << size << ",\n"
          << offset << ",\n";
-    switch (type)
-    {
-    case SymTab::INT:
-        cout << "\"int\"";
-        break;
-    case SymTab::FLOAT:
-        cout << "\"float\"";
-        break;
-    }
+    cout<<"\""<<type<<"\"";
     cout << "\n]";
 }
 void SymTab::printJson()
@@ -102,4 +94,7 @@ void SymTab::printJson()
         cout << "\n";
     }
     cout<<"]\n";
+}
+int SymTab::getNewOffset(){
+    return 4;
 }

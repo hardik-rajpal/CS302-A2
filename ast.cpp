@@ -161,3 +161,8 @@ void arrow_astnode::print() {
     this->identifier->print();
     std::cout << "\n}";
 }
+
+// intconst_astnode::intconst_astnode(int val): val(val){}
+// void intconst_astnode::print(){
+//     std::cout<<"\"intconstvalue:\""<<std::to_string(val)<<",\n";
+// }
