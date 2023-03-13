@@ -391,9 +391,6 @@ namespace IPL {
     union union_type
     {
       // struct_specifier
-      // fun_declarator
-      // parameter_list
-      // parameter_declaration
       // procedure_call
       // declaration_list
       char dummy1[sizeof (abstract_astnode*)];
@@ -413,12 +410,15 @@ namespace IPL {
       // expression_list
       char dummy3[sizeof (exp_astnode*)];
 
+      // fun_declarator
+      char dummy4[sizeof (fundeclarator_astnode*)];
+
       // function_definition
       // statement
       // selection_statement
       // iteration_statement
       // assignment_statement
-      char dummy4[sizeof (statement_astnode*)];
+      char dummy5[sizeof (statement_astnode*)];
 
       // VOID
       // INT
@@ -443,22 +443,26 @@ namespace IPL {
       // RETURN
       // OTHERS
       // unary_operator
-      char dummy5[sizeof (std::string)];
+      char dummy6[sizeof (std::string)];
 
       // translation_unit
       // begin_nterm
-      char dummy6[sizeof (std::vector<abstract_astnode*>)];
+      char dummy7[sizeof (std::vector<abstract_astnode*>)];
 
       // compound_statement
       // statement_list
-      char dummy7[sizeof (std::vector<statement_astnode*>)];
+      char dummy8[sizeof (std::vector<statement_astnode*>)];
+
+      // parameter_list
+      char dummy9[sizeof (std::vector<typespec_astnode>)];
 
       // type_specifier
       // declaration
       // declarator_list
       // declarator
       // declarator_arr
-      char dummy8[sizeof (typespec_astnode)];
+      // parameter_declaration
+      char dummy10[sizeof (typespec_astnode)];
     };
 
     /// The size of the largest semantic type.
@@ -621,6 +625,19 @@ namespace IPL {
       {}
 #endif
 #if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, fundeclarator_astnode*&& v, location_type&& l)
+        : Base (t)
+        , value (std::move (v))
+        , location (std::move (l))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const fundeclarator_astnode*& v, const location_type& l)
+        : Base (t)
+        , value (v)
+        , location (l)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
       basic_symbol (typename Base::kind_type t, statement_astnode*&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
@@ -673,6 +690,19 @@ namespace IPL {
       {}
 #endif
 #if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, std::vector<typespec_astnode>&& v, location_type&& l)
+        : Base (t)
+        , value (std::move (v))
+        , location (std::move (l))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const std::vector<typespec_astnode>& v, const location_type& l)
+        : Base (t)
+        , value (v)
+        , location (l)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
       basic_symbol (typename Base::kind_type t, typespec_astnode&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
@@ -709,36 +739,37 @@ namespace IPL {
 switch (yytype)
     {
       case 47: // struct_specifier
-      case 48: // fun_declarator
-      case 49: // parameter_list
-      case 50: // parameter_declaration
-      case 51: // procedure_call
-      case 52: // declaration_list
+      case 48: // procedure_call
+      case 49: // declaration_list
         value.template destroy< abstract_astnode* > ();
         break;
 
-      case 63: // assignment_expression
+      case 60: // assignment_expression
         value.template destroy< assignE_astnode* > ();
         break;
 
-      case 53: // expression
-      case 54: // logical_and_expression
-      case 55: // equality_expression
-      case 56: // relational_expression
-      case 57: // additive_expression
-      case 58: // unary_expression
-      case 59: // multiplicative_expression
-      case 60: // postfix_expression
-      case 61: // primary_expression
-      case 62: // expression_list
+      case 50: // expression
+      case 51: // logical_and_expression
+      case 52: // equality_expression
+      case 53: // relational_expression
+      case 54: // additive_expression
+      case 55: // unary_expression
+      case 56: // multiplicative_expression
+      case 57: // postfix_expression
+      case 58: // primary_expression
+      case 59: // expression_list
         value.template destroy< exp_astnode* > ();
         break;
 
-      case 64: // function_definition
-      case 65: // statement
-      case 66: // selection_statement
-      case 67: // iteration_statement
-      case 68: // assignment_statement
+      case 76: // fun_declarator
+        value.template destroy< fundeclarator_astnode* > ();
+        break;
+
+      case 61: // function_definition
+      case 62: // statement
+      case 63: // selection_statement
+      case 64: // iteration_statement
+      case 65: // assignment_statement
         value.template destroy< statement_astnode* > ();
         break;
 
@@ -764,7 +795,7 @@ switch (yytype)
       case 22: // FOR
       case 23: // RETURN
       case 24: // OTHERS
-      case 71: // unary_operator
+      case 68: // unary_operator
         value.template destroy< std::string > ();
         break;
 
@@ -773,16 +804,21 @@ switch (yytype)
         value.template destroy< std::vector<abstract_astnode*> > ();
         break;
 
-      case 69: // compound_statement
-      case 70: // statement_list
+      case 66: // compound_statement
+      case 67: // statement_list
         value.template destroy< std::vector<statement_astnode*> > ();
         break;
 
-      case 72: // type_specifier
-      case 73: // declaration
-      case 74: // declarator_list
-      case 75: // declarator
-      case 76: // declarator_arr
+      case 75: // parameter_list
+        value.template destroy< std::vector<typespec_astnode> > ();
+        break;
+
+      case 69: // type_specifier
+      case 70: // declaration
+      case 71: // declarator_list
+      case 72: // declarator
+      case 73: // declarator_arr
+      case 74: // parameter_declaration
         value.template destroy< typespec_astnode > ();
         break;
 
@@ -1554,8 +1590,8 @@ switch (yytype)
     enum
     {
       yyeof_ = 0,
-      yylast_ = 333,     ///< Last index in yytable_.
-      yynnts_ = 36,  ///< Number of nonterminal symbols.
+      yylast_ = 368,     ///< Last index in yytable_.
+      yynnts_ = 35,  ///< Number of nonterminal symbols.
       yyfinal_ = 3, ///< Termination state number.
       yyntokens_ = 44  ///< Number of tokens.
     };
@@ -1568,7 +1604,7 @@ switch (yytype)
 
 #line 5 "parser.yy"
 } // IPL
-#line 1572 "parser.tab.hh"
+#line 1608 "parser.tab.hh"
 
 
 

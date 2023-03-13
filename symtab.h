@@ -51,9 +51,6 @@ public:
     static SymTab * gst;
     static map<string, SymTab *> flsts;
     static map<string, SymTab *> slsts;
-    static     int getStructBaseTypeWidth(string structname){
-        //TODO
-        return 4;
-    }
+    static int getStructBaseTypeWidth(string structname);
 };
 #endif

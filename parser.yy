@@ -86,7 +86,7 @@ string topvarname;
 %left '*' '/'
 %token '=' '(' ')' ',' '{' '}' '[' ']' '!' '&' '<' '>' ';' '\n'
 %nterm <std::vector<abstract_astnode*>> translation_unit begin_nterm
-%nterm <abstract_astnode*> struct_specifier fun_declarator parameter_list parameter_declaration procedure_call declaration_list
+%nterm <abstract_astnode*> struct_specifier procedure_call declaration_list
 
 %nterm <exp_astnode*> expression logical_and_expression equality_expression relational_expression additive_expression unary_expression multiplicative_expression postfix_expression primary_expression expression_list //assignment_expression
 
@@ -97,7 +97,9 @@ string topvarname;
 %nterm <std::vector<statement_astnode*>> compound_statement statement_list
 
 %nterm <std::string> unary_operator
-%nterm <typespec_astnode> type_specifier declaration declarator_list declarator declarator_arr
+%nterm <typespec_astnode> type_specifier declaration declarator_list declarator declarator_arr parameter_declaration
+%nterm <std::vector<typespec_astnode>> parameter_list 
+%nterm <fundeclarator_astnode*> fun_declarator
 %%
 begin_nterm: {
     Symbols::gst = new SymTab();
@@ -108,7 +110,7 @@ begin_nterm: {
     // for (auto item: $2) {
     //     item->print();
     // }
-    ststack.top()->printJson();
+    // ststack.top()->printJson();
     // std::cout <<"printed\n";
     
 }
@@ -129,15 +131,17 @@ translation_unit: struct_specifier{
 ;
 
 struct_specifier: STRUCT IDENTIFIER {
-    string structName = $2;
-    ststack.push(new SymTab());
-    Symbols::slsts[structName] = ststack.top();
+    string structName = "struct " + $2;
+    ststack.top()->rows[structName] = SymEntry("struct",SymTab::ST_HL_type::STRUCT,SymTab::ST_LPG::GLOBAL,0,0);
+    Symbols::slsts[structName] = new SymTab();
+    ststack.push(Symbols::slsts[structName]);
 }'{' declaration_list '}' ';'{
-
+    ststack.pop();
 };
 
 function_definition: type_specifier fun_declarator compound_statement{
     $$ = new seq_astnode($3);
+    ststack.pop();
 };
 
 type_specifier: VOID{
@@ -145,6 +149,8 @@ type_specifier: VOID{
     ts.baseTypeWidth = 0;
     ts.typeName = "void";
     $$ = ts;
+    toptype = ts;
+
 }
 | INT{
     // retType = SymTab::ST_type::INT;
@@ -152,6 +158,8 @@ type_specifier: VOID{
     ts.baseTypeWidth = 4;
     ts.typeName = "int";
     $$ = ts;
+    toptype = ts;
+
 }
 | FLOAT{
     // retType = SymTab::ST_type::FLOAT;
@@ -159,6 +167,7 @@ type_specifier: VOID{
     ts.baseTypeWidth = 8;
     ts.typeName = "float";
     $$ = ts;
+    toptype = ts;
 }
 | STRUCT IDENTIFIER{
     // retType = SymTab::ST_type::STRUCT_TYPE;
@@ -167,22 +176,38 @@ type_specifier: VOID{
     ts.baseTypeWidth = Symbols::getStructBaseTypeWidth(structname);
     ts.typeName = "struct "+($2);
     $$ = ts;
+    toptype = ts;
 }
 ;
 
 fun_declarator: IDENTIFIER '(' parameter_list ')'{
+    std::string name = $1;
+    $$ = new fundeclarator_astnode(name, $3);
+    ststack.top()->rows[name] = SymEntry(toptype.typeName,SymTab::ST_HL_type::FUN,SymTab::ST_LPG::GLOBAL,0,0);
+    Symbols::flsts[name] = new SymTab();
+    ststack.push(Symbols::flsts[name]);
 }
 | IDENTIFIER '(' ')'{
+    std::string name = $1;
+    $$ = new fundeclarator_astnode(name,std::vector<typespec_astnode>());
+    ststack.top()->rows[name] = SymEntry(toptype.typeName,SymTab::ST_HL_type::FUN,SymTab::ST_LPG::GLOBAL,0,0);
+    Symbols::flsts[name] = new SymTab();
+    ststack.push(Symbols::flsts[name]);
 }
 ;
 
 parameter_list: parameter_declaration{
+    $$ = std::vector<typespec_astnode>();
+    $$.push_back($1);
 }
 | parameter_list ',' parameter_declaration{
+    $$ = $1;
+    $$.push_back($3);
 }
 ;
 
 parameter_declaration: type_specifier declarator{
+    $$ = $1;
 }
 ;
 
@@ -192,7 +217,6 @@ declarator_arr: IDENTIFIER{
     topvarname = $1;
 }
 | declarator_arr '[' INT_CONSTANT ']'{
-    //TODO
     $$ = toptype;
     typespec_astnode tstmp = $1;
     $$.typeWidth = ((tstmp).typeWidth) * (std::stoi($3));
@@ -430,7 +454,7 @@ declaration_list: declaration{
 }
 ;
 
-declaration: type_specifier declarator_list {toptype = $1;} ';'{
+declaration:type_specifier declarator_list  ';'{
 }
 ;
 

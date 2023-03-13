@@ -1,22 +1,29 @@
 {
-    "globalST": [
-        [
-            "x",
-            "var",
-            "local",
-            4,
-            4,
-            "int"
-        ],
-        [
-            "y",
-            "var",
-            "local",
-            4,
-            4,
-            "int"
-        ]
-    ],
-    "structs": [],
-    "functions": []
-}
+"globalST": [
+[
+"foo","fun",
+"global",
+0,
+0,
+"int"
+],
+[
+"main","fun",
+"global",
+0,
+0,
+"int"
+],
+[
+"struct book","struct",
+"global",
+0,
+0,
+"struct"
+]
+],
+"structs":[
+{
+"name":"book",
+"localST":[
+

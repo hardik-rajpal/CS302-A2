@@ -34,7 +34,7 @@
             "program": "${workspaceRoot}/iplC",
             "cwd": "${workspaceFolder}",
             "args": [
-                "tests/example.c",
+                "tests/struct.c",
                 ">",
                 "myout.json"
             ]

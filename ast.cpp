@@ -166,7 +166,9 @@ void arrow_astnode::print() {
     std::cout << "\n}";
 }
 
-// intconst_astnode::intconst_astnode(int val): val(val){}
-// void intconst_astnode::print(){
-//     std::cout<<"\"intconstvalue:\""<<std::to_string(val)<<",\n";
-// }
+void fundeclarator_astnode::print(){
+
+}
+fundeclarator_astnode::fundeclarator_astnode(std::string name,std::vector<typespec_astnode> ptypes):name(name),paramtypes(ptypes){
+
+}

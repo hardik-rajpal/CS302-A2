@@ -2,6 +2,7 @@
 SymTab * Symbols::gst;
 map<string, SymTab *> Symbols::flsts;
 map<string, SymTab *> Symbols::slsts;
+using namespace std;
 void SymEntry::printJson(string varname)
 {
     cout << "[\n\"" << varname << "\",";
@@ -48,47 +49,51 @@ void SymTab::printJson()
         cout << "\n";
     }
     cout << "],\n\"structs\":[\n";
-    for (auto lst : Symbols::slsts)
+    auto iterlst = Symbols::slsts.begin();
+    auto &slst = Symbols::slsts;
+    for (;iterlst!=Symbols::slsts.end();)
     {
-        cout << "{\n\"name\":" << lst.first << ",\n\"localST\":[\n";
-        for (auto entry : lst.second->rows)
+        cout << "{\n\"name\":\"" << (*iterlst).first << "\",\n\"localST\":[\n"<<endl;
+        SymTab* symtab = (*iterlst).second;
+        auto rws = symtab->rows;
+        auto iterent = rws.begin();
+        for (;iterent!=(*iterlst).second->rows.end();)
         {
-            entry.second.printJson(entry.first);
-            if (&entry != &(*(lst.second->rows.rbegin())))
+            (*iterent).second.printJson((*iterent).first);
+            if ((++iterent) != ((*iterlst).second->rows.end()))
             {
                 cout << ",";
             }
             cout << "\n";
         }
-        cout << "],\n";
-        // TODO:printAST here.
+        cout << "]\n";
+        // TODO:add comma above, printAST here.
         cout << "}\n";
-        if (lst != *(Symbols::slsts).rbegin())
+        if ((++iterlst) != (Symbols::slsts).end())
         {
             cout << ",";
         }
         cout << "\n";
     }
     cout << "],\n\"functions\":[\n";
-    for (auto lst : (Symbols::flsts))
+    iterlst = Symbols::flsts.begin();
+    for (;iterlst!=Symbols::flsts.end();)
     {
-        cout << "{\n\"name\":" << lst.first << ",\n\"localST\":[\n";
-        for (auto entry : lst.second->rows)
+        cout << "{\n\"name\":\"" << (*iterlst).first << "\",\n\"localST\":[\n";
+        auto iterent = (*iterlst).second->rows.begin();
+        for (;iterent != (*iterlst).second->rows.end();)
         {
-            entry.second.printJson(entry.first);
-            if (&entry != &(*(lst.second->rows.rbegin())))
+            (*iterent).second.printJson((*iterent).first);
+            if ((++iterent) != (((*iterlst).second->rows.end())))
             {
                 cout << ",";
             }
             cout << "\n";
-            // if(entry.second.hltype==SymTab::STRUCT){
-            //     // slsts[entry.first] =
-            // }
         }
-        cout << "],\n";
+        cout << "]\n";
         // TODO:printAST here.
         cout << "}\n";
-        if (lst != *(Symbols::flsts).rbegin())
+        if ((++iterlst) != (Symbols::flsts).end())
         {
             cout << ",";
         }
@@ -98,5 +103,25 @@ void SymTab::printJson()
     cout<<"}\n";
 }
 int SymTab::getNewOffset(){
-    return 4;
+    auto iter = rows.begin();
+    auto maxiter = rows.begin();
+    int newOffset = 0;
+    if(rows.size()>0){
+        for(;iter!=rows.end();iter++){
+            if((*iter).second.offset>(*maxiter).second.offset){
+                maxiter = iter;
+            }
+        }
+        SymEntry &maxOffsetEntry = (*maxiter).second;
+        newOffset = maxOffsetEntry.offset + maxOffsetEntry.size;
+    }
+    return newOffset;
+}
+int Symbols::getStructBaseTypeWidth(string structname){
+    int size = 0;
+    if(slsts[structname]){
+        return slsts[structname]->getNewOffset();
+    }
+    //throw struct not def exception
+    return 0;
 }

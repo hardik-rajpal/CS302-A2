@@ -108,7 +108,21 @@ public:
     void print();
     exp_astnode* exp1, *exp2;
 };
-
+class typespec_astnode{
+public:
+    int baseTypeWidth;
+    std::string typeName;
+    int typeWidth;
+    typespec_astnode(){};
+    
+};
+class fundeclarator_astnode: public abstract_astnode{
+    public:
+    std::string name;
+    std::vector<typespec_astnode> paramtypes;
+    fundeclarator_astnode(std::string name,std::vector<typespec_astnode> ptypes);
+    void print();
+};
 class funcall_astnode: public exp_astnode {
 public:
     funcall_astnode(exp_astnode*, exp_astnode*);
@@ -189,12 +203,4 @@ public:
 private:
     exp_astnode* exp;
     identifier_astnode* identifier;
-};
-class typespec_astnode{
-public:
-    int baseTypeWidth;
-    std::string typeName;
-    int typeWidth;
-    typespec_astnode(){};
-    
 };

@@ -15,9 +15,39 @@
       0,
       0,
       "int"
+    ],
+    [
+      "struct book",
+      "struct",
+      "global",
+      8,
+      0,
+      "int"
     ]
   ],
-  "structs": [],
+  "structs": [
+    {
+      "name": "struct book",
+      "localST": [
+        [
+          "pages",
+          "var",
+          "local",
+          4,
+          -4,
+          "int"
+        ],
+        [
+          "wt",
+          "var",
+          "local",
+          4,
+          -8,
+          "int"
+        ]
+      ]
+    }
+  ],
   "functions": [
     {
       "name": "foo",
@@ -53,6 +83,22 @@
       "name": "main",
       "localST": [
         [
+          "sapiens",
+          "var",
+          "local",
+          8,
+          -816,
+          "struct book"
+        ],
+        [
+          "w",
+          "var",
+          "local",
+          800,
+          -808,
+          "int[10][20]"
+        ],
+        [
           "x",
           "var",
           "local",
@@ -66,6 +112,14 @@
           "local",
           4,
           -8,
+          "int"
+        ],
+        [
+          "z",
+          "var",
+          "local",
+          4,
+          -820,
           "int"
         ]
       ],
