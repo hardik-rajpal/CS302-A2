@@ -181,12 +181,12 @@ Nonterminals, with rules where they appear
 
     $accept (44)
         on left: 0
-    begin_nterm <abstract_astnode*> (45)
-        on left: 2
-        on right: 0
-    translation_unit <abstract_astnode*> (46)
+    translation_unit <std::vector<abstract_astnode*>> (45)
         on left: 3 4 5 6
         on right: 2 5 6
+    begin_nterm <std::vector<abstract_astnode*>> (46)
+        on left: 2
+        on right: 0
     struct_specifier <abstract_astnode*> (47)
         on left: 8
         on right: 3 5

@@ -390,8 +390,6 @@ namespace IPL {
     /// An auxiliary type to compute the largest semantic type.
     union union_type
     {
-      // begin_nterm
-      // translation_unit
       // struct_specifier
       // fun_declarator
       // parameter_list
@@ -447,16 +445,20 @@ namespace IPL {
       // unary_operator
       char dummy5[sizeof (std::string)];
 
+      // translation_unit
+      // begin_nterm
+      char dummy6[sizeof (std::vector<abstract_astnode*>)];
+
       // compound_statement
       // statement_list
-      char dummy6[sizeof (std::vector<statement_astnode*>)];
+      char dummy7[sizeof (std::vector<statement_astnode*>)];
 
       // type_specifier
       // declaration
       // declarator_list
       // declarator
       // declarator_arr
-      char dummy7[sizeof (typespec_astnode)];
+      char dummy8[sizeof (typespec_astnode)];
     };
 
     /// The size of the largest semantic type.
@@ -645,6 +647,19 @@ namespace IPL {
       {}
 #endif
 #if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, std::vector<abstract_astnode*>&& v, location_type&& l)
+        : Base (t)
+        , value (std::move (v))
+        , location (std::move (l))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const std::vector<abstract_astnode*>& v, const location_type& l)
+        : Base (t)
+        , value (v)
+        , location (l)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
       basic_symbol (typename Base::kind_type t, std::vector<statement_astnode*>&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
@@ -693,8 +708,6 @@ namespace IPL {
         // Type destructor.
 switch (yytype)
     {
-      case 45: // begin_nterm
-      case 46: // translation_unit
       case 47: // struct_specifier
       case 48: // fun_declarator
       case 49: // parameter_list
@@ -753,6 +766,11 @@ switch (yytype)
       case 24: // OTHERS
       case 71: // unary_operator
         value.template destroy< std::string > ();
+        break;
+
+      case 45: // translation_unit
+      case 46: // begin_nterm
+        value.template destroy< std::vector<abstract_astnode*> > ();
         break;
 
       case 69: // compound_statement
@@ -1550,7 +1568,7 @@ switch (yytype)
 
 #line 5 "parser.yy"
 } // IPL
-#line 1554 "parser.tab.hh"
+#line 1572 "parser.tab.hh"
 
 
 

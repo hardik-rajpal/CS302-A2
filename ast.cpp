@@ -30,9 +30,11 @@ seq_astnode::seq_astnode(std::vector<statement_astnode*> children) : children(ch
 void seq_astnode::print() {
     std::cout << "\"seq\": [\n";
     for (statement_astnode* child: children) {
-        std::cout << "{\n";
-        child->print();
-        std::cout << "\n},\n";
+        if(child){
+            std::cout << "{\n";
+            child->print();
+            std::cout << "\n},\n";
+        }
     }
     std::cout << "]\n";
 }
@@ -55,7 +57,9 @@ void if_astnode::print() {
     std::cout << ",\n";
     this->statement1->print();
     std::cout << ",\n";
-    this->statement2->print();
+    if(this->statement2){
+        this->statement2->print();
+    }
     std::cout << "\n}";
 }
 

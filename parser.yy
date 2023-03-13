@@ -85,8 +85,8 @@ string topvarname;
 %left '+' '-'
 %left '*' '/'
 %token '=' '(' ')' ',' '{' '}' '[' ']' '!' '&' '<' '>' ';' '\n'
-
-%nterm <abstract_astnode*> begin_nterm translation_unit struct_specifier fun_declarator parameter_list parameter_declaration procedure_call declaration_list
+%nterm <std::vector<abstract_astnode*>> translation_unit begin_nterm
+%nterm <abstract_astnode*> struct_specifier fun_declarator parameter_list parameter_declaration procedure_call declaration_list
 
 %nterm <exp_astnode*> expression logical_and_expression equality_expression relational_expression additive_expression unary_expression multiplicative_expression postfix_expression primary_expression expression_list //assignment_expression
 
@@ -100,22 +100,31 @@ string topvarname;
 %nterm <typespec_astnode> type_specifier declaration declarator_list declarator declarator_arr
 %%
 begin_nterm: {
+    Symbols::gst = new SymTab();
     ststack.push(Symbols::gst);
-    std::cout<<"pushed onto stack\n";
+    // std::cout<<"pushed onto stack"<<Symbols::gst<<"\n";
 } translation_unit {
-    std::cout << "about to begin printing\n";
-    $2->print();
+    // std::cout << "about to begin printing\n";
+    // for (auto item: $2) {
+    //     item->print();
+    // }
+    ststack.top()->printJson();
+    // std::cout <<"printed\n";
+    
 }
 
 translation_unit: struct_specifier{
     
 }
 | function_definition{
-    $$ = $1;
+    $$ = std::vector<abstract_astnode*>();
+    $$.push_back($1);
 }
 | translation_unit struct_specifier{
 }
 | translation_unit function_definition{
+    $$ = $1;
+    $$.push_back($2);
 }
 ;
 
@@ -203,11 +212,15 @@ declarator: declarator_arr{
 ;
 
 compound_statement: '{' '}'{
+    $$ = std::vector<statement_astnode*>();
 }
 | '{' statement_list '}'{
     $$ = $2;
 }
 | '{' declaration_list '}' {
+    //TODO
+    $$ = std::vector<statement_astnode*>();
+
 }
 | '{' declaration_list statement_list '}'{
     $$ = $3;
@@ -216,7 +229,10 @@ compound_statement: '{' '}'{
 
 statement_list: statement {
     std::vector<statement_astnode*> temp;
-    temp.push_back($1);
+    statement_astnode* stmt = $1;
+    if(stmt!=NULL){
+        temp.push_back($1);
+    }
     $$ = temp;
 }
 | statement_list statement{
@@ -226,6 +242,7 @@ statement_list: statement {
 ;
 
 statement: ';'{
+    $$ = NULL;
 }
 | '{' statement_list '}'{
     $$ = new seq_astnode($2);
@@ -240,8 +257,10 @@ statement: ';'{
     $$ = $1;
 }
 | procedure_call{
+    $$ = NULL;
 }
 | RETURN expression ';'{
+    $$ = NULL;
 }
 ;
 
@@ -412,7 +431,6 @@ declaration_list: declaration{
 ;
 
 declaration: type_specifier declarator_list {toptype = $1;} ';'{
-    // ststack.top()->printJson();
 }
 ;
 
@@ -421,14 +439,16 @@ declarator_list: declarator{
     string type = $1.typeName;
     int size = $1.typeWidth;
     int offset = ststack.top()->getNewOffset();
-    // ststack.top()->rows[topvarname] = SymEntry(type,SymTab::ST_HL_type::VAR,SymTab::ST_LPG::LOCAL,size,offset);
+    SymTab* st = ststack.top();
+
+    st->rows[topvarname] = SymEntry(type,SymTab::ST_HL_type::VAR,SymTab::ST_LPG::LOCAL,size,offset);
 }
 | declarator_list ',' declarator{
     $$ = $3;
     string type = $3.typeName;
     int size = $3.typeWidth;
     int offset = ststack.top()->getNewOffset();
-    // ststack.top()->rows[topvarname] = SymEntry(type,SymTab::ST_HL_type::VAR,SymTab::ST_LPG::LOCAL,size,offset);
+    ststack.top()->rows[topvarname] = SymEntry(type,SymTab::ST_HL_type::VAR,SymTab::ST_LPG::LOCAL,size,offset);
 }
 ;
 

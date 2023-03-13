@@ -18,7 +18,7 @@ lexer: scanner.l scanner.hh
 	$(CXX)  $(CXXDEBUG) -c scanner.yy.cc -o scanner.o
 .PHONY: ast.o
 ast.o: ast.cpp ast.hh
-	g++ -c ast.cpp 
+	g++ -c -g ast.cpp 
 graph: 
 	./ipl_parser main.c 2>debug_messages > output.txt
 .PHONY: clean

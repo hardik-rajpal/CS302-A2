@@ -37,10 +37,11 @@ void SymEntry::printJson(string varname)
 void SymTab::printJson()
 {
     cout << "{\n\"globalST\": [\n";
-    for (auto entry : rows)
+    auto iter = rows.begin();
+    for (;iter!=rows.end();)
     {
-        entry.second.printJson(entry.first);
-        if (&entry != &(*rows.rbegin()))
+        (*iter).second.printJson((*iter).first);
+        if ((++iter) != (rows.end()))
         {
             cout << ",";
         }
@@ -94,6 +95,7 @@ void SymTab::printJson()
         cout << "\n";
     }
     cout<<"]\n";
+    cout<<"}\n";
 }
 int SymTab::getNewOffset(){
     return 4;
