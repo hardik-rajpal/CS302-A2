@@ -106,6 +106,8 @@ begin_nterm: {
     ststack.push(Symbols::gst);
     // std::cout<<"pushed onto stack"<<Symbols::gst<<"\n";
 } translation_unit {
+    //TODO:
+    //struct return type == int????
     // std::cout << "about to begin printing\n";
     // for (auto item: $2) {
     //     item->print();
@@ -116,7 +118,11 @@ begin_nterm: {
 }
 
 translation_unit: struct_specifier{
-    
+    for(auto entry: ststack.top()->rows){
+        if(entry.second.size==0&&entry.second.hltype==SymTab::ST_HL_type::STRUCT){
+            ststack.top()->rows[entry.first].size = Symbols::getStructBaseTypeWidth(entry.first);
+        }
+    }
 }
 | function_definition{
     $$ = std::vector<abstract_astnode*>();
@@ -464,7 +470,7 @@ declarator_list: declarator{
     $$ = $1;
     string type = $1.typeName;
     int size = $1.typeWidth;
-    int offset = ststack.top()->getNewOffset();
+    int offset = ststack.top()->getNewOffset(size);
     SymTab* st = ststack.top();
 
     st->rows[topvarname] = SymEntry(type,SymTab::ST_HL_type::VAR,SymTab::ST_LPG::LOCAL,size,offset);
@@ -473,7 +479,7 @@ declarator_list: declarator{
     $$ = $3;
     string type = $3.typeName;
     int size = $3.typeWidth;
-    int offset = ststack.top()->getNewOffset();
+    int offset = ststack.top()->getNewOffset(size);
     ststack.top()->rows[topvarname] = SymEntry(type,SymTab::ST_HL_type::VAR,SymTab::ST_LPG::LOCAL,size,offset);
 }
 ;

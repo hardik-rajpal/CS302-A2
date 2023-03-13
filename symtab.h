@@ -29,13 +29,13 @@ public:
     };
     map<string, SymEntry> rows;
     void printJson();
-    int getNewOffset();
+    int getNewOffset(size_t posSize);
     SymTab(){};
 };
 class SymEntry
 {
 public:
-    size_t offset = 0;
+    long long offset = 0;
     size_t size = 0;
     string type;
     SymTab::ST_HL_type hltype;

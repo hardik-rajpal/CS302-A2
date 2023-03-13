@@ -100,25 +100,28 @@ void SymTab::printJson()
     cout<<"]\n";
     cout<<"}"<<endl;
 }
-int SymTab::getNewOffset(){
+int SymTab::getNewOffset(size_t posSize){
     auto iter = rows.begin();
-    auto maxiter = rows.begin();
-    int newOffset = 0;
+    auto miniter = rows.begin();
+    int newOffset = -4;
     if(rows.size()>0){
         for(;iter!=rows.end();iter++){
-            if((*iter).second.offset>(*maxiter).second.offset){
-                maxiter = iter;
+            if((*iter).second.offset<(*miniter).second.offset){
+                miniter = iter;
             }
         }
-        SymEntry &maxOffsetEntry = (*maxiter).second;
-        newOffset = maxOffsetEntry.offset + maxOffsetEntry.size;
+        SymEntry &minOffsetEntry = (*miniter).second;
+        newOffset = minOffsetEntry.offset - posSize;
     }
     return newOffset;
 }
 int Symbols::getStructBaseTypeWidth(string structname){
     int size = 0;
     if(slsts[structname]){
-        return slsts[structname]->getNewOffset();
+        for(auto entry:slsts[structname]->rows){
+            size += entry.second.size;
+        };
+        return size;
     }
     cout<<"Error! Unknown struct encountered in code!";
     throw ;
