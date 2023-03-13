@@ -50,17 +50,15 @@ void SymTab::printJson()
     }
     cout << "],\n\"structs\":[\n";
     auto iterlst = Symbols::slsts.begin();
-    auto &slst = Symbols::slsts;
     for (;iterlst!=Symbols::slsts.end();)
     {
         cout << "{\n\"name\":\"" << (*iterlst).first << "\",\n\"localST\":[\n"<<endl;
-        SymTab* symtab = (*iterlst).second;
-        auto rws = symtab->rows;
-        auto iterent = rws.begin();
-        for (;iterent!=(*iterlst).second->rows.end();)
+        auto rows = (*iterlst).second->rows;
+        auto iterent = rows.begin();
+        for (;iterent!=rows.end();)
         {
-            (*iterent).second.printJson((*iterent).first);
-            if ((++iterent) != ((*iterlst).second->rows.end()))
+            iterent->second.printJson(iterent->first);
+            if ((++iterent) != (rows.end()))
             {
                 cout << ",";
             }
@@ -68,14 +66,14 @@ void SymTab::printJson()
         }
         cout << "]\n";
         // TODO:add comma above, printAST here.
-        cout << "}\n";
+        cout << "}"<<endl;
         if ((++iterlst) != (Symbols::slsts).end())
         {
             cout << ",";
         }
         cout << "\n";
     }
-    cout << "],\n\"functions\":[\n";
+    cout << "],\n\"functions\":["<<endl;
     iterlst = Symbols::flsts.begin();
     for (;iterlst!=Symbols::flsts.end();)
     {
@@ -92,7 +90,7 @@ void SymTab::printJson()
         }
         cout << "]\n";
         // TODO:printAST here.
-        cout << "}\n";
+        cout << "}"<<endl;
         if ((++iterlst) != (Symbols::flsts).end())
         {
             cout << ",";
@@ -100,7 +98,7 @@ void SymTab::printJson()
         cout << "\n";
     }
     cout<<"]\n";
-    cout<<"}\n";
+    cout<<"}"<<endl;
 }
 int SymTab::getNewOffset(){
     auto iter = rows.begin();
@@ -122,6 +120,7 @@ int Symbols::getStructBaseTypeWidth(string structname){
     if(slsts[structname]){
         return slsts[structname]->getNewOffset();
     }
-    //throw struct not def exception
+    cout<<"Error! Unknown struct encountered in code!";
+    throw ;
     return 0;
 }

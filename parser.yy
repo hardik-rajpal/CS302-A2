@@ -110,7 +110,7 @@ begin_nterm: {
     // for (auto item: $2) {
     //     item->print();
     // }
-    // ststack.top()->printJson();
+    ststack.top()->printJson();
     // std::cout <<"printed\n";
     
 }
@@ -134,7 +134,10 @@ struct_specifier: STRUCT IDENTIFIER {
     string structName = "struct " + $2;
     ststack.top()->rows[structName] = SymEntry("struct",SymTab::ST_HL_type::STRUCT,SymTab::ST_LPG::GLOBAL,0,0);
     Symbols::slsts[structName] = new SymTab();
+    // Symbols::slsts[$2] = new SymTab();
     ststack.push(Symbols::slsts[structName]);
+    // SymTab *table = ststack.top();
+
 }'{' declaration_list '}' ';'{
     ststack.pop();
 };
@@ -172,9 +175,8 @@ type_specifier: VOID{
 | STRUCT IDENTIFIER{
     // retType = SymTab::ST_type::STRUCT_TYPE;
     typespec_astnode ts;
-    string structname = $2;
-    ts.baseTypeWidth = Symbols::getStructBaseTypeWidth(structname);
     ts.typeName = "struct "+($2);
+    ts.baseTypeWidth = Symbols::getStructBaseTypeWidth(ts.typeName);
     $$ = ts;
     toptype = ts;
 }
