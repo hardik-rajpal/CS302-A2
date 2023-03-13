@@ -3,7 +3,7 @@ struct book{
   int wt;
 };
 
-int foo(int y) {
+int foo(int y, int z, int w, int u, int v) {
   int x;
   return 4;
 }

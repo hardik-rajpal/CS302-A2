@@ -104,12 +104,16 @@ int SymTab::getNewOffset(size_t posSize){
     auto iter = rows.begin();
     auto miniter = rows.begin();
     int newOffset = -4;
-    if(rows.size()>0){
+    bool offsetSet = true;
         for(;iter!=rows.end();iter++){
-            if((*iter).second.offset<(*miniter).second.offset){
-                miniter = iter;
+            if(iter->second.lpgtype==LOCAL){
+                offsetSet = false;
+                if((*iter).second.offset<(*miniter).second.offset){
+                    miniter = iter;
+                }
             }
         }
+    if(!offsetSet){
         SymEntry &minOffsetEntry = (*miniter).second;
         newOffset = minOffsetEntry.offset - posSize;
     }
@@ -126,4 +130,25 @@ int Symbols::getStructBaseTypeWidth(string structname){
     cout<<"Error! Unknown struct encountered in code!";
     throw ;
     return 0;
+}
+int Symbols::getParamOffset(SymTab* fst){
+    int posSize = 4;
+    auto rows = fst->rows;
+    auto iter = rows.begin();
+    auto miniter = rows.begin();
+    int newOffset = -4;
+    bool offsetSet = true;
+        for(;iter!=rows.end();iter++){
+            if(iter->second.lpgtype==SymTab::ST_LPG::PARAM){
+                offsetSet = false;
+                if((*iter).second.offset<(*miniter).second.offset){
+                    miniter = iter;
+                }
+            }
+        }
+    if(!offsetSet){
+        SymEntry &minOffsetEntry = (*miniter).second;
+        newOffset = minOffsetEntry.offset - posSize;
+    }
+    return newOffset;
 }

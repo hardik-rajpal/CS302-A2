@@ -156,6 +156,7 @@ function_definition: type_specifier fun_declarator compound_statement{
 type_specifier: VOID{
     typespec_astnode ts;
     ts.baseTypeWidth = 0;
+    ts.typeWidth = ts.baseTypeWidth;
     ts.typeName = "void";
     $$ = ts;
     toptype = ts;
@@ -165,6 +166,7 @@ type_specifier: VOID{
     // retType = SymTab::ST_type::INT;
     typespec_astnode ts;
     ts.baseTypeWidth = 4;
+    ts.typeWidth = ts.baseTypeWidth;
     ts.typeName = "int";
     $$ = ts;
     toptype = ts;
@@ -174,6 +176,7 @@ type_specifier: VOID{
     // retType = SymTab::ST_type::FLOAT;
     typespec_astnode ts;
     ts.baseTypeWidth = 8;
+    ts.typeWidth = ts.baseTypeWidth;
     ts.typeName = "float";
     $$ = ts;
     toptype = ts;
@@ -183,17 +186,36 @@ type_specifier: VOID{
     typespec_astnode ts;
     ts.typeName = "struct "+($2);
     ts.baseTypeWidth = Symbols::getStructBaseTypeWidth(ts.typeName);
+    ts.typeWidth = ts.baseTypeWidth;
     $$ = ts;
     toptype = ts;
 }
 ;
 
-fun_declarator: IDENTIFIER '(' parameter_list ')'{
+fun_declarator: IDENTIFIER '('{
     std::string name = $1;
-    $$ = new fundeclarator_astnode(name, $3);
     ststack.top()->rows[name] = SymEntry(toptype.typeName,SymTab::ST_HL_type::FUN,SymTab::ST_LPG::GLOBAL,0,0);
     Symbols::flsts[name] = new SymTab();
     ststack.push(Symbols::flsts[name]);
+} parameter_list ')'{
+    auto &rows = (ststack.top())->rows;
+    int poffset = Symbols::getParamOffset(ststack.top());
+    long long minParamOffset = 0;
+    for(auto entry:rows){
+        minParamOffset = min(minParamOffset,ststack.top()->rows[entry.first].offset);
+    }
+    int localsParamsGap = 12;
+    int summer = localsParamsGap - minParamOffset;
+    auto iter = rows.begin();
+    for(;iter!=rows.end();){
+        rows[iter->first].offset += summer;    
+        iter++;
+    }
+    
+    //TODO: fix this.
+    std::string name = $1;
+    std::vector<typespec_astnode> vect = std::vector<typespec_astnode>();
+    $$ = new fundeclarator_astnode(name, vect);
 }
 | IDENTIFIER '(' ')'{
     std::string name = $1;
@@ -208,14 +230,16 @@ parameter_list: parameter_declaration{
     $$ = std::vector<typespec_astnode>();
     $$.push_back($1);
 }
-| parameter_list ',' parameter_declaration{
-    $$ = $1;
-    $$.push_back($3);
+| parameter_declaration ',' parameter_list {
+    $$ = $3;
+    $$.push_back($1);
 }
 ;
 
 parameter_declaration: type_specifier declarator{
     $$ = $1;
+    ststack.top()->rows[topvarname] = SymEntry(toptype.typeName,SymTab::ST_HL_type::VAR,SymTab::ST_LPG::PARAM,toptype.typeWidth,0);
+    ststack.top()->rows[topvarname].offset = Symbols::getParamOffset(ststack.top());
 }
 ;
 

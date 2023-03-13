@@ -53,11 +53,51 @@
             "name": "foo",
             "localST": [
                 [
+                    "u",
+                    "var",
+                    "param",
+                    4,
+                    16,
+                    "int"
+                ],
+                [
+                    "v",
+                    "var",
+                    "param",
+                    4,
+                    12,
+                    "int"
+                ],
+                [
+                    "w",
+                    "var",
+                    "param",
+                    4,
+                    20,
+                    "int"
+                ],
+                [
                     "x",
                     "var",
                     "local",
                     4,
                     -4,
+                    "int"
+                ],
+                [
+                    "y",
+                    "var",
+                    "param",
+                    4,
+                    28,
+                    "int"
+                ],
+                [
+                    "z",
+                    "var",
+                    "param",
+                    4,
+                    24,
                     "int"
                 ]
             ]

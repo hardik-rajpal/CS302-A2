@@ -52,5 +52,6 @@ public:
     static map<string, SymTab *> flsts;
     static map<string, SymTab *> slsts;
     static int getStructBaseTypeWidth(string structname);
+    static int getParamOffset(SymTab * fst);
 };
 #endif

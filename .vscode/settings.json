@@ -51,6 +51,15 @@
         "optional": "cpp",
         "string_view": "cpp",
         "random": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "cstdarg": "cpp",
+        "cwctype": "cpp",
+        "deque": "cpp",
+        "map": "cpp",
+        "unordered_map": "cpp",
+        "algorithm": "cpp",
+        "numeric": "cpp",
+        "numbers": "cpp",
+        "cinttypes": "cpp"
     }
 }

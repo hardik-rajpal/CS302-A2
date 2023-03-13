@@ -630,32 +630,33 @@ namespace IPL {
         S_function_definition = 50,              // function_definition
         S_type_specifier = 51,                   // type_specifier
         S_fun_declarator = 52,                   // fun_declarator
-        S_parameter_list = 53,                   // parameter_list
-        S_parameter_declaration = 54,            // parameter_declaration
-        S_declarator_arr = 55,                   // declarator_arr
-        S_declarator = 56,                       // declarator
-        S_compound_statement = 57,               // compound_statement
-        S_statement_list = 58,                   // statement_list
-        S_statement = 59,                        // statement
-        S_assignment_expression = 60,            // assignment_expression
-        S_assignment_statement = 61,             // assignment_statement
-        S_procedure_call = 62,                   // procedure_call
-        S_expression = 63,                       // expression
-        S_logical_and_expression = 64,           // logical_and_expression
-        S_equality_expression = 65,              // equality_expression
-        S_relational_expression = 66,            // relational_expression
-        S_additive_expression = 67,              // additive_expression
-        S_unary_expression = 68,                 // unary_expression
-        S_multiplicative_expression = 69,        // multiplicative_expression
-        S_postfix_expression = 70,               // postfix_expression
-        S_primary_expression = 71,               // primary_expression
-        S_expression_list = 72,                  // expression_list
-        S_unary_operator = 73,                   // unary_operator
-        S_selection_statement = 74,              // selection_statement
-        S_iteration_statement = 75,              // iteration_statement
-        S_declaration_list = 76,                 // declaration_list
-        S_declaration = 77,                      // declaration
-        S_declarator_list = 78                   // declarator_list
+        S_53_3 = 53,                             // $@3
+        S_parameter_list = 54,                   // parameter_list
+        S_parameter_declaration = 55,            // parameter_declaration
+        S_declarator_arr = 56,                   // declarator_arr
+        S_declarator = 57,                       // declarator
+        S_compound_statement = 58,               // compound_statement
+        S_statement_list = 59,                   // statement_list
+        S_statement = 60,                        // statement
+        S_assignment_expression = 61,            // assignment_expression
+        S_assignment_statement = 62,             // assignment_statement
+        S_procedure_call = 63,                   // procedure_call
+        S_expression = 64,                       // expression
+        S_logical_and_expression = 65,           // logical_and_expression
+        S_equality_expression = 66,              // equality_expression
+        S_relational_expression = 67,            // relational_expression
+        S_additive_expression = 68,              // additive_expression
+        S_unary_expression = 69,                 // unary_expression
+        S_multiplicative_expression = 70,        // multiplicative_expression
+        S_postfix_expression = 71,               // postfix_expression
+        S_primary_expression = 72,               // primary_expression
+        S_expression_list = 73,                  // expression_list
+        S_unary_operator = 74,                   // unary_operator
+        S_selection_statement = 75,              // selection_statement
+        S_iteration_statement = 76,              // iteration_statement
+        S_declaration_list = 77,                 // declaration_list
+        S_declaration = 78,                      // declaration
+        S_declarator_list = 79                   // declarator_list
       };
     };
 
@@ -1911,8 +1912,8 @@ switch (yykind)
     /// Constants.
     enum
     {
-      yylast_ = 347,     ///< Last index in yytable_.
-      yynnts_ = 35,  ///< Number of nonterminal symbols.
+      yylast_ = 348,     ///< Last index in yytable_.
+      yynnts_ = 36,  ///< Number of nonterminal symbols.
       yyfinal_ = 3 ///< Termination state number.
     };
 
@@ -1925,7 +1926,7 @@ switch (yykind)
 
 #line 5 "parser.yy"
 } // IPL
-#line 1929 "parser.tab.hh"
+#line 1930 "parser.tab.hh"
 
 
 
