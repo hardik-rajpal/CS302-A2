@@ -98,11 +98,11 @@ void SymTab::printJson()
             }
             cout << "\n";
         }
-        cout << "],\n";
-        cout<<"\"ast\":{\n";
-        ptr->print();
+        cout << "]\n";
+        // cout<<"\"ast\":{\n";
+        // ptr->print();
         // TODO:printAST here.
-        cout << "\n}" ;
+        // cout << "\n}" ;
         cout << "}"<<endl;
         if ((++iterlst) != (Symbols::flsts).end())
         {

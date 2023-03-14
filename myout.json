@@ -1,49 +1,151 @@
 {
-"globalST": [
-[
-"foo","fun",
-"global",
-0,
-0,
-"int"
-],
-[
-"main","fun",
-"global",
-0,
-0,
-"int"
-],
-[
-"struct book","struct",
-"global",
-8,
-"-",
-"-"
-
-]
-],
-"structs":[
-{
-"name":"struct book",
-"localST":[
-
-[
-"pages","var",
-"local",
-4,
--4,
-"int"
-],
-[
-"wt","var",
-"local",
-4,
--8,
-"int"
-]
-]
+    "globalST": [
+        [
+            "foo",
+            "fun",
+            "global",
+            0,
+            0,
+            "int"
+        ],
+        [
+            "main",
+            "fun",
+            "global",
+            0,
+            0,
+            "int"
+        ],
+        [
+            "struct book",
+            "struct",
+            "global",
+            8,
+            "-",
+            "-"
+        ]
+    ],
+    "structs": [
+        {
+            "name": "struct book",
+            "localST": [
+                [
+                    "pages",
+                    "var",
+                    "local",
+                    4,
+                    -4,
+                    "int"
+                ],
+                [
+                    "wt",
+                    "var",
+                    "local",
+                    4,
+                    -8,
+                    "int"
+                ]
+            ]
+        }
+    ],
+    "functions": [
+        {
+            "name": "foo",
+            "localST": [
+                [
+                    "u",
+                    "var",
+                    "param",
+                    4,
+                    16,
+                    "int"
+                ],
+                [
+                    "v",
+                    "var",
+                    "param",
+                    4,
+                    12,
+                    "int"
+                ],
+                [
+                    "w",
+                    "var",
+                    "param",
+                    4,
+                    20,
+                    "int"
+                ],
+                [
+                    "x",
+                    "var",
+                    "local",
+                    4,
+                    -4,
+                    "int"
+                ],
+                [
+                    "y",
+                    "var",
+                    "param",
+                    4,
+                    28,
+                    "int"
+                ],
+                [
+                    "z",
+                    "var",
+                    "param",
+                    4,
+                    24,
+                    "int"
+                ]
+            ]
+        },
+        {
+            "name": "main",
+            "localST": [
+                [
+                    "sapiens",
+                    "var",
+                    "local",
+                    8,
+                    -816,
+                    "struct book"
+                ],
+                [
+                    "w",
+                    "var",
+                    "local",
+                    800,
+                    -808,
+                    "array(array(int,10),20)"
+                ],
+                [
+                    "x",
+                    "var",
+                    "local",
+                    4,
+                    -4,
+                    "int"
+                ],
+                [
+                    "y",
+                    "var",
+                    "local",
+                    4,
+                    -8,
+                    "int"
+                ],
+                [
+                    "z",
+                    "var",
+                    "local",
+                    4,
+                    -820,
+                    "int"
+                ]
+            ]
+        }
+    ]
 }
-
-],
-"functions":[
