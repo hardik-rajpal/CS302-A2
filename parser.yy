@@ -106,15 +106,8 @@ begin_nterm: {
     ststack.push(Symbols::gst);
     // std::cout<<"pushed onto stack"<<Symbols::gst<<"\n";
 } translation_unit {
-    //TODO:
-    //struct return type == int????
-    // std::cout << "about to begin printing\n";
-    // for (auto item: $2) {
-    //     item->print();
-    // }
     ststack.top()->printJson();
     // std::cout <<"printed\n";
-    
 }
 
 translation_unit: struct_specifier{
@@ -149,7 +142,9 @@ struct_specifier: STRUCT IDENTIFIER {
 };
 
 function_definition: type_specifier fun_declarator compound_statement{
-    $$ = new seq_astnode($3);
+    ststack.top()->ptr = new seq_astnode($3);
+    $$ = ststack.top()->ptr;
+    $$ = ststack.top()->ptr;
     ststack.pop();
 };
 

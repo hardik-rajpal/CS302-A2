@@ -100,6 +100,7 @@ void SymTab::printJson()
         }
         cout << "],\n";
         cout<<"\"ast\":{\n";
+        // cout << flush;
         ptr->print();
         // TODO:printAST here.
         cout << "\n}" ;
