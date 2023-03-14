@@ -102,8 +102,10 @@ string topvarname;
 %nterm <fundeclarator_astnode*> fun_declarator
 %%
 begin_nterm: {
-    Symbols::gst = new SymTab();
-    ststack.push(Symbols::gst);
+    // if(!Symbols::symTabConstructed){
+        Symbols::gst = new SymTab();
+        ststack.push(Symbols::gst);
+    // }
     // std::cout<<"pushed onto stack"<<Symbols::gst<<"\n";
 } translation_unit {
     //TODO:
@@ -112,7 +114,9 @@ begin_nterm: {
     // for (auto item: $2) {
     //     item->print();
     // }
-    ststack.top()->printJson();
+    // if(!Symbols::symTabConstructed){
+        ststack.top()->printJson();
+    // }
     // std::cout <<"printed\n";
     
 }
@@ -253,7 +257,7 @@ declarator_arr: IDENTIFIER{
     $$ = toptype;
     typespec_astnode tstmp = $1;
     $$.typeWidth = ((tstmp).typeWidth) * (std::stoi($3));
-    $$.typeName = "array("+(tstmp).typeName+","+($3)+")";
+    $$.typeName = (tstmp).typeName+"["+($3)+"]";
 
 }
 ;
@@ -264,7 +268,7 @@ declarator: declarator_arr{
 | '*' declarator {
     $$.typeWidth = 4;
     $$.baseTypeWidth = $2.typeWidth;
-    $$.typeName = "pointer("+$2.typeName+")";
+    $$.typeName = $2.typeName+"*";
 }
 ;
 

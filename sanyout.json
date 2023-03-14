@@ -123,6 +123,14 @@
           "struct book"
         ],
         [
+          "saps",
+          "var",
+          "local",
+          4,
+          -820,
+          "struct book*"
+        ],
+        [
           "w",
           "var",
           "local",
@@ -151,7 +159,7 @@
           "var",
           "local",
           4,
-          -820,
+          -824,
           "int"
         ]
       ],

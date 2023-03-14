@@ -12,7 +12,6 @@ int main(const int argc, const char **argv)
 
   using namespace std;
   fstream in_file;
-
   in_file.open(argv[1], ios::in);
   // Generate a scanner
   IPL::Scanner scanner(in_file);
