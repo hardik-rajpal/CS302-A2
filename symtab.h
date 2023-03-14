@@ -9,7 +9,9 @@ using namespace std;
 class SymEntry;
 class SymTab
 {
+    int getNewOffsetInStruct();
 public:
+    string type = "global";
     abstract_astnode * ptr;
     enum ST_type
     {

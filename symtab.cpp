@@ -113,7 +113,17 @@ void SymTab::printJson()
     cout<<"]\n";
     cout<<"}"<<endl;
 }
+int SymTab::getNewOffsetInStruct(){
+    int size = 0;
+    for(auto entry:rows){
+        size+=entry.second.size;
+    }
+    return size;
+}
 int SymTab::getNewOffset(size_t posSize){
+    if(type=="struct"){
+        return getNewOffsetInStruct();
+    }
     auto iter = rows.begin();
     auto miniter = rows.begin();
     int newOffset = -posSize;

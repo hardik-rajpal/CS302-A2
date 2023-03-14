@@ -140,6 +140,7 @@ struct_specifier: STRUCT IDENTIFIER {
     string structName = "struct " + $2;
     ststack.top()->rows[structName] = SymEntry("struct",SymTab::ST_HL_type::STRUCT,SymTab::ST_LPG::GLOBAL,0,0);
     Symbols::slsts[structName] = new SymTab();
+    Symbols::slsts[structName]->type = "struct";
     // Symbols::slsts[$2] = new SymTab();
     ststack.push(Symbols::slsts[structName]);
     // SymTab *table = ststack.top();
@@ -196,6 +197,7 @@ fun_declarator: IDENTIFIER '('{
     std::string name = $1;
     ststack.top()->rows[name] = SymEntry(toptype.typeName,SymTab::ST_HL_type::FUN,SymTab::ST_LPG::GLOBAL,0,0);
     Symbols::flsts[name] = new SymTab();
+    Symbols::flsts[name]->type = "function";
     ststack.push(Symbols::flsts[name]);
 } parameter_list ')'{
     auto &rows = (ststack.top())->rows;
