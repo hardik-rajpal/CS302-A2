@@ -20,7 +20,7 @@
       "struct book",
       "struct",
       "global",
-      12,
+      8,
       "-",
       "-"
     ]
@@ -34,7 +34,7 @@
           "var",
           "local",
           4,
-          -4,
+          0,
           "int"
         ],
         [
@@ -42,7 +42,7 @@
           "var",
           "local",
           4,
-          -8,
+          -4,
           "int"
         ]
       ]
@@ -53,19 +53,19 @@
       "name": "foo",
       "localST": [
         [
-          "v",
-          "var",
-          "param",
-          4,
-          12,
-          "int"
-        ],
-        [
           "u",
           "var",
           "param",
           4,
           16,
+          "int"
+        ],
+        [
+          "v",
+          "var",
+          "param",
+          4,
+          12,
           "int"
         ],
         [
@@ -77,11 +77,11 @@
           "int"
         ],
         [
-          "z",
+          "x",
           "var",
-          "param",
+          "local",
           4,
-          24,
+          -4,
           "int"
         ],
         [
@@ -93,14 +93,24 @@
           "int"
         ],
         [
-          "x",
+          "z",
           "var",
-          "local",
+          "param",
           4,
-          -4,
+          24,
           "int"
         ]
-      ]    },
+      ],
+      "ast": {
+        "seq": [
+          {
+            "return": {
+              "intconst": 4
+            }
+          }
+        ]
+      }
+    },
     {
       "name": "main",
       "localST": [
@@ -108,8 +118,8 @@
           "sapiens",
           "var",
           "local",
-          12,
-          -812,
+          8,
+          -816,
           "struct book"
         ],
         [
@@ -117,7 +127,7 @@
           "var",
           "local",
           800,
-          -12,
+          -808,
           "int[10][20]"
         ],
         [
@@ -141,10 +151,119 @@
           "var",
           "local",
           4,
-          -824,
+          -820,
           "int"
         ]
-      ]
+      ],
+      "ast": {
+        "seq": [
+          {
+            "for": {
+              "init": {
+                "assignE": {
+                  "left": {
+                    "identifier": "x"
+                  },
+                  "right": {
+                    "intconst": 0
+                  }
+                }
+              },
+              "guard": {
+                "op_binary": {
+                  "op": "LT_OP_INT",
+                  "left": {
+                    "identifier": "x"
+                  },
+                  "right": {
+                    "intconst": 10
+                  }
+                }
+              },
+              "step": {
+                "assignE": {
+                  "left": {
+                    "identifier": "x"
+                  },
+                  "right": {
+                    "op_binary": {
+                      "op": "PLUS_INT",
+                      "left": {
+                        "identifier": "x"
+                      },
+                      "right": {
+                        "intconst": 1
+                      }
+                    }
+                  }
+                }
+              },
+              "body": "empty"
+            }
+          },
+          {
+            "if": {
+              "cond": {
+                "op_binary": {
+                  "op": "GT_OP_INT",
+                  "left": {
+                    "identifier": "y"
+                  },
+                  "right": {
+                    "intconst": 1
+                  }
+                }
+              },
+              "then": {
+                "seq": [
+                  {
+                    "assignS": {
+                      "left": {
+                        "identifier": "x"
+                      },
+                      "right": {
+                        "op_binary": {
+                          "op": "MINUS_INT",
+                          "left": {
+                            "identifier": "x"
+                          },
+                          "right": {
+                            "intconst": 1
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "assignS": {
+                      "left": {
+                        "identifier": "y"
+                      },
+                      "right": {
+                        "op_binary": {
+                          "op": "PLUS_INT",
+                          "left": {
+                            "identifier": "y"
+                          },
+                          "right": {
+                            "intconst": 1
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              "else": "empty"
+            }
+          },
+          {
+            "return": {
+              "identifier": "y"
+            }
+          }
+        ]
+      }
     }
   ]
 }

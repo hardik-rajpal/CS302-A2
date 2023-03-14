@@ -30,9 +30,19 @@ void SymEntry::printJson(string varname)
         cout << "\"global\",\n";
         break;
     }
-    cout << size << ",\n"
-         << offset << ",\n";
-    cout<<"\""<<type<<"\"";
+    cout << size << ",\n";
+    if(hltype==SymTab::STRUCT){
+        cout<<"\"-\",\n";
+    }
+    else{
+        cout << offset << ",\n";
+    }
+    if(hltype==SymTab::STRUCT){
+        cout<<"\"-\"\n";
+    }
+    else{
+        cout<<"\""<<type<<"\"";
+    }
     cout << "\n]";
 }
 void SymTab::printJson()
@@ -88,8 +98,11 @@ void SymTab::printJson()
             }
             cout << "\n";
         }
-        cout << "]\n";
+        cout << "],\n";
+        cout<<"\"ast\":{\n";
+        ptr->print();
         // TODO:printAST here.
+        cout << "\n}" ;
         cout << "}"<<endl;
         if ((++iterlst) != (Symbols::flsts).end())
         {
@@ -103,7 +116,7 @@ void SymTab::printJson()
 int SymTab::getNewOffset(size_t posSize){
     auto iter = rows.begin();
     auto miniter = rows.begin();
-    int newOffset = -4;
+    int newOffset = -posSize;
     bool offsetSet = true;
         for(;iter!=rows.end();iter++){
             if(iter->second.lpgtype==LOCAL){
@@ -131,9 +144,8 @@ int Symbols::getStructBaseTypeWidth(string structname){
     throw ;
     return 0;
 }
-int Symbols::getParamOffset(SymTab* fst){
-    int posSize = 4;
-    auto rows = fst->rows;
+//within a struct the offsets start from 0, then increased by the size of the first field then the next field.
+int SymTab::getParamOffset(size_t posSize){
     auto iter = rows.begin();
     auto miniter = rows.begin();
     int newOffset = -4;

@@ -4,11 +4,13 @@
 #include <map>
 #include <vector>
 #include <iostream>
+#include "ast.hh"
 using namespace std;
 class SymEntry;
 class SymTab
 {
 public:
+    abstract_astnode * ptr;
     enum ST_type
     {
         INT,
@@ -30,6 +32,7 @@ public:
     map<string, SymEntry> rows;
     void printJson();
     int getNewOffset(size_t posSize);
+    int getParamOffset(size_t posSize);
     SymTab(){};
 };
 class SymEntry
@@ -52,6 +55,5 @@ public:
     static map<string, SymTab *> flsts;
     static map<string, SymTab *> slsts;
     static int getStructBaseTypeWidth(string structname);
-    static int getParamOffset(SymTab * fst);
 };
 #endif

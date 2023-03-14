@@ -1,3 +1,5 @@
+#ifndef AST_HH
+#define AST_HH
 #include <string>
 #include <vector>
 
@@ -204,3 +206,4 @@ private:
     exp_astnode* exp;
     identifier_astnode* identifier;
 };
+#endif

@@ -199,7 +199,6 @@ fun_declarator: IDENTIFIER '('{
     ststack.push(Symbols::flsts[name]);
 } parameter_list ')'{
     auto &rows = (ststack.top())->rows;
-    int poffset = Symbols::getParamOffset(ststack.top());
     long long minParamOffset = 0;
     for(auto entry:rows){
         minParamOffset = min(minParamOffset,ststack.top()->rows[entry.first].offset);
@@ -239,7 +238,7 @@ parameter_list: parameter_declaration{
 parameter_declaration: type_specifier declarator{
     $$ = $1;
     ststack.top()->rows[topvarname] = SymEntry(toptype.typeName,SymTab::ST_HL_type::VAR,SymTab::ST_LPG::PARAM,toptype.typeWidth,0);
-    ststack.top()->rows[topvarname].offset = Symbols::getParamOffset(ststack.top());
+    ststack.top()->rows[topvarname].offset = ststack.top()->getParamOffset(ststack.top()->rows[topvarname].size);
 }
 ;
 
