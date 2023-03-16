@@ -96,7 +96,16 @@ void op_binary_astnode::print() {
     std::cout << "\n}";
 }
 
-op_unary_astnode::op_unary_astnode(std::string op, exp_astnode* exp): op(op), exp(exp) {}
+op_unary_astnode::op_unary_astnode(std::string op, exp_astnode* exp): op(op), exp(exp) {
+    //TODO validity checks
+    typeNode = exp->typeNode;
+    if(op=="DEREF"){
+        typeNode.deref();
+    }
+    else if(op=="ADDRESS"){
+        typeNode.addressOf();
+    }
+}
 
 void op_unary_astnode::print() {
     std::cout << "\"op_unary\": {\n";
@@ -130,7 +139,10 @@ void funcall_astnode::print() {
     std::cout << "\n}";
 }
 
-arrayref_astnode::arrayref_astnode(exp_astnode* exp1, exp_astnode* exp2): exp1(exp1), exp2(exp2) {}
+arrayref_astnode::arrayref_astnode(exp_astnode* exp1, exp_astnode* exp2): exp1(exp1), exp2(exp2) {
+    typeNode = exp1->typeNode;
+    typeNode.deref();
+}
 
 void arrayref_astnode::print() {
     std::cout << "\"arrayref\": {\n";
@@ -146,7 +158,9 @@ void deref_astnode::print() {
     std::cout << "\"deref";
 }
 
-member_astnode::member_astnode(exp_astnode* exp, identifier_astnode* identifier): exp(exp), identifier(identifier) {}
+member_astnode::member_astnode(exp_astnode* exp, identifier_astnode* identifier): exp(exp), identifier(identifier) {
+
+}
 
 void member_astnode::print() {
     std::cout << "\"member\": {\n";
@@ -171,4 +185,32 @@ void fundeclarator_astnode::print(){
 }
 fundeclarator_astnode::fundeclarator_astnode(std::string name,std::vector<typespec_astnode> ptypes):name(name),paramtypes(ptypes){
 
+}
+void typespec_astnode::deref(){
+    if(arrsizes.size()>0){
+        arrsizes.pop_back();
+    }
+    else if(numptrstars>0){
+        numptrstars--;
+    }
+    else{
+        std::cout<<"Error in deref funcall."<<std::endl;
+        return;
+    }
+    typeName = genTypeName();
+}
+void typespec_astnode::addressOf(){
+    numptrstars+=1;
+    typeName = genTypeName();
+}
+std::string typespec_astnode::genTypeName(){
+    std::string tn = baseTypeName;
+    int k = numptrstars;
+    while(k--){
+        tn += "*";
+    }
+    for(auto iter = arrsizes.rbegin();iter!=arrsizes.rend();iter++){
+        tn += ("["+std::to_string(*iter)+"]");
+    }
+    return tn;
 }

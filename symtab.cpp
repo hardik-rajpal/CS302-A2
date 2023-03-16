@@ -42,7 +42,7 @@ void SymEntry::printJson(string varname)
         cout<<"\"-\"\n";
     }
     else{
-        cout<<"\""<<type<<"\"";
+        cout<<"\""<<type.typeName<<"\"";
     }
     cout << "\n]";
 }
@@ -156,6 +156,16 @@ int Symbols::getStructBaseTypeWidth(string structname){
     return 0;
 }
 //within a struct the offsets start from 0, then increased by the size of the first field then the next field.
+SymEntry* Symbols::getSymEntry(SymTab * tst, string symbol){
+    if(tst->rows.count(symbol)){
+        return &(tst->rows[symbol]);
+    }
+    if(Symbols::gst->rows.count(symbol)){
+        return &(Symbols::gst->rows[symbol]);
+    }
+    return NULL;
+}
+
 int SymTab::getParamOffset(size_t posSize){
     auto iter = rows.begin();
     auto miniter = rows.begin();

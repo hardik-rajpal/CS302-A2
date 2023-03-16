@@ -25,6 +25,7 @@ int main(const int argc, const char **argv)
 
   // std::cout << "digraph D { node [ordering=out]" << std::endl;
   parser.parse();
+  parser.parse();//for semantic checks and overloading resolution
   // std::cout << "}" << std::endl;
 }
 

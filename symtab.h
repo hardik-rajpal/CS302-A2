@@ -42,12 +42,12 @@ class SymEntry
 public:
     long long offset = 0;
     size_t size = 0;
-    string type;
+    typespec_astnode type;
     SymTab::ST_HL_type hltype;
     SymTab::ST_LPG lpgtype;
     SymTab *lst;
     void *astnodeptr;
-    SymEntry(string type, SymTab::ST_HL_type hltype, SymTab::ST_LPG lpgtype, size_t size, size_t offset) : type(type), hltype(hltype), lpgtype(lpgtype), size(size), offset(offset) {}
+    SymEntry(typespec_astnode type, SymTab::ST_HL_type hltype, SymTab::ST_LPG lpgtype, size_t size, size_t offset) : type(type), hltype(hltype), lpgtype(lpgtype), size(size), offset(offset) {}
     SymEntry(){};
     void printJson(string varname);
 };
@@ -58,5 +58,6 @@ public:
     static map<string, SymTab *> flsts;
     static map<string, SymTab *> slsts;
     static int getStructBaseTypeWidth(string structname);
+    static SymEntry* getSymEntry(SymTab * tst, string symbol);
 };
 #endif

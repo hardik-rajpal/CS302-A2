@@ -52,6 +52,7 @@
 stack<SymTab*> ststack;
 int retType;
 typespec_astnode toptype;
+typespec_astnode structc, intc, floatc,stringc;
 string topvarname;
 }
 
@@ -102,29 +103,43 @@ string topvarname;
 %nterm <fundeclarator_astnode*> fun_declarator
 %%
 begin_nterm: {
-    // if(!Symbols::symTabConstructed){
+    structc.baseTypeWidth = 0;
+    structc.baseTypeName = "struct";
+    structc.typeName = "struct";
+    structc.typeWidth = 0;
+    intc.baseTypeWidth = 4;
+    intc.baseTypeName = "int";
+    intc.typeName = "int";
+    intc.typeWidth = 4;
+    floatc.baseTypeWidth = 8;
+    floatc.baseTypeName = "float";
+    floatc.typeName = "float";
+    floatc.typeWidth = 8;
+    stringc.baseTypeWidth = 0;
+    stringc.baseTypeName = "string";
+    stringc.typeName = "string";
+    stringc.typeWidth = 0;
+    if(!Symbols::symTabConstructed){
         Symbols::gst = new SymTab();
         ststack.push(Symbols::gst);
-    // }
-    // std::cout<<"pushed onto stack"<<Symbols::gst<<"\n";
+    }
+    else{
+        // std::cout<<"Here again";
+    }
+
 } translation_unit {
-    //TODO:
-    //struct return type == int????
-    // std::cout << "about to begin printing\n";
-    // for (auto item: $2) {
-    //     item->print();
-    // }
-    // if(!Symbols::symTabConstructed){
+    if(!Symbols::symTabConstructed){
         ststack.top()->printJson();
-    // }
-    // std::cout <<"printed\n";
-    
+        Symbols::symTabConstructed = true;
+    }
 }
 
 translation_unit: struct_specifier{
-    for(auto entry: ststack.top()->rows){
-        if(entry.second.size==0&&entry.second.hltype==SymTab::ST_HL_type::STRUCT){
-            ststack.top()->rows[entry.first].size = Symbols::getStructBaseTypeWidth(entry.first);
+    if(!Symbols::symTabConstructed){
+        for(auto entry: ststack.top()->rows){
+            if(entry.second.size==0&&entry.second.hltype==SymTab::ST_HL_type::STRUCT){
+                ststack.top()->rows[entry.first].size = Symbols::getStructBaseTypeWidth(entry.first);
+            }
         }
     }
 }
@@ -141,30 +156,37 @@ translation_unit: struct_specifier{
 ;
 
 struct_specifier: STRUCT IDENTIFIER {
-    string structName = "struct " + $2;
-    ststack.top()->rows[structName] = SymEntry("struct",SymTab::ST_HL_type::STRUCT,SymTab::ST_LPG::GLOBAL,0,0);
-    Symbols::slsts[structName] = new SymTab();
-    Symbols::slsts[structName]->type = "struct";
-    // Symbols::slsts[$2] = new SymTab();
-    ststack.push(Symbols::slsts[structName]);
-    // SymTab *table = ststack.top();
-
+    if(!Symbols::symTabConstructed){
+        string structName = "struct " + $2;
+        ststack.top()->rows[structName] = SymEntry(structc,SymTab::ST_HL_type::STRUCT,SymTab::ST_LPG::GLOBAL,0,0);
+        Symbols::slsts[structName] = new SymTab();
+        Symbols::slsts[structName]->type = "struct";
+        // Symbols::slsts[$2] = new SymTab();
+        ststack.push(Symbols::slsts[structName]);
+    }
 }'{' declaration_list '}' ';'{
-    ststack.pop();
+    if(!Symbols::symTabConstructed){
+        ststack.pop();
+    }
 };
 
 function_definition: type_specifier fun_declarator compound_statement{
     $$ = new seq_astnode($3);
-    ststack.pop();
+    if(!Symbols::symTabConstructed){
+        ststack.pop();
+    }
 };
 
 type_specifier: VOID{
     typespec_astnode ts;
     ts.baseTypeWidth = 0;
+    ts.baseTypeName = "void";
     ts.typeWidth = ts.baseTypeWidth;
     ts.typeName = "void";
     $$ = ts;
-    toptype = ts;
+    if(!Symbols::symTabConstructed){
+        toptype = ts;
+    }
 
 }
 | INT{
@@ -173,8 +195,11 @@ type_specifier: VOID{
     ts.baseTypeWidth = 4;
     ts.typeWidth = ts.baseTypeWidth;
     ts.typeName = "int";
+    ts.baseTypeName = "int";
     $$ = ts;
-    toptype = ts;
+    if(!Symbols::symTabConstructed){
+        toptype = ts;
+    }
 
 }
 | FLOAT{
@@ -183,8 +208,11 @@ type_specifier: VOID{
     ts.baseTypeWidth = 8;
     ts.typeWidth = ts.baseTypeWidth;
     ts.typeName = "float";
+    ts.baseTypeName = "float";
     $$ = ts;
-    toptype = ts;
+    if(!Symbols::symTabConstructed){
+        toptype = ts;
+    }
 }
 | STRUCT IDENTIFIER{
     // retType = SymTab::ST_type::STRUCT_TYPE;
@@ -192,32 +220,40 @@ type_specifier: VOID{
     ts.typeName = "struct "+($2);
     ts.baseTypeWidth = Symbols::getStructBaseTypeWidth(ts.typeName);
     ts.typeWidth = ts.baseTypeWidth;
+    ts.baseTypeName = ts.typeName;
     $$ = ts;
+    if(!Symbols::symTabConstructed){
     toptype = ts;
+    }
 }
 ;
 
 fun_declarator: IDENTIFIER '('{
-    std::string name = $1;
-    ststack.top()->rows[name] = SymEntry(toptype.typeName,SymTab::ST_HL_type::FUN,SymTab::ST_LPG::GLOBAL,0,0);
-    Symbols::flsts[name] = new SymTab();
-    Symbols::flsts[name]->type = "function";
-    ststack.push(Symbols::flsts[name]);
+    if(!Symbols::symTabConstructed){
+        std::string name = $1;
+        ststack.top()->rows[name] = SymEntry(toptype,SymTab::ST_HL_type::FUN,SymTab::ST_LPG::GLOBAL,0,0);
+        Symbols::flsts[name] = new SymTab();
+        Symbols::flsts[name]->type = "function";
+        ststack.push(Symbols::flsts[name]);
+    }
 } parameter_list ')'{
-    auto &rows = (ststack.top())->rows;
-    long long minParamOffset = 0;
-    for(auto entry:rows){
-        minParamOffset = min(minParamOffset,ststack.top()->rows[entry.first].offset);
+    if(!Symbols::symTabConstructed){
+
+        auto &rows = (ststack.top())->rows;
+        long long minParamOffset = 0;
+        for(auto entry:rows){
+            minParamOffset = min(minParamOffset,ststack.top()->rows[entry.first].offset);
+        }
+        int localsParamsGap = 12;
+        int summer = localsParamsGap - minParamOffset;
+        auto iter = rows.begin();
+        for(;iter!=rows.end();){
+            rows[iter->first].offset += summer;    
+            iter++;
+        }
     }
-    int localsParamsGap = 12;
-    int summer = localsParamsGap - minParamOffset;
-    auto iter = rows.begin();
-    for(;iter!=rows.end();){
-        rows[iter->first].offset += summer;    
-        iter++;
-    }
-    
     //TODO: fix this.
+    
     std::string name = $1;
     std::vector<typespec_astnode> vect = std::vector<typespec_astnode>();
     $$ = new fundeclarator_astnode(name, vect);
@@ -225,9 +261,11 @@ fun_declarator: IDENTIFIER '('{
 | IDENTIFIER '(' ')'{
     std::string name = $1;
     $$ = new fundeclarator_astnode(name,std::vector<typespec_astnode>());
-    ststack.top()->rows[name] = SymEntry(toptype.typeName,SymTab::ST_HL_type::FUN,SymTab::ST_LPG::GLOBAL,0,0);
-    Symbols::flsts[name] = new SymTab();
-    ststack.push(Symbols::flsts[name]);
+    if(!Symbols::symTabConstructed){
+        ststack.top()->rows[name] = SymEntry(toptype,SymTab::ST_HL_type::FUN,SymTab::ST_LPG::GLOBAL,0,0);
+        Symbols::flsts[name] = new SymTab();
+        ststack.push(Symbols::flsts[name]);
+    }
 }
 ;
 
@@ -243,24 +281,27 @@ parameter_list: parameter_declaration{
 
 parameter_declaration: type_specifier declarator{
     $$ = $1;
-    ststack.top()->rows[topvarname] = SymEntry(toptype.typeName,SymTab::ST_HL_type::VAR,SymTab::ST_LPG::PARAM,toptype.typeWidth,0);
-    ststack.top()->rows[topvarname].offset = ststack.top()->getParamOffset(ststack.top()->rows[topvarname].size);
+    if(!Symbols::symTabConstructed){
+        ststack.top()->rows[topvarname] = SymEntry(toptype,SymTab::ST_HL_type::VAR,SymTab::ST_LPG::PARAM,toptype.typeWidth,0);
+        ststack.top()->rows[topvarname].offset = ststack.top()->getParamOffset(ststack.top()->rows[topvarname].size);
+    }
 }
 ;
 
 declarator_arr: IDENTIFIER{
     $$ = toptype;
     $$.typeWidth = $$.baseTypeWidth;
-    topvarname = $1;
+    if(!Symbols::symTabConstructed){
+        topvarname = $1;
+    }
 }
 | declarator_arr '[' INT_CONSTANT ']'{
     $$ = toptype;
     typespec_astnode tstmp = $1;
     $$.typeWidth = ((tstmp).typeWidth) * (std::stoi($3));
     $$.typeName = (tstmp).typeName+"["+($3)+"]";
-
-}
-;
+    $$.arrsizes.push_back(std::stoi($3));
+};
 
 declarator: declarator_arr{
     $$ = $1;
@@ -269,6 +310,7 @@ declarator: declarator_arr{
     $$.typeWidth = 4;
     $$.baseTypeWidth = $2.typeWidth;
     $$.typeName = $2.typeName+"*";
+    $$.numptrstars+=1;
 }
 ;
 
@@ -408,9 +450,11 @@ multiplicative_expression: unary_expression{
 }
 | multiplicative_expression '*' unary_expression{
     $$ = new op_binary_astnode("MULT?", $1, $3);
+    //overloading resolution.
 }
 | multiplicative_expression '/' unary_expression{
     $$ = new op_binary_astnode("DIV?", $1, $3);
+    //overloading resolution.
 }
 ;
 
@@ -421,14 +465,36 @@ postfix_expression: primary_expression{
     $$ = new arrayref_astnode($1, $3);
 }
 | IDENTIFIER '(' ')'{
+    //TODO Funcall
 }
 | IDENTIFIER '(' expression_list ')'{
+    //TODO funcall
 }
 | postfix_expression '.' IDENTIFIER{
     $$ = new member_astnode($1, new identifier_astnode($3));
+    //TODO
+    std::string structName = $1->typeNode.typeName;
+    SymEntry* memberEntry = Symbols::getSymEntry(Symbols::slsts[structName],$3);
+    if(memberEntry){
+        $$->typeNode = memberEntry->type;
+    }
+    else{
+        //throw member dne
+    }
 }
 | postfix_expression PTR_OP IDENTIFIER{
-    $$ = new arrow_astnode($1, new identifier_astnode($3));
+    $$ = new member_astnode(new arrow_astnode($1, new identifier_astnode($3)), new identifier_astnode($3));
+    typespec_astnode dereftype = $1->typeNode;
+    dereftype.deref();
+    std::string structName  = dereftype.typeName;
+    //TODO restrict global table search here.
+    SymEntry* memberEntry = Symbols::getSymEntry(Symbols::slsts[structName],$3);
+    if(memberEntry){
+        $$->typeNode = memberEntry->type;
+    }
+    else{
+        //throw member dne
+    }
 }
 | postfix_expression INC_OP{
     
@@ -437,18 +503,32 @@ postfix_expression: primary_expression{
 
 primary_expression: IDENTIFIER{
     $$ = new identifier_astnode($1);
+    if(Symbols::symTabConstructed){
+        SymEntry * entry = Symbols::getSymEntry(ststack.top(),$1);
+        if(!entry){
+            std::cout<<"Write error handling code."<<endl;
+        }
+        else{
+            $$->typeNode = entry->type;
+        }
+    }
 }
 | INT_CONSTANT{
     $$ = new intconst_astnode($1);
+    $$->typeNode = intc;
 }
 | FLOAT_CONSTANT{
     $$ = new floatconst_astnode($1);
+    $$->typeNode = floatc;
 }
 | STRING_LITERAL{
     $$ = new stringconst_astnode($1);
+    $$->typeNode = stringc;
     $$->print();
 }
 | '(' expression ')'{
+    //TODO
+    $$ = $2;
 }
 ;
 
@@ -499,17 +579,20 @@ declarator_list: declarator{
     $$ = $1;
     string type = $1.typeName;
     int size = $1.typeWidth;
-    int offset = ststack.top()->getNewOffset(size);
-    SymTab* st = ststack.top();
-
-    st->rows[topvarname] = SymEntry(type,SymTab::ST_HL_type::VAR,SymTab::ST_LPG::LOCAL,size,offset);
+    if(!Symbols::symTabConstructed){
+        int offset = ststack.top()->getNewOffset(size);
+        SymTab* st = ststack.top();
+        st->rows[topvarname] = SymEntry($1,SymTab::ST_HL_type::VAR,SymTab::ST_LPG::LOCAL,size,offset);
+    }
 }
 | declarator_list ',' declarator{
     $$ = $3;
     string type = $3.typeName;
     int size = $3.typeWidth;
-    int offset = ststack.top()->getNewOffset(size);
-    ststack.top()->rows[topvarname] = SymEntry(type,SymTab::ST_HL_type::VAR,SymTab::ST_LPG::LOCAL,size,offset);
+    if(!Symbols::symTabConstructed){
+        int offset = ststack.top()->getNewOffset(size);
+        ststack.top()->rows[topvarname] = SymEntry($3,SymTab::ST_HL_type::VAR,SymTab::ST_LPG::LOCAL,size,offset);
+    }
 }
 ;
 

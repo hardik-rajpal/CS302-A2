@@ -23,8 +23,23 @@ public:
 /* Abstract Classes */
 class statement_astnode: public abstract_astnode {
 };
-
+class typespec_astnode{
+public:
+    int baseTypeWidth;
+    std::string baseTypeName;
+    std::string typeName;
+    int typeWidth;
+    int numptrstars = 0;
+    std::vector<int> arrsizes;
+    typespec_astnode(){};
+    std::string genTypeName();
+    void deref();
+    void addressOf();
+    
+};
 class exp_astnode: public abstract_astnode {
+public:
+    typespec_astnode typeNode;
 };
 
 class ref_astnode: public exp_astnode {
@@ -109,14 +124,6 @@ public:
     assignE_astnode(exp_astnode* exp1, exp_astnode* exp2);
     void print();
     exp_astnode* exp1, *exp2;
-};
-class typespec_astnode{
-public:
-    int baseTypeWidth;
-    std::string typeName;
-    int typeWidth;
-    typespec_astnode(){};
-    
 };
 class fundeclarator_astnode: public abstract_astnode{
     public:
