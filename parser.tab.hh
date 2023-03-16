@@ -47,12 +47,14 @@
 // "%code requires" blocks.
 #line 10 "parser.yy"
 
+    #include "location.hh"
     #include "ast.hh"
+
    namespace IPL {
       class Scanner;
    }
 
-#line 56 "parser.tab.hh"
+#line 58 "parser.tab.hh"
 
 # include <cassert>
 # include <cstdlib> // std::abort
@@ -97,7 +99,7 @@
 #else
 # define YY_CONSTEXPR
 #endif
-# include "location.hh"
+
 #include <typeinfo>
 #ifndef YY_ASSERT
 # include <cassert>
@@ -193,7 +195,7 @@
 
 #line 5 "parser.yy"
 namespace IPL {
-#line 197 "parser.tab.hh"
+#line 199 "parser.tab.hh"
 
 
 
@@ -508,7 +510,7 @@ namespace IPL {
     typedef value_type semantic_type;
 
     /// Symbol locations.
-    typedef location location_type;
+    typedef IPL::location location_type;
 
     /// Syntax errors thrown from user actions.
     struct syntax_error : std::runtime_error
@@ -1926,7 +1928,7 @@ switch (yykind)
 
 #line 5 "parser.yy"
 } // IPL
-#line 1930 "parser.tab.hh"
+#line 1932 "parser.tab.hh"
 
 
 

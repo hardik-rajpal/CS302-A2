@@ -8,7 +8,9 @@
 %define parse.trace
 
 %code requires{
+    #include "location.hh"
     #include "ast.hh"
+
    namespace IPL {
       class Scanner;
    }
@@ -57,6 +59,7 @@ string topvarname;
 }
 
 %define api.value.type variant
+%define api.location.type {IPL::location}
 %define parse.assert
 
 %start begin_nterm

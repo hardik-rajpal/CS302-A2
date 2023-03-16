@@ -321,8 +321,8 @@ int yyFlexLexer::yylex()
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 43
-#define YY_END_OF_BUFFER 44
+#define YY_NUM_RULES 44
+#define YY_END_OF_BUFFER 45
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -332,16 +332,16 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[102] =
     {   0,
-        0,    0,   44,   42,    1,    1,   32,   42,   33,   25,
-       26,   23,   21,   27,   22,   37,   24,   39,   39,   36,
-       34,   20,   35,   41,   30,   31,   41,   41,   41,   41,
-       41,   41,   41,   28,   42,   29,   15,    0,   38,    0,
-       13,   18,   19,   40,    0,   40,   39,    0,    0,   39,
-       39,   16,   14,   17,   41,   41,   41,   41,    7,   41,
-       41,   41,   41,   41,   12,   38,    0,    0,    0,    0,
-        0,   40,   39,   39,   41,   41,   10,    4,   41,   41,
-       41,   41,    0,   40,    0,    2,    8,   41,   41,   41,
-        3,   41,    0,    0,    5,   41,   41,    9,   11,    6,
+        0,    0,   45,   43,    1,    2,   33,   43,   34,   26,
+       27,   24,   22,   28,   23,   38,   25,   40,   40,   37,
+       35,   21,   36,   42,   31,   32,   42,   42,   42,   42,
+       42,   42,   42,   29,   43,   30,   16,    0,   39,    0,
+       14,   19,   20,   41,    0,   41,   40,    0,    0,   40,
+       40,   17,   15,   18,   42,   42,   42,   42,    8,   42,
+       42,   42,   42,   42,   13,   39,    0,    0,    0,    0,
+        0,   41,   40,   40,   42,   42,   11,    5,   42,   42,
+       42,   42,    0,   41,    0,    3,    9,   42,   42,   42,
+        4,   42,    0,    0,    6,   42,   42,   10,   12,    7,
 
         0
     } ;
@@ -710,7 +710,6 @@ do_action:	/* This label is used only to access EOF actions. */
 			goto yy_find_action;
 
 case 1:
-/* rule 1 can match eol */
 YY_RULE_SETUP
 #line 34 "scanner.l"
 {}
@@ -719,281 +718,287 @@ case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
 #line 35 "scanner.l"
-{}
+loc->lines();
 	YY_BREAK
 case 3:
+/* rule 3 can match eol */
 YY_RULE_SETUP
 #line 36 "scanner.l"
+{}
+	YY_BREAK
+case 4:
+YY_RULE_SETUP
+#line 37 "scanner.l"
 {
   yylval->emplace< std::string >( YYText() );
   return token_type::VOID;
 }
 	YY_BREAK
-case 4:
+case 5:
 YY_RULE_SETUP
-#line 40 "scanner.l"
+#line 41 "scanner.l"
 {
   yylval->emplace< std::string >( YYText() );
   return token_type::INT;
 }
 	YY_BREAK
-case 5:
+case 6:
 YY_RULE_SETUP
-#line 44 "scanner.l"
+#line 45 "scanner.l"
 {
   yylval->emplace< std::string >( YYText() );
   return token_type::FLOAT;
 }
 	YY_BREAK
-case 6:
+case 7:
 YY_RULE_SETUP
-#line 48 "scanner.l"
+#line 49 "scanner.l"
 {
   yylval->emplace< std::string >( YYText() );
   return token_type::STRUCT;
 }
 	YY_BREAK
-case 7:
+case 8:
 YY_RULE_SETUP
-#line 52 "scanner.l"
+#line 53 "scanner.l"
 {
   yylval->emplace< std::string >( YYText() );
   return token_type::IF;
 }
 	YY_BREAK
-case 8:
+case 9:
 YY_RULE_SETUP
-#line 56 "scanner.l"
+#line 57 "scanner.l"
 {
   yylval->emplace< std::string >( YYText() );
   return token_type::ELSE;
 }
 	YY_BREAK
-case 9:
+case 10:
 YY_RULE_SETUP
-#line 60 "scanner.l"
+#line 61 "scanner.l"
 {
   yylval->emplace< std::string >( YYText() );
   return token_type::WHILE;
 }
 	YY_BREAK
-case 10:
+case 11:
 YY_RULE_SETUP
-#line 64 "scanner.l"
+#line 65 "scanner.l"
 {
   yylval->emplace< std::string >( YYText() );
   return token_type::FOR;
 }
 	YY_BREAK
-case 11:
+case 12:
 YY_RULE_SETUP
-#line 68 "scanner.l"
+#line 69 "scanner.l"
 {
   yylval->emplace< std::string >( YYText() );
   return token_type::RETURN;
 }
 	YY_BREAK
-case 12:
+case 13:
 YY_RULE_SETUP
-#line 72 "scanner.l"
+#line 73 "scanner.l"
 {
   yylval->emplace< std::string >( YYText() );
   return token_type::OR_OP;
 }
 	YY_BREAK
-case 13:
+case 14:
 YY_RULE_SETUP
-#line 76 "scanner.l"
+#line 77 "scanner.l"
 {
   yylval->emplace< std::string >( YYText() );
   return token_type::AND_OP;
 }
 	YY_BREAK
-case 14:
+case 15:
 YY_RULE_SETUP
-#line 80 "scanner.l"
+#line 81 "scanner.l"
 {
   yylval->emplace< std::string >( YYText() );
   return token_type::EQ_OP;
 }
 	YY_BREAK
-case 15:
+case 16:
 YY_RULE_SETUP
-#line 84 "scanner.l"
+#line 85 "scanner.l"
 {
   yylval->emplace< std::string >( YYText() );
   return token_type::NE_OP;
 }
 	YY_BREAK
-case 16:
+case 17:
 YY_RULE_SETUP
-#line 88 "scanner.l"
+#line 89 "scanner.l"
 {
   yylval->emplace< std::string >( YYText() );
   return token_type::LE_OP;
 }
 	YY_BREAK
-case 17:
+case 18:
 YY_RULE_SETUP
-#line 92 "scanner.l"
+#line 93 "scanner.l"
 {
   yylval->emplace< std::string >( YYText() );
   return token_type::GE_OP;
 }
 	YY_BREAK
-case 18:
+case 19:
 YY_RULE_SETUP
-#line 96 "scanner.l"
+#line 97 "scanner.l"
 {
   yylval->emplace< std::string >( YYText() );
   return token_type::INC_OP;
 }
 	YY_BREAK
-case 19:
+case 20:
 YY_RULE_SETUP
-#line 100 "scanner.l"
+#line 101 "scanner.l"
 {
   yylval->emplace< std::string >( YYText() );
   return token_type::PTR_OP;
 }
 	YY_BREAK
-case 20:
-YY_RULE_SETUP
-#line 104 "scanner.l"
-return '=';
-	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 105 "scanner.l"
-return '+';
+return '=';
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 106 "scanner.l"
-return '-';
+return '+';
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 107 "scanner.l"
-return '*';
+return '-';
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
 #line 108 "scanner.l"
-return '/';
+return '*';
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
 #line 109 "scanner.l"
-return '(';
+return '/';
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
 #line 110 "scanner.l"
-return ')';
+return '(';
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
 #line 111 "scanner.l"
-return ',';
+return ')';
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
 #line 112 "scanner.l"
-return '{';
+return ',';
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
 #line 113 "scanner.l"
-return '}';
+return '{';
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
 #line 114 "scanner.l"
-return '[';
+return '}';
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
 #line 115 "scanner.l"
-return ']';
+return '[';
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
 #line 116 "scanner.l"
-return '!';
+return ']';
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
 #line 117 "scanner.l"
-return '&';
+return '!';
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
 #line 118 "scanner.l"
-return '<';
+return '&';
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
 #line 119 "scanner.l"
-return '>';
+return '<';
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
 #line 120 "scanner.l"
-return ';';
+return '>';
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
 #line 121 "scanner.l"
-return '.';
+return ';';
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
 #line 122 "scanner.l"
+return '.';
+	YY_BREAK
+case 39:
+YY_RULE_SETUP
+#line 123 "scanner.l"
 {
   yylval->emplace< std::string >( YYText() );
   return token_type::STRING_LITERAL;
 }
 	YY_BREAK
-case 39:
+case 40:
 YY_RULE_SETUP
-#line 126 "scanner.l"
+#line 127 "scanner.l"
 {
   yylval->emplace< std::string >( YYText() );
   return token_type::INT_CONSTANT;
 }
 	YY_BREAK
-case 40:
+case 41:
 YY_RULE_SETUP
-#line 130 "scanner.l"
+#line 131 "scanner.l"
 {
   yylval->emplace< std::string >( YYText() );
   return token_type::FLOAT_CONSTANT;
 }
 	YY_BREAK
-case 41:
+case 42:
 YY_RULE_SETUP
-#line 134 "scanner.l"
+#line 135 "scanner.l"
 {
   yylval->emplace< std::string >( YYText() );
   return token_type::IDENTIFIER;
 }
 	YY_BREAK
-case 42:
+case 43:
 YY_RULE_SETUP
-#line 138 "scanner.l"
+#line 139 "scanner.l"
 return token_type::OTHERS;
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 139 "scanner.l"
+#line 140 "scanner.l"
 yyterminate();
 	YY_BREAK
-case 43:
+case 44:
 YY_RULE_SETUP
-#line 140 "scanner.l"
+#line 141 "scanner.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 997 "scanner.yy.cc"
+#line 1002 "scanner.yy.cc"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1954,6 +1959,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 140 "scanner.l"
+#line 141 "scanner.l"
 
 

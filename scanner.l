@@ -30,7 +30,8 @@ using token_type = IPL::Parser::token;
 
 %}
 
-[ \t\n\r]                                                   {}
+[ \t\r]                                                   {}
+[\n]                                                      loc->lines();
 [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]                       {}
 void {
   yylval->emplace< std::string >( YYText() );
