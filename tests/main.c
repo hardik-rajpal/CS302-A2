@@ -1,11 +1,5 @@
-struct nigger {
-    int t;
-};
-
 int main() {
-    struct nigger* nigga;
-    int z;
-    z = nigga->t;
-    z++;
+    int* val;
+    *val = 3;
     return 0;
 }

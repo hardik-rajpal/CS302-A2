@@ -1,1 +1,56 @@
+<<<<<<< HEAD
 Error at line 19: Struct "struct book" has no member named "page"
+=======
+{
+    "globalST": [
+        [
+            "main",
+            "fun",
+            "global",
+            0,
+            0,
+            "int"
+        ]
+    ],
+    "structs": [],
+    "functions": [
+        {
+            "name": "main",
+            "localST": [
+                [
+                    "val",
+                    "var",
+                    "local",
+                    4,
+                    -4,
+                    "int*"
+                ]
+            ],
+            "ast": {
+                "seq": [
+                    {
+                        "assignS": {
+                            "left": {
+                                "op_unary": {
+                                    "op": "DEREF",
+                                    "child": {
+                                        "identifier": "val"
+                                    }
+                                }
+                            },
+                            "right": {
+                                "intconst": 3
+                            }
+                        }
+                    },
+                    {
+                        "return": {
+                            "intconst": 0
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
+>>>>>>> disass
