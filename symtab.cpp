@@ -1,4 +1,5 @@
 #include "symtab.h"
+#include "util.hh"
 SymTab * Symbols::gst;
 map<string, SymTab *> Symbols::flsts;
 map<string, SymTab *> Symbols::slsts;
@@ -99,11 +100,10 @@ void SymTab::printJson()
             cout << "\n";
         }
         cout << "],\n";
-        cout<<"\"ast\":{\n";
+        cout<<"\"ast\":";
         // cout << flush;
-        ptr->print();
+        iterlst->second->ptr->print();
         // TODO:printAST here.
-        cout << "\n}" ;
         cout << "}"<<endl;
         if ((++iterlst) != (Symbols::flsts).end())
         {

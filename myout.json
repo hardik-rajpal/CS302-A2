@@ -1,96 +1,52 @@
 {
-"globalST": [
-[
-"foo","fun",
-"global",
-0,
-0,
-"int"
-],
-[
-"main","fun",
-"global",
-0,
-0,
-"int"
-],
-[
-"struct book","struct",
-"global",
-8,
-"-",
-"-"
-
-]
-],
-"structs":[
-{
-"name":"struct book",
-"localST":[
-
-[
-"pages","var",
-"local",
-4,
--4,
-"int"
-],
-[
-"wt","var",
-"local",
-4,
--8,
-"int"
-]
-]
+    "globalST": [
+        [
+            "main",
+            "fun",
+            "global",
+            0,
+            0,
+            "int"
+        ]
+    ],
+    "structs": [],
+    "functions": [
+        {
+            "name": "main",
+            "localST": [
+                [
+                    "val",
+                    "var",
+                    "local",
+                    4,
+                    -4,
+                    "pointer(int)"
+                ]
+            ],
+            "ast": {
+                "seq": [
+                    {
+                        "assignS": {
+                            "left": {
+                                "op_unary": {
+                                    "op": "DEREF",
+                                    "child": {
+                                        "identifier": "val"
+                                    }
+                                }
+                            },
+                            "right": {
+                                "intconst": 3
+                            }
+                        }
+                    },
+                    {
+                        "return": {
+                            "intconst": 0
+                        }
+                    }
+                ]
+            }
+        }
+    ]
 }
-
-],
-"functions":[
-{
-"name":"foo",
-"localST":[
-[
-"u","var",
-"param",
-4,
-16,
-"int"
-],
-[
-"v","var",
-"param",
-4,
-12,
-"int"
-],
-[
-"w","var",
-"param",
-4,
-20,
-"int"
-],
-[
-"x","var",
-"local",
-4,
--4,
-"int"
-],
-[
-"y","var",
-"param",
-4,
-28,
-"int"
-],
-[
-"z","var",
-"param",
-4,
-24,
-"int"
-]
-],
-"ast":{

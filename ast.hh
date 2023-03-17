@@ -54,6 +54,7 @@ private:
 
 class return_astnode:public statement_astnode {
 public: 
+    return_astnode(exp_astnode*);
     void print();
 private:
     exp_astnode* exp;

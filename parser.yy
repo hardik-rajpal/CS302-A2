@@ -143,8 +143,7 @@ struct_specifier: STRUCT IDENTIFIER {
 
 function_definition: type_specifier fun_declarator compound_statement{
     ststack.top()->ptr = new seq_astnode($3);
-    $$ = ststack.top()->ptr;
-    $$ = ststack.top()->ptr;
+    $$ = nullptr;
     ststack.pop();
 };
 
@@ -292,7 +291,7 @@ statement_list: statement {
 ;
 
 statement: ';'{
-    $$ = NULL;
+    $$ = new empty_astnode();
 }
 | '{' statement_list '}'{
     $$ = new seq_astnode($2);
@@ -310,7 +309,7 @@ statement: ';'{
     $$ = NULL;
 }
 | RETURN expression ';'{
-    $$ = NULL;
+    $$ = new return_astnode($2);
 }
 ;
 

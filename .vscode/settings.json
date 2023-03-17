@@ -60,6 +60,7 @@
         "algorithm": "cpp",
         "numeric": "cpp",
         "numbers": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "sstream": "cpp"
     }
 }
