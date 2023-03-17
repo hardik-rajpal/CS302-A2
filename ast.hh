@@ -25,13 +25,14 @@ class statement_astnode: public abstract_astnode {
 };
 class typespec_astnode{
 public:
+    static typespec_astnode structc, intc, floatc,stringc;
     int baseTypeWidth;
     std::string baseTypeName;
     std::string typeName;
     int typeWidth;
     int numptrstars = 0;
     std::vector<int> arrsizes;
-    typespec_astnode(){};
+    typespec_astnode();
     std::string genTypeName();
     void deref();
     void addressOf();
@@ -105,8 +106,8 @@ class op_binary_astnode: public exp_astnode {
 public:
     op_binary_astnode(std::string, exp_astnode*, exp_astnode*);
     void print();
-private:
     std::string op;
+private:
     exp_astnode* exp1, *exp2;
 };
 

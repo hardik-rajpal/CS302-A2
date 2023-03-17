@@ -423,12 +423,7 @@ namespace IPL {
       char dummy2[sizeof (assignE_astnode*)];
 
       // expression
-      // logical_and_expression
-      // equality_expression
-      // relational_expression
-      // additive_expression
       // unary_expression
-      // multiplicative_expression
       // postfix_expression
       // primary_expression
       // expression_list
@@ -437,12 +432,19 @@ namespace IPL {
       // fun_declarator
       char dummy4[sizeof (fundeclarator_astnode*)];
 
+      // logical_and_expression
+      // equality_expression
+      // relational_expression
+      // additive_expression
+      // multiplicative_expression
+      char dummy5[sizeof (op_binary_astnode*)];
+
       // function_definition
       // statement
       // assignment_statement
       // selection_statement
       // iteration_statement
-      char dummy5[sizeof (statement_astnode*)];
+      char dummy6[sizeof (statement_astnode*)];
 
       // VOID
       // INT
@@ -467,18 +469,18 @@ namespace IPL {
       // RETURN
       // OTHERS
       // unary_operator
-      char dummy6[sizeof (std::string)];
+      char dummy7[sizeof (std::string)];
 
       // begin_nterm
       // translation_unit
-      char dummy7[sizeof (std::vector<abstract_astnode*>)];
+      char dummy8[sizeof (std::vector<abstract_astnode*>)];
 
       // compound_statement
       // statement_list
-      char dummy8[sizeof (std::vector<statement_astnode*>)];
+      char dummy9[sizeof (std::vector<statement_astnode*>)];
 
       // parameter_list
-      char dummy9[sizeof (std::vector<typespec_astnode>)];
+      char dummy10[sizeof (std::vector<typespec_astnode>)];
 
       // type_specifier
       // parameter_declaration
@@ -486,7 +488,7 @@ namespace IPL {
       // declarator
       // declaration
       // declarator_list
-      char dummy10[sizeof (typespec_astnode)];
+      char dummy11[sizeof (typespec_astnode)];
     };
 
     /// The size of the largest semantic type.
@@ -706,12 +708,7 @@ namespace IPL {
         break;
 
       case symbol_kind::S_expression: // expression
-      case symbol_kind::S_logical_and_expression: // logical_and_expression
-      case symbol_kind::S_equality_expression: // equality_expression
-      case symbol_kind::S_relational_expression: // relational_expression
-      case symbol_kind::S_additive_expression: // additive_expression
       case symbol_kind::S_unary_expression: // unary_expression
-      case symbol_kind::S_multiplicative_expression: // multiplicative_expression
       case symbol_kind::S_postfix_expression: // postfix_expression
       case symbol_kind::S_primary_expression: // primary_expression
       case symbol_kind::S_expression_list: // expression_list
@@ -720,6 +717,14 @@ namespace IPL {
 
       case symbol_kind::S_fun_declarator: // fun_declarator
         value.move< fundeclarator_astnode* > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_logical_and_expression: // logical_and_expression
+      case symbol_kind::S_equality_expression: // equality_expression
+      case symbol_kind::S_relational_expression: // relational_expression
+      case symbol_kind::S_additive_expression: // additive_expression
+      case symbol_kind::S_multiplicative_expression: // multiplicative_expression
+        value.move< op_binary_astnode* > (std::move (that.value));
         break;
 
       case symbol_kind::S_function_definition: // function_definition
@@ -859,6 +864,20 @@ namespace IPL {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, op_binary_astnode*&& v, location_type&& l)
+        : Base (t)
+        , value (std::move (v))
+        , location (std::move (l))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const op_binary_astnode*& v, const location_type& l)
+        : Base (t)
+        , value (v)
+        , location (l)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
       basic_symbol (typename Base::kind_type t, statement_astnode*&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
@@ -977,12 +996,7 @@ switch (yykind)
         break;
 
       case symbol_kind::S_expression: // expression
-      case symbol_kind::S_logical_and_expression: // logical_and_expression
-      case symbol_kind::S_equality_expression: // equality_expression
-      case symbol_kind::S_relational_expression: // relational_expression
-      case symbol_kind::S_additive_expression: // additive_expression
       case symbol_kind::S_unary_expression: // unary_expression
-      case symbol_kind::S_multiplicative_expression: // multiplicative_expression
       case symbol_kind::S_postfix_expression: // postfix_expression
       case symbol_kind::S_primary_expression: // primary_expression
       case symbol_kind::S_expression_list: // expression_list
@@ -991,6 +1005,14 @@ switch (yykind)
 
       case symbol_kind::S_fun_declarator: // fun_declarator
         value.template destroy< fundeclarator_astnode* > ();
+        break;
+
+      case symbol_kind::S_logical_and_expression: // logical_and_expression
+      case symbol_kind::S_equality_expression: // equality_expression
+      case symbol_kind::S_relational_expression: // relational_expression
+      case symbol_kind::S_additive_expression: // additive_expression
+      case symbol_kind::S_multiplicative_expression: // multiplicative_expression
+        value.template destroy< op_binary_astnode* > ();
         break;
 
       case symbol_kind::S_function_definition: // function_definition
@@ -1928,7 +1950,7 @@ switch (yykind)
 
 #line 5 "parser.yy"
 } // IPL
-#line 1932 "parser.tab.hh"
+#line 1954 "parser.tab.hh"
 
 
 

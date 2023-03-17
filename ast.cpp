@@ -1,7 +1,8 @@
 #include <iostream>
 #include <string>
+#include <set>
 #include "ast.hh"
-
+typespec_astnode typespec_astnode::intc,typespec_astnode::floatc,typespec_astnode::stringc,typespec_astnode::structc;
 identifier_astnode::identifier_astnode(std::string id) : id(id) { }
 
 void identifier_astnode::print() {
@@ -85,7 +86,28 @@ void for_astnode::print() {
     std::cout << "\n}";
 }
 
-op_binary_astnode::op_binary_astnode(std::string op, exp_astnode* exp1, exp_astnode* exp2): op(op), exp1(exp1), exp2(exp2) {}
+op_binary_astnode::op_binary_astnode(std::string op, exp_astnode* exp1, exp_astnode* exp2): op(op), exp1(exp1), exp2(exp2) {
+    std::set<std::string> boolops={
+        "OR_OP",
+        "AND_OP",
+        "EQ_OP_INT","NE_OP_INT","LT_OP_INT","GT_OP_INT","LE_OP_INT","GE_OP_INT",
+        "EQ_OP_FLOAT","NE_OP_FLOAT","LT_OP_FLOAT","GT_OP_FLOAT","LE_OP_FLOAT","GE_OP_FLOAT",
+    };
+    if(boolops.count(op)){
+        
+    }
+    else if(exp1->typeNode.baseTypeName=="float"||exp2->typeNode.baseTypeName=="float"){
+        if(exp1->typeNode.baseTypeName=="float"){
+            typeNode = exp1->typeNode;
+        }
+        else{
+            typeNode = exp2->typeNode;
+        }
+    }
+    else{
+        typeNode = exp1->typeNode;
+    }
+}
 
 void op_binary_astnode::print() {
     std::cout << "\"op_binary\": {\n";
@@ -185,6 +207,24 @@ void fundeclarator_astnode::print(){
 }
 fundeclarator_astnode::fundeclarator_astnode(std::string name,std::vector<typespec_astnode> ptypes):name(name),paramtypes(ptypes){
 
+}
+typespec_astnode::typespec_astnode(){
+    typespec_astnode::structc.baseTypeWidth = 0;
+    typespec_astnode::structc.baseTypeName = "struct";
+    typespec_astnode::structc.typeName = "struct";
+    typespec_astnode::structc.typeWidth = 0;
+    typespec_astnode::intc.baseTypeWidth = 4;
+    typespec_astnode::intc.baseTypeName = "int";
+    typespec_astnode::intc.typeName = "int";
+    typespec_astnode::intc.typeWidth = 4;
+    typespec_astnode::floatc.baseTypeWidth = 8;
+    typespec_astnode::floatc.baseTypeName = "float";
+    typespec_astnode::floatc.typeName = "float";
+    typespec_astnode::floatc.typeWidth = 8;
+    typespec_astnode::stringc.baseTypeWidth = 0;
+    typespec_astnode::stringc.baseTypeName = "string";
+    typespec_astnode::stringc.typeName = "string";
+    typespec_astnode::stringc.typeWidth = 0;
 }
 void typespec_astnode::deref(){
     if(arrsizes.size()>0){

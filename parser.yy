@@ -53,8 +53,8 @@
 #define yylex IPL::Parser::scanner.yylex
 stack<SymTab*> ststack;
 int retType;
+typespec_astnode structc,intc,floatc,stringc;
 typespec_astnode toptype;
-typespec_astnode structc, intc, floatc,stringc;
 string topvarname;
 }
 
@@ -92,7 +92,9 @@ string topvarname;
 %nterm <std::vector<abstract_astnode*>> translation_unit begin_nterm
 %nterm <abstract_astnode*> struct_specifier procedure_call declaration_list
 
-%nterm <exp_astnode*> expression logical_and_expression equality_expression relational_expression additive_expression unary_expression multiplicative_expression postfix_expression primary_expression expression_list //assignment_expression
+%nterm <exp_astnode*> expression unary_expression postfix_expression primary_expression expression_list //assignment_expression
+
+%nterm <op_binary_astnode*> logical_and_expression equality_expression relational_expression additive_expression multiplicative_expression
 
 %nterm <assignE_astnode*> assignment_expression
 
@@ -106,22 +108,10 @@ string topvarname;
 %nterm <fundeclarator_astnode*> fun_declarator
 %%
 begin_nterm: {
-    structc.baseTypeWidth = 0;
-    structc.baseTypeName = "struct";
-    structc.typeName = "struct";
-    structc.typeWidth = 0;
-    intc.baseTypeWidth = 4;
-    intc.baseTypeName = "int";
-    intc.typeName = "int";
-    intc.typeWidth = 4;
-    floatc.baseTypeWidth = 8;
-    floatc.baseTypeName = "float";
-    floatc.typeName = "float";
-    floatc.typeWidth = 8;
-    stringc.baseTypeWidth = 0;
-    stringc.baseTypeName = "string";
-    stringc.typeName = "string";
-    stringc.typeWidth = 0;
+    structc = typespec_astnode::structc;
+    intc = typespec_astnode::intc;
+    floatc = typespec_astnode::floatc;
+    stringc = typespec_astnode::stringc;
     if(!Symbols::symTabConstructed){
         Symbols::gst = new SymTab();
         ststack.push(Symbols::gst);
@@ -226,7 +216,7 @@ type_specifier: VOID{
     ts.baseTypeName = ts.typeName;
     $$ = ts;
     if(!Symbols::symTabConstructed){
-    toptype = ts;
+        toptype = ts;
     }
 }
 ;
@@ -300,10 +290,12 @@ declarator_arr: IDENTIFIER{
 }
 | declarator_arr '[' INT_CONSTANT ']'{
     $$ = toptype;
-    typespec_astnode tstmp = $1;
-    $$.typeWidth = ((tstmp).typeWidth) * (std::stoi($3));
-    $$.typeName = (tstmp).typeName+"["+($3)+"]";
-    $$.arrsizes.push_back(std::stoi($3));
+    if(Symbols::symTabConstructed){
+        typespec_astnode tstmp = $1;
+        $$.typeWidth = ((tstmp).typeWidth) * (std::stoi($3));
+        $$.typeName = (tstmp).typeName+"["+($3)+"]";
+        $$.arrsizes.push_back(std::stoi($3));
+    }
 };
 
 declarator: declarator_arr{
@@ -434,9 +426,27 @@ additive_expression: multiplicative_expression{
 }
 | additive_expression '+' multiplicative_expression{
     $$ = new op_binary_astnode("PLUS?", $1, $3);
+    if(Symbols::symTabConstructed){
+        $$->op = "PLUS";
+        if($$->typeNode.baseTypeName=="float"){
+            $$->op += "_FLOAT";
+        }
+        else{
+            $$->op += "_INT";
+        }
+    }
 }
 | additive_expression '-' multiplicative_expression{
     $$ = new op_binary_astnode("MINUS?", $1, $3);
+    if(Symbols::symTabConstructed){
+        $$->op = "MINUS";
+        if($$->typeNode.baseTypeName=="float"){
+            $$->op += "_FLOAT";
+        }
+        else{
+            $$->op += "_INT";
+        }
+    }
 }
 ;
 
@@ -449,15 +459,33 @@ unary_expression: postfix_expression{
 ;
 
 multiplicative_expression: unary_expression{
-    $$ = $1;
+    $$ = new op_binary_astnode("MULT?",$1,new intconst_astnode("1"));
+
 }
 | multiplicative_expression '*' unary_expression{
     $$ = new op_binary_astnode("MULT?", $1, $3);
-    //overloading resolution.
+    //operator and expression match check here.
+    if(Symbols::symTabConstructed){
+        $$->op = "MULT";
+        if($$->typeNode.baseTypeName=="float"){
+            $$->op += "_FLOAT";
+        }
+        else{
+            $$->op += "_INT";
+        }
+    }
 }
 | multiplicative_expression '/' unary_expression{
     $$ = new op_binary_astnode("DIV?", $1, $3);
-    //overloading resolution.
+    if(Symbols::symTabConstructed){
+        $$->op = "DIV";
+        if($$->typeNode.baseTypeName=="float"){
+            $$->op += "_FLOAT";
+        }
+        else{
+            $$->op += "_INT";
+        }
+    }
 }
 ;
 
@@ -468,35 +496,38 @@ postfix_expression: primary_expression{
     $$ = new arrayref_astnode($1, $3);
 }
 | IDENTIFIER '(' ')'{
-    //TODO Funcall
+    // TODO
 }
 | IDENTIFIER '(' expression_list ')'{
     //TODO funcall
 }
 | postfix_expression '.' IDENTIFIER{
     $$ = new member_astnode($1, new identifier_astnode($3));
-    //TODO
-    std::string structName = $1->typeNode.typeName;
-    SymEntry* memberEntry = Symbols::getSymEntry(Symbols::slsts[structName],$3);
-    if(memberEntry){
-        $$->typeNode = memberEntry->type;
-    }
-    else{
-        //throw member dne
+    if(Symbols::symTabConstructed){
+        std::string structName = $1->typeNode.typeName;
+        SymEntry* memberEntry = Symbols::getSymEntry(Symbols::slsts[structName],$3,true);
+        if(memberEntry){
+            $$->typeNode = memberEntry->type;
+        }
+        else{
+            error(@$,"Member DNE");
+        }
     }
 }
 | postfix_expression PTR_OP IDENTIFIER{
     $$ = new member_astnode(new arrow_astnode($1, new identifier_astnode($3)), new identifier_astnode($3));
-    typespec_astnode dereftype = $1->typeNode;
-    dereftype.deref();
-    std::string structName  = dereftype.typeName;
-    //TODO restrict global table search here.
-    SymEntry* memberEntry = Symbols::getSymEntry(Symbols::slsts[structName],$3);
-    if(memberEntry){
-        $$->typeNode = memberEntry->type;
-    }
-    else{
-        //throw member dne
+    if(Symbols::symTabConstructed){
+        typespec_astnode dereftype = $1->typeNode;
+        dereftype.deref();
+        std::string structName  = dereftype.typeName;
+        //TODO restrict global table search here.
+        SymEntry* memberEntry = Symbols::getSymEntry(Symbols::slsts[structName],$3,true);
+        if(memberEntry){
+            $$->typeNode = memberEntry->type;
+        }
+        else{
+            error(@$,"Member DNE");
+        }
     }
 }
 | postfix_expression INC_OP{

@@ -241,22 +241,22 @@ Nonterminals, with rules where they appear
     expression <exp_astnode*> (64)
         on left: 41 42
         on right: 36 37 42 62 72 73 74 79 80 81
-    logical_and_expression <exp_astnode*> (65)
+    logical_and_expression <op_binary_astnode*> (65)
         on left: 43 44
         on right: 41 42 44
-    equality_expression <exp_astnode*> (66)
+    equality_expression <op_binary_astnode*> (66)
         on left: 45 46 47
         on right: 43 44 46 47
-    relational_expression <exp_astnode*> (67)
+    relational_expression <op_binary_astnode*> (67)
         on left: 48 49 50 51 52
         on right: 45 46 47 49 50 51 52
-    additive_expression <exp_astnode*> (68)
+    additive_expression <op_binary_astnode*> (68)
         on left: 53 54 55
         on right: 48 49 50 51 52 54 55
     unary_expression <exp_astnode*> (69)
         on left: 56 57
         on right: 37 57 58 59 60
-    multiplicative_expression <exp_astnode*> (70)
+    multiplicative_expression <op_binary_astnode*> (70)
         on left: 58 59 60
         on right: 53 54 55 59 60
     postfix_expression <exp_astnode*> (71)

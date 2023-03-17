@@ -156,11 +156,11 @@ int Symbols::getStructBaseTypeWidth(string structname){
     return 0;
 }
 //within a struct the offsets start from 0, then increased by the size of the first field then the next field.
-SymEntry* Symbols::getSymEntry(SymTab * tst, string symbol){
+SymEntry* Symbols::getSymEntry(SymTab * tst, string symbol,bool isMember){
     if(tst->rows.count(symbol)){
         return &(tst->rows[symbol]);
     }
-    if(Symbols::gst->rows.count(symbol)){
+    if((!isMember)&&Symbols::gst->rows.count(symbol)){
         return &(Symbols::gst->rows[symbol]);
     }
     return NULL;
