@@ -9,7 +9,7 @@
 
 //We want these to be the first action after a token is recognized. 
 
-#define YY_USER_ACTION loc->step(); loc->columns(yyleng);
+#define YY_USER_ACTION loc->step(); loc->columns();
 
 // token_type is a short hand for IPL::Parser::token
 
@@ -27,11 +27,11 @@ using token_type = IPL::Parser::token;
 
 %{  /** Code executed at the beginning of yylex **/
       yylval = lval;
-
+    loc = location;
 %}
 
-[ \t\r]                                                   {}
-[\n]                                                      loc->lines();
+[ \t]                                                   {}
+[\n]                                                  loc->lines();
 [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]                       {}
 void {
   yylval->emplace< std::string >( YYText() );

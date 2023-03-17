@@ -349,7 +349,7 @@ static const flex_int16_t yy_accept[102] =
 static const YY_CHAR yy_ec[256] =
     {   0,
         1,    1,    1,    1,    1,    1,    1,    1,    2,    3,
-        1,    1,    2,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    4,    5,    6,    7,    7,    7,    8,    7,    9,
        10,   11,   12,   13,   14,   15,   16,   17,   18,   19,
@@ -503,7 +503,7 @@ static const flex_int16_t yy_chk[253] =
 
 //We want these to be the first action after a token is recognized. 
 
-#define YY_USER_ACTION loc->step(); loc->columns(yyleng);
+#define YY_USER_ACTION loc->step(); loc->columns();
 
 // token_type is a short hand for IPL::Parser::token
 
@@ -649,7 +649,7 @@ YY_DECL
   /** Code executed at the beginning of yylex **/
 #line 30 "scanner.l"
       yylval = lval;
-
+    loc = location;
 
 
 #line 656 "scanner.yy.cc"

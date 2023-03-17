@@ -4,13 +4,14 @@
 %defines 
 %define api.namespace {IPL}
 %define api.parser.class {Parser}
-
+%define api.value.type variant
+/* %define api.location.type {IPL::location} */
+%define parse.assert
 %define parse.trace
 
 %code requires{
-    #include "location.hh"
     #include "ast.hh"
-
+    #include "location.hh"
    namespace IPL {
       class Scanner;
    }
@@ -58,9 +59,7 @@ typespec_astnode toptype;
 string topvarname;
 }
 
-%define api.value.type variant
-%define api.location.type {IPL::location}
-%define parse.assert
+
 
 %start begin_nterm
 
@@ -122,10 +121,10 @@ begin_nterm: {
 
 } translation_unit {
     if(!Symbols::symTabConstructed){
-        ststack.top()->printJson();
         Symbols::symTabConstructed = true;
     }
     else{
+        ststack.top()->printJson();
         std::cout<<"here again"<<std::endl;
     }
 }
@@ -641,5 +640,6 @@ declarator_list: declarator{
 //grammar definition.
 void IPL::Parser::error( const location_type &l, const std::string &err_message )
 {
-   std::cerr << "Error: " << err_message << " at " << l << "\n";
+   std::cerr << "Error: " << err_message << " at " << l.end << "\n";
+   exit(1);
 }
