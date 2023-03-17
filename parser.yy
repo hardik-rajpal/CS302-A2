@@ -290,8 +290,8 @@ declarator_arr: IDENTIFIER{
     }
 }
 | declarator_arr '[' INT_CONSTANT ']'{
-    $$ = toptype;
-    if(Symbols::symTabConstructed){
+    $$ = $1;
+    if(!Symbols::symTabConstructed){
         typespec_astnode tstmp = $1;
         $$.typeWidth = ((tstmp).typeWidth) * (std::stoi($3));
         $$.typeName = (tstmp).typeName+"["+($3)+"]";
@@ -460,7 +460,7 @@ unary_expression: postfix_expression{
 ;
 
 multiplicative_expression: unary_expression{
-    $$ = new op_binary_astnode("MULT?",$1,new intconst_astnode("1"));
+    $$ = (op_binary_astnode*) $1;
 
 }
 | multiplicative_expression '*' unary_expression{
@@ -619,6 +619,7 @@ declarator_list: declarator{
     string type = $1.typeName;
     int size = $1.typeWidth;
     if(!Symbols::symTabConstructed){
+        std::cerr<<topvarname<<": "<<size<<" "<<std::endl;
         int offset = ststack.top()->getNewOffset(size);
         SymTab* st = ststack.top();
         st->rows[topvarname] = SymEntry($1,SymTab::ST_HL_type::VAR,SymTab::ST_LPG::LOCAL,size,offset);

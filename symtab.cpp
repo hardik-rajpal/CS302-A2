@@ -1,5 +1,6 @@
 #include "symtab.h"
-SymTab * Symbols::gst;
+#include "util.hh"
+SymTab *Symbols::gst;
 map<string, SymTab *> Symbols::flsts;
 map<string, SymTab *> Symbols::slsts;
 bool Symbols::symTabConstructed = false;
@@ -32,17 +33,21 @@ void SymEntry::printJson(string varname)
         break;
     }
     cout << size << ",\n";
-    if(hltype==SymTab::STRUCT){
-        cout<<"\"-\",\n";
+    if (hltype == SymTab::STRUCT)
+    {
+        cout << "\"-\",\n";
     }
-    else{
+    else
+    {
         cout << offset << ",\n";
     }
-    if(hltype==SymTab::STRUCT){
-        cout<<"\"-\"\n";
+    if (hltype == SymTab::STRUCT)
+    {
+        cout << "\"-\"\n";
     }
-    else{
-        cout<<"\""<<type.typeName<<"\"";
+    else
+    {
+        cout << "\"" << type.typeName << "\"";
     }
     cout << "\n]";
 }
@@ -50,7 +55,7 @@ void SymTab::printJson()
 {
     cout << "{\n\"globalST\": [\n";
     auto iter = rows.begin();
-    for (;iter!=rows.end();)
+    for (; iter != rows.end();)
     {
         (*iter).second.printJson((*iter).first);
         if ((++iter) != (rows.end()))
@@ -61,12 +66,13 @@ void SymTab::printJson()
     }
     cout << "],\n\"structs\":[\n";
     auto iterlst = Symbols::slsts.begin();
-    for (;iterlst!=Symbols::slsts.end();)
+    for (; iterlst != Symbols::slsts.end();)
     {
-        cout << "{\n\"name\":\"" << (*iterlst).first << "\",\n\"localST\":[\n"<<endl;
+        cout << "{\n\"name\":\"" << (*iterlst).first << "\",\n\"localST\":[\n"
+             << endl;
         auto rows = (*iterlst).second->rows;
         auto iterent = rows.begin();
-        for (;iterent!=rows.end();)
+        for (; iterent != rows.end();)
         {
             iterent->second.printJson(iterent->first);
             if ((++iterent) != (rows.end()))
@@ -77,20 +83,20 @@ void SymTab::printJson()
         }
         cout << "]\n";
         // TODO:add comma above, printAST here.
-        cout << "}"<<endl;
+        cout << "}" << endl;
         if ((++iterlst) != (Symbols::slsts).end())
         {
             cout << ",";
         }
         cout << "\n";
     }
-    cout << "],\n\"functions\":["<<endl;
+    cout << "],\n\"functions\":[" << endl;
     iterlst = Symbols::flsts.begin();
-    for (;iterlst!=Symbols::flsts.end();)
+    for (; iterlst != Symbols::flsts.end();)
     {
         cout << "{\n\"name\":\"" << (*iterlst).first << "\",\n\"localST\":[\n";
         auto iterent = (*iterlst).second->rows.begin();
-        for (;iterent != (*iterlst).second->rows.end();)
+        for (; iterent != (*iterlst).second->rows.end();)
         {
             (*iterent).second.printJson((*iterent).first);
             if ((++iterent) != (((*iterlst).second->rows.end())))
@@ -100,86 +106,105 @@ void SymTab::printJson()
             cout << "\n";
         }
         cout << "],\n";
-        cout<<"\"ast\":";
+        cout << "\"ast\":";
         // cout << flush;
         iterlst->second->ptr->print();
         // TODO:printAST here.
-        cout << "}"<<endl;
+        cout << "}" << endl;
         if ((++iterlst) != (Symbols::flsts).end())
         {
             cout << ",";
         }
         cout << "\n";
     }
-    cout<<"]\n";
-    cout<<"}"<<endl;
+    cout << "]\n";
+    cout << "}" << endl;
 }
-int SymTab::getNewOffsetInStruct(){
+int SymTab::getNewOffsetInStruct()
+{
     int size = 0;
-    for(auto entry:rows){
-        size+=entry.second.size;
+    for (auto entry : rows)
+    {
+        size += entry.second.size;
     }
     return size;
 }
-int SymTab::getNewOffset(size_t posSize){
-    if(type=="struct"){
+int SymTab::getNewOffset(size_t posSize)
+{
+    if (type == "struct")
+    {
         return getNewOffsetInStruct();
     }
     auto iter = rows.begin();
     auto miniter = rows.begin();
     int newOffset = -posSize;
     bool offsetSet = true;
-        for(;iter!=rows.end();iter++){
-            if(iter->second.lpgtype==LOCAL){
-                offsetSet = false;
-                if((*iter).second.offset<(*miniter).second.offset){
-                    miniter = iter;
-                }
+    for (; iter != rows.end(); iter++)
+    {
+        if (iter->second.lpgtype == LOCAL)
+        {
+            offsetSet = false;
+            if ((*iter).second.offset < (*miniter).second.offset)
+            {
+                miniter = iter;
             }
         }
-    if(!offsetSet){
+    }
+    if (!offsetSet)
+    {
         SymEntry &minOffsetEntry = (*miniter).second;
         newOffset = minOffsetEntry.offset - posSize;
     }
     return newOffset;
 }
-int Symbols::getStructBaseTypeWidth(string structname){
+int Symbols::getStructBaseTypeWidth(string structname)
+{
     int size = 0;
-    if(slsts[structname]){
-        for(auto entry:slsts[structname]->rows){
+    if (slsts[structname])
+    {
+        for (auto entry : slsts[structname]->rows)
+        {
             size += entry.second.size;
         };
         return size;
     }
-    cout<<"Error! Unknown struct encountered in code!";
-    throw ;
+    cout << "Error! Unknown struct encountered in code!";
+    throw;
     return 0;
 }
-//within a struct the offsets start from 0, then increased by the size of the first field then the next field.
-SymEntry* Symbols::getSymEntry(SymTab * tst, string symbol,bool isMember){
-    if(tst->rows.count(symbol)){
+// within a struct the offsets start from 0, then increased by the size of the first field then the next field.
+SymEntry *Symbols::getSymEntry(SymTab *tst, string symbol, bool isMember)
+{
+    if (tst->rows.count(symbol))
+    {
         return &(tst->rows[symbol]);
     }
-    if((!isMember)&&Symbols::gst->rows.count(symbol)){
+    if ((!isMember) && Symbols::gst->rows.count(symbol))
+    {
         return &(Symbols::gst->rows[symbol]);
     }
     return NULL;
 }
 
-int SymTab::getParamOffset(size_t posSize){
+int SymTab::getParamOffset(size_t posSize)
+{
     auto iter = rows.begin();
     auto miniter = rows.begin();
     int newOffset = -4;
     bool offsetSet = true;
-        for(;iter!=rows.end();iter++){
-            if(iter->second.lpgtype==SymTab::ST_LPG::PARAM){
-                offsetSet = false;
-                if((*iter).second.offset<(*miniter).second.offset){
-                    miniter = iter;
-                }
+    for (; iter != rows.end(); iter++)
+    {
+        if (iter->second.lpgtype == SymTab::ST_LPG::PARAM)
+        {
+            offsetSet = false;
+            if ((*iter).second.offset < (*miniter).second.offset)
+            {
+                miniter = iter;
             }
         }
-    if(!offsetSet){
+    }
+    if (!offsetSet)
+    {
         SymEntry &minOffsetEntry = (*miniter).second;
         newOffset = minOffsetEntry.offset - posSize;
     }

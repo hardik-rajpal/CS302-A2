@@ -2,6 +2,7 @@
 #include <string>
 #include <set>
 #include "ast.hh"
+#include "util.hh"
 typespec_astnode typespec_astnode::intc,typespec_astnode::floatc,typespec_astnode::stringc,typespec_astnode::structc;
 identifier_astnode::identifier_astnode(std::string id) : id(id) { }
 
@@ -258,7 +259,7 @@ std::string typespec_astnode::genTypeName(){
         tn += ("["+std::to_string(*iter)+"]");
     }
     return tn;
-
+}
 return_astnode::return_astnode(exp_astnode* exp): exp(exp) { };
 void return_astnode::print() {
     printAst(
