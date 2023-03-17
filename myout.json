@@ -102,22 +102,22 @@
 "sapiens","var",
 "local",
 8,
--816,
+-20,
 "struct book"
 ],
 [
 "saps","var",
 "local",
 4,
--820,
+-24,
 "struct book*"
 ],
 [
 "w","var",
 "local",
-800,
--808,
-"int[10][20]"
+4,
+-12,
+"int"
 ],
 [
 "x","var",
@@ -137,7 +137,7 @@
 "z","var",
 "local",
 4,
--824,
+-28,
 "int"
 ]
 ]
@@ -145,4 +145,4 @@
 
 ]
 }
-Here again
+here again

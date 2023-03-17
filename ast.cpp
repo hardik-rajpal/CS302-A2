@@ -94,7 +94,7 @@ op_binary_astnode::op_binary_astnode(std::string op, exp_astnode* exp1, exp_astn
         "EQ_OP_FLOAT","NE_OP_FLOAT","LT_OP_FLOAT","GT_OP_FLOAT","LE_OP_FLOAT","GE_OP_FLOAT",
     };
     if(boolops.count(op)){
-        
+        typeNode = typespec_astnode::intc;
     }
     else if(exp1->typeNode.baseTypeName=="float"||exp2->typeNode.baseTypeName=="float"){
         if(exp1->typeNode.baseTypeName=="float"){
@@ -181,7 +181,7 @@ void deref_astnode::print() {
 }
 
 member_astnode::member_astnode(exp_astnode* exp, identifier_astnode* identifier): exp(exp), identifier(identifier) {
-
+    
 }
 
 void member_astnode::print() {

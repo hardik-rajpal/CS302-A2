@@ -36,7 +36,8 @@
             "args": [
                 "tests/struct.c",
                 ">",
-                "myout.json"
+                "myout.json",
+                "2>mydebug.txt"
             ]
         }
     ]

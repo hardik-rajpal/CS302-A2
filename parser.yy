@@ -114,16 +114,19 @@ begin_nterm: {
     stringc = typespec_astnode::stringc;
     if(!Symbols::symTabConstructed){
         Symbols::gst = new SymTab();
-        ststack.push(Symbols::gst);
     }
     else{
         // std::cout<<"Here again";
     }
+    ststack.push(Symbols::gst);
 
 } translation_unit {
     if(!Symbols::symTabConstructed){
         ststack.top()->printJson();
         Symbols::symTabConstructed = true;
+    }
+    else{
+        std::cout<<"here again"<<std::endl;
     }
 }
 
@@ -149,25 +152,25 @@ translation_unit: struct_specifier{
 ;
 
 struct_specifier: STRUCT IDENTIFIER {
+    string structName = "struct " + $2;
     if(!Symbols::symTabConstructed){
-        string structName = "struct " + $2;
         ststack.top()->rows[structName] = SymEntry(structc,SymTab::ST_HL_type::STRUCT,SymTab::ST_LPG::GLOBAL,0,0);
         Symbols::slsts[structName] = new SymTab();
         Symbols::slsts[structName]->type = "struct";
         // Symbols::slsts[$2] = new SymTab();
-        ststack.push(Symbols::slsts[structName]);
     }
+    ststack.push(Symbols::slsts[structName]);
 }'{' declaration_list '}' ';'{
-    if(!Symbols::symTabConstructed){
+    // if(!Symbols::symTabConstructed){
         ststack.pop();
-    }
+    // }
 };
 
 function_definition: type_specifier fun_declarator compound_statement{
     $$ = new seq_astnode($3);
-    if(!Symbols::symTabConstructed){
+    // if(!Symbols::symTabConstructed){
         ststack.pop();
-    }
+    // }
 };
 
 type_specifier: VOID{
@@ -222,13 +225,13 @@ type_specifier: VOID{
 ;
 
 fun_declarator: IDENTIFIER '('{
+    std::string name = $1;
     if(!Symbols::symTabConstructed){
-        std::string name = $1;
         ststack.top()->rows[name] = SymEntry(toptype,SymTab::ST_HL_type::FUN,SymTab::ST_LPG::GLOBAL,0,0);
         Symbols::flsts[name] = new SymTab();
         Symbols::flsts[name]->type = "function";
-        ststack.push(Symbols::flsts[name]);
     }
+    ststack.push(Symbols::flsts[name]);
 } parameter_list ')'{
     if(!Symbols::symTabConstructed){
 
@@ -257,8 +260,8 @@ fun_declarator: IDENTIFIER '('{
     if(!Symbols::symTabConstructed){
         ststack.top()->rows[name] = SymEntry(toptype,SymTab::ST_HL_type::FUN,SymTab::ST_LPG::GLOBAL,0,0);
         Symbols::flsts[name] = new SymTab();
-        ststack.push(Symbols::flsts[name]);
     }
+    ststack.push(Symbols::flsts[name]);
 }
 ;
 
@@ -503,13 +506,17 @@ postfix_expression: primary_expression{
 }
 | postfix_expression '.' IDENTIFIER{
     $$ = new member_astnode($1, new identifier_astnode($3));
+    std::cerr<<"using this rule"<<std::endl;
     if(Symbols::symTabConstructed){
         std::string structName = $1->typeNode.typeName;
+        std::cerr<<"symtab constr, structname: "<<structName<<std::endl;
         SymEntry* memberEntry = Symbols::getSymEntry(Symbols::slsts[structName],$3,true);
         if(memberEntry){
             $$->typeNode = memberEntry->type;
+            std::cerr<<"Member "<<$3<<" found in "<<structName<<std::endl;
         }
         else{
+            std::cerr<<"Member "<<$3<<" not found in "<<structName<<std::endl;
             error(@$,"Member DNE");
         }
     }
@@ -540,7 +547,7 @@ primary_expression: IDENTIFIER{
     if(Symbols::symTabConstructed){
         SymEntry * entry = Symbols::getSymEntry(ststack.top(),$1);
         if(!entry){
-            std::cout<<"Write error handling code."<<endl;
+            error(@$,"Symbol not found.");
         }
         else{
             $$->typeNode = entry->type;
