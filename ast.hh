@@ -2,6 +2,7 @@
 #define AST_HH
 #include <string>
 #include <vector>
+#include <set>
 
 enum base_type {
     INT,
@@ -24,6 +25,7 @@ public:
 class statement_astnode: public abstract_astnode {
 };
 class typespec_astnode{
+    std::set<std::string> numtypes= {"int","float"};
 public:
     static typespec_astnode structc, intc, floatc,stringc;
     int baseTypeWidth;
@@ -37,6 +39,7 @@ public:
     void deref();
     void addressOf();
     bool compatibleWith(typespec_astnode t2);
+    bool isNumeric();
     
 };
 class exp_astnode: public abstract_astnode {

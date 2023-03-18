@@ -49,11 +49,12 @@
 
     #include "ast.hh"
     #include "location.hh"
+    #include <algorithm>
    namespace IPL {
       class Scanner;
    }
 
-#line 57 "parser.tab.hh"
+#line 58 "parser.tab.hh"
 
 # include <cassert>
 # include <cstdlib> // std::abort
@@ -194,7 +195,7 @@
 
 #line 5 "parser.yy"
 namespace IPL {
-#line 198 "parser.tab.hh"
+#line 199 "parser.tab.hh"
 
 
 
@@ -1949,7 +1950,7 @@ switch (yykind)
 
 #line 5 "parser.yy"
 } // IPL
-#line 1953 "parser.tab.hh"
+#line 1954 "parser.tab.hh"
 
 
 

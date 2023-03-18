@@ -1,2 +1,8 @@
 Parsing round 1 done
-Error: Incompatible types: tried to assign int** to int[10][10] at 5.6
+gonna update exp1
+int
+376
+378
+380
+382
+INT

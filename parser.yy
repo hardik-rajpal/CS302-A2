@@ -12,6 +12,7 @@
 %code requires{
     #include "ast.hh"
     #include "location.hh"
+    #include <algorithm>
    namespace IPL {
       class Scanner;
    }
@@ -186,11 +187,7 @@ type_specifier: VOID{
 }
 | INT{
     // retType = SymTab::ST_type::INT;
-    typespec_astnode ts;
-    ts.baseTypeWidth = 4;
-    ts.typeWidth = ts.baseTypeWidth;
-    ts.typeName = "int";
-    ts.baseTypeName = "int";
+    typespec_astnode ts = intc;
     $$ = ts;
     if(!Symbols::symTabConstructed){
         toptype = ts;
@@ -199,11 +196,7 @@ type_specifier: VOID{
 }
 | FLOAT{
     // retType = SymTab::ST_type::FLOAT;
-    typespec_astnode ts;
-    ts.baseTypeWidth = 8;
-    ts.typeWidth = ts.baseTypeWidth;
-    ts.typeName = "float";
-    ts.baseTypeName = "float";
+    typespec_astnode ts = floatc;
     $$ = ts;
     if(!Symbols::symTabConstructed){
         toptype = ts;
@@ -380,8 +373,21 @@ statement: ';'{
 
 assignment_expression: unary_expression '=' expression{
     if(Symbols::symTabConstructed){
+        std::cerr<<__LINE__<<std::endl;
         if($1->typeNode.compatibleWith($3->typeNode)){
-            $$ = new assignE_astnode($1, $3);
+        std::cerr<<__LINE__<<std::endl;
+            if($1->typeNode.typeName!=$3->typeNode.typeName){
+        std::cerr<<__LINE__<<std::endl;
+                if ($1->typeNode.isNumeric()){
+        std::cerr<<__LINE__<<std::endl;
+                    std::string ltypename = $1->typeNode.typeName;
+                    std::transform(ltypename.begin(), ltypename.end(), ltypename.begin(), [](auto c) { return std::toupper(c); });
+                    std::cerr << ltypename << std::endl;
+                    std::string utypename = "TO_" + ltypename;
+                    $$ = new assignE_astnode($1, new op_unary_astnode(utypename, $3));
+                }
+            }
+            else {$$ = new assignE_astnode($1, $3);}
         }
         else{
             error(@$,"Incompatible types: tried to assign "+$3->typeNode.typeName+" to "+$1->typeNode.typeName);

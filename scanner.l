@@ -26,11 +26,11 @@ using token_type = IPL::Parser::token;
 %% 
 
 %{  /** Code executed at the beginning of yylex **/
-      yylval = lval;
+    yylval = lval;
     loc = location;
 %}
 
-[ \t]                                                   {}
+[ \t\r]                                                   {}
 [\n]                                                  loc->lines();
 [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]                       {}
 void {

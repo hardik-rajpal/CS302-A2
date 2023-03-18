@@ -16,6 +16,7 @@ int main()
   struct book sapiens;
   struct book * saps;
   int z;
+  float gayness;
   z = x*y;
   *p = 1;
   for (x=0; x <10; x=x+1);

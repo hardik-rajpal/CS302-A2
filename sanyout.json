@@ -1,47 +1,73 @@
-{"globalST": 
-[[         "main",         "fun",         "global",       0,       0,"int"
-]
-]
-,
-  "structs": [
-],
+{
+  "globalST": [
+    [
+      "main",
+      "fun",
+      "global",
+      0,
+      0,
+      "int"
+    ]
+  ],
+  "structs": [],
   "functions": [
-{
-"name": "main",
-"localST": 
-[
-["a",         "var",         "local",      40,     -40,"int***[10]"
-]
-,
-["b",         "var",         "local",       4,     -44,"int****"
-]
-]
-,
-"ast": 
-{
-"seq": [
-{ "assignS": {
-"left": 
-{
-"identifier": "b"
-}
-,
-"right": 
-{
-"identifier": "a"
-}
-}
-}
-,
-{
-"return": 
-{
-"intconst": 0}
-}
-
-
-]
-}
-}
-]
+    {
+      "name": "main",
+      "localST": [
+        [
+          "a",
+          "var",
+          "local",
+          4,
+          -4,
+          "int"
+        ],
+        [
+          "b",
+          "var",
+          "local",
+          4,
+          -8,
+          "float"
+        ]
+      ],
+      "ast": {
+        "seq": [
+          {
+            "assignS": {
+              "left": {
+                "identifier": "a"
+              },
+              "right": {
+                "op_unary": {
+                  "op": "TO_INT",
+                  "child": {
+                    "op_binary": {
+                      "op": "PLUS_FLOAT",
+                      "left": {
+                        "op_unary": {
+                          "op": "TO_FLOAT",
+                          "child": {
+                            "identifier": "a"
+                          }
+                        }
+                      },
+                      "right": {
+                        "identifier": "b"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "return": {
+              "intconst": 0
+            }
+          }
+        ]
+      }
+    }
+  ]
 }

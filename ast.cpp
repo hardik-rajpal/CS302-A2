@@ -100,12 +100,16 @@ op_binary_astnode::op_binary_astnode(std::string op, exp_astnode* exp1, exp_astn
     if(boolops.count(op)){
         typeNode = typespec_astnode::intc;
     }
-    else if(exp1->typeNode.baseTypeName=="float"||exp2->typeNode.baseTypeName=="float"){
-        if(exp1->typeNode.baseTypeName=="float"){
-            typeNode = exp1->typeNode;
+    else if(exp1->typeNode.typeName=="float"||exp2->typeNode.typeName=="float"){
+        typeNode = typespec_astnode::floatc;
+        if(exp1->typeNode.typeName=="int"){
+            std::cerr<<"gonna update exp1"<<endl;
+            this->exp1 = new op_unary_astnode("TO_FLOAT",exp1);
+            std::cerr<<exp1->typeNode.typeName<<std::endl;
+        
         }
-        else{
-            typeNode = exp2->typeNode;
+        if(exp2->typeNode.typeName=="int"){
+            this->exp2 = new op_unary_astnode("TO_FLOAT",exp2);
         }
     }
     else{
@@ -124,7 +128,15 @@ void op_binary_astnode::print() {
 
 op_unary_astnode::op_unary_astnode(std::string op, exp_astnode* exp): op(op), exp(exp) {
     //TODO validity checks
-    typeNode = exp->typeNode;
+    if(op=="TO_FLOAT"){
+        typeNode = typespec_astnode::floatc;        //parser generated
+    }
+    else if(op=="TO_INT"){
+        typeNode = typespec_astnode::intc;
+    }
+    else{
+        typeNode = exp->typeNode;
+    }
     if(op=="DEREF"){
         typeNode.deref();
     }
@@ -221,10 +233,10 @@ typespec_astnode::typespec_astnode(){
     typespec_astnode::intc.baseTypeName = "int";
     typespec_astnode::intc.typeName = "int";
     typespec_astnode::intc.typeWidth = 4;
-    typespec_astnode::floatc.baseTypeWidth = 8;
+    typespec_astnode::floatc.baseTypeWidth = 4;
     typespec_astnode::floatc.baseTypeName = "float";
     typespec_astnode::floatc.typeName = "float";
-    typespec_astnode::floatc.typeWidth = 8;
+    typespec_astnode::floatc.typeWidth = 4;
     typespec_astnode::stringc.baseTypeWidth = 0;
     typespec_astnode::stringc.baseTypeName = "string";
     typespec_astnode::stringc.typeName = "string";
@@ -247,6 +259,9 @@ void typespec_astnode::addressOf(){
     numptrstars+=1;
     typeName = genTypeName();
 }
+bool typespec_astnode::isNumeric(){
+    return numtypes.count(typeName);
+}
 std::string typespec_astnode::genTypeName(){
     std::string tn = baseTypeName;
     int k = numptrstars;
@@ -265,6 +280,9 @@ bool typespec_astnode::compatibleWith(typespec_astnode t2){
             return false;
         }
         //Note: struct names need to match, as in gcc.
+        if(numtypes.count(baseTypeName)&&numtypes.count(t2.baseTypeName)){
+            return true;
+        }
         return (baseTypeName==t2.baseTypeName);
     }
     else{
