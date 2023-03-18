@@ -1,12 +1,20 @@
 {
   "globalST": [
     [
+      "bar",
+      "fun",
+      "global",
+      0,
+      0,
+      "void"
+    ],
+    [
       "foo",
       "fun",
       "global",
       0,
       0,
-      "int"
+      "void"
     ],
     [
       "main",
@@ -17,7 +25,7 @@
       "int"
     ],
     [
-      "struct book",
+      "struct pair",
       "struct",
       "global",
       8,
@@ -27,10 +35,10 @@
   ],
   "structs": [
     {
-      "name": "struct book",
+      "name": "struct pair",
       "localST": [
         [
-          "pages",
+          "a",
           "var",
           "local",
           4,
@@ -38,7 +46,7 @@
           "int"
         ],
         [
-          "wt",
+          "b",
           "var",
           "local",
           4,
@@ -50,62 +58,49 @@
   ],
   "functions": [
     {
+      "name": "bar",
+      "localST": [],
+      "ast": {
+        "seq": []
+      }
+    },
+    {
       "name": "foo",
       "localST": [
         [
-          "u",
+          "p",
           "var",
           "param",
-          4,
+          8,
           16,
-          "int"
+          "struct pair"
         ],
         [
-          "v",
+          "q",
           "var",
           "param",
           4,
           12,
-          "int"
-        ],
-        [
-          "w",
-          "var",
-          "param",
-          4,
-          20,
-          "int"
-        ],
-        [
-          "x",
-          "var",
-          "local",
-          4,
-          -4,
-          "int"
-        ],
-        [
-          "y",
-          "var",
-          "param",
-          4,
-          28,
-          "int"
-        ],
-        [
-          "z",
-          "var",
-          "param",
-          4,
-          24,
           "int"
         ]
       ],
       "ast": {
         "seq": [
           {
-            "return": {
-              "intconst": 4
+            "assignS": {
+              "left": {
+                "member": {
+                  "struct": {
+                    "identifier": "p"
+                  },
+                  "field": {
+                    "identifier": "a"
+                  }
+                }
+              },
+              "right": {
+                "identifier": "q"
+              }
             }
           }
         ]
@@ -115,52 +110,12 @@
       "name": "main",
       "localST": [
         [
-          "sapiens",
+          "p",
           "var",
           "local",
           8,
-          -816,
-          "struct book"
-        ],
-        [
-          "saps",
-          "var",
-          "local",
-          4,
-          -820,
-          "struct book*"
-        ],
-        [
-          "w",
-          "var",
-          "local",
-          800,
-          -808,
-          "int[10][20]"
-        ],
-        [
-          "x",
-          "var",
-          "local",
-          4,
-          -4,
-          "int"
-        ],
-        [
-          "y",
-          "var",
-          "local",
-          4,
           -8,
-          "int"
-        ],
-        [
-          "z",
-          "var",
-          "local",
-          4,
-          -824,
-          "int"
+          "struct pair"
         ]
       ],
       "ast": {
@@ -168,124 +123,62 @@
           {
             "assignS": {
               "left": {
-                "identifier": "z"
-              },
-              "right": {
-                "op_binary": {
-                  "op": "MULT_INT",
-                  "left": {
-                    "identifier": "x"
+                "member": {
+                  "struct": {
+                    "identifier": "p"
                   },
-                  "right": {
-                    "identifier": "y"
+                  "field": {
+                    "identifier": "a"
                   }
                 }
+              },
+              "right": {
+                "intconst": 4
               }
             }
           },
           {
-            "for": {
-              "init": {
-                "assignE": {
-                  "left": {
-                    "identifier": "x"
+            "assignS": {
+              "left": {
+                "member": {
+                  "struct": {
+                    "identifier": "p"
                   },
-                  "right": {
-                    "intconst": 0
+                  "field": {
+                    "identifier": "b"
                   }
                 }
               },
-              "guard": {
-                "op_binary": {
-                  "op": "LT_OP_INT",
-                  "left": {
-                    "identifier": "x"
-                  },
-                  "right": {
-                    "intconst": 10
-                  }
-                }
-              },
-              "step": {
-                "assignE": {
-                  "left": {
-                    "identifier": "x"
-                  },
-                  "right": {
-                    "op_binary": {
-                      "op": "PLUS_INT",
-                      "left": {
-                        "identifier": "x"
-                      },
-                      "right": {
-                        "intconst": 1
-                      }
-                    }
-                  }
-                }
-              },
-              "body": "empty"
+              "right": {
+                "intconst": 10
+              }
             }
           },
           {
-            "if": {
-              "cond": {
-                "op_binary": {
-                  "op": "GT_OP_INT",
-                  "left": {
-                    "identifier": "y"
-                  },
-                  "right": {
-                    "intconst": 1
+            "proccall": {
+              "fname": {
+                "identifier": "foo"
+              },
+              "params": [
+                {
+                  "identifier": "p"
+                },
+                {
+                  "member": {
+                    "struct": {
+                      "identifier": "p"
+                    },
+                    "field": {
+                      "identifier": "a"
+                    }
                   }
                 }
-              },
-              "then": {
-                "seq": [
-                  {
-                    "assignS": {
-                      "left": {
-                        "identifier": "x"
-                      },
-                      "right": {
-                        "op_binary": {
-                          "op": "MINUS_INT",
-                          "left": {
-                            "identifier": "x"
-                          },
-                          "right": {
-                            "intconst": 1
-                          }
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "assignS": {
-                      "left": {
-                        "identifier": "y"
-                      },
-                      "right": {
-                        "op_binary": {
-                          "op": "PLUS_INT",
-                          "left": {
-                            "identifier": "y"
-                          },
-                          "right": {
-                            "intconst": 1
-                          }
-                        }
-                      }
-                    }
-                  }
-                ]
-              },
-              "else": "empty"
+              ]
             }
           },
           {
             "return": {
-              "identifier": "y"
+              "intconst": 0
             }
           }
         ]

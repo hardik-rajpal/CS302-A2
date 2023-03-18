@@ -12,6 +12,8 @@
 %code requires{
     #include "ast.hh"
     #include "location.hh"
+    #include <set>
+    #include <algorithm>
    namespace IPL {
       class Scanner;
    }
@@ -89,17 +91,20 @@ string topvarname;
 %left '*' '/'
 %token '=' '(' ')' ',' '{' '}' '[' ']' '!' '&' '<' '>' ';' '\n'
 %nterm <std::vector<abstract_astnode*>> translation_unit begin_nterm
-%nterm <abstract_astnode*> struct_specifier procedure_call declaration_list
+%nterm <abstract_astnode*> struct_specifier declaration_list
 
-%nterm <exp_astnode*> expression unary_expression postfix_expression primary_expression expression_list //assignment_expression
+%nterm <exp_astnode*> expression unary_expression postfix_expression primary_expression //assignment_expression
 
 %nterm <op_binary_astnode*> logical_and_expression equality_expression relational_expression additive_expression multiplicative_expression
+
+%nterm <funcall_astnode*> procedure_call
 
 %nterm <assignE_astnode*> assignment_expression
 
 %nterm <statement_astnode*> function_definition statement selection_statement iteration_statement assignment_statement
 
 %nterm <std::vector<statement_astnode*>> compound_statement statement_list
+%nterm <std::vector<exp_astnode*>> expression_list
 
 %nterm <std::string> unary_operator
 %nterm <typespec_astnode> type_specifier declaration declarator_list declarator declarator_arr parameter_declaration
@@ -122,10 +127,11 @@ begin_nterm: {
 } translation_unit {
     if(!Symbols::symTabConstructed){
         Symbols::symTabConstructed = true;
+        // std::cerr<<"Parsing round 1 done"<<std::endl;
     }
     else{
         ststack.top()->printJson();
-        std::cout<<"here again"<<std::endl;
+        // std::cout<<"here again"<<std::endl;
     }
 }
 
@@ -356,7 +362,7 @@ statement: ';'{
     $$ = $1;
 }
 | procedure_call{
-    $$ = NULL;
+    $$ = $1;
 }
 | RETURN expression ';'{
     $$ = new return_astnode($2);
@@ -374,13 +380,58 @@ assignment_statement: assignment_expression ';'{
 ;
 
 procedure_call: IDENTIFIER '(' ')' ';'{
+    if (Symbols::symTabConstructed) {
+        std::string function_name = $1;
+        SymTab* fstab = Symbols::flsts[function_name];
+        if (fstab == nullptr) {
+            error(@$, "Procedure \"" + $1 + "\" not declared");
+        }
+        std::set<std::pair<long long, std::string>> expected;
+        for (auto row: fstab->rows) {
+            if (row.second.lpgtype == SymTab::PARAM) {
+                expected.insert(std::make_pair(row.second.offset, row.second.type.typeName));
+            }
+        }
+        if (!expected.empty()) {
+            error(@$, "Procedure \"" + $1 + "\" called with too few arguments");
+        }
+        $$ = new funcall_astnode(new identifier_astnode($1), std::vector<exp_astnode*>());
+    }
 }
 | IDENTIFIER '(' expression_list ')' ';'{
+    if (Symbols::symTabConstructed) {
+        std::string function_name = $1;
+        SymTab* fstab = Symbols::flsts[function_name];
+    std::set<std::pair<long long, typespec_astnode>,struct offsetcomp> expected;
+        for (auto row: fstab->rows) {
+            if (row.second.lpgtype == SymTab::PARAM) {
+                expected.insert(std::make_pair(row.second.offset, row.second.type));
+            }
+        }
+        if ($3.size() < expected.size()) {
+            error(@$, "Procedure \"" + $1 + "\" called with too few arguments");
+        }
+        else if ($3.size() > expected.size()) {
+            error(@$, "Procedure \"" + $1 + "\" called with too many arguments");
+        }
+        std::vector<exp_astnode*> exp_list = $3;
+        std::reverse(exp_list.begin(), exp_list.end());
+        int i = 0;
+        for (auto item: expected) {
+            if (item.second.compatibleWith(exp_list[i]->typeNode)) {
+                error(@$, "Expected \"" + item.second.typeName + "\" but argument is of type \"" + exp_list[i]->typeNode.typeName + "\"");
+            }
+            i++;
+        }
+
+        $$ = new funcall_astnode(new identifier_astnode($1), $3);
+    }
 }
 ;
 
 expression: logical_and_expression{
     $$ = $1;
+    std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
 | expression OR_OP logical_and_expression{
 }
@@ -388,6 +439,7 @@ expression: logical_and_expression{
 
 logical_and_expression: equality_expression{
     $$ = $1;
+    std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
 | logical_and_expression AND_OP equality_expression{
     $$ = new op_binary_astnode("AND?", $1, $3);
@@ -396,6 +448,7 @@ logical_and_expression: equality_expression{
 
 equality_expression: relational_expression{
     $$ = $1;
+    std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
 | equality_expression EQ_OP relational_expression {
     $$ = new op_binary_astnode("EQ?", $1, $3);
@@ -407,6 +460,7 @@ equality_expression: relational_expression{
 
 relational_expression: additive_expression{
     $$ = $1;
+    std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
 | relational_expression '<' additive_expression{
     $$ = new op_binary_astnode("LT?", $1, $3);
@@ -424,6 +478,7 @@ relational_expression: additive_expression{
 
 additive_expression: multiplicative_expression{
     $$ = $1;
+    std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
 | additive_expression '+' multiplicative_expression{
     $$ = new op_binary_astnode("PLUS?", $1, $3);
@@ -453,6 +508,7 @@ additive_expression: multiplicative_expression{
 
 unary_expression: postfix_expression{
     $$ = $1;
+    std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
 | unary_operator unary_expression{
     $$ = new op_unary_astnode($1, $2);
@@ -461,6 +517,7 @@ unary_expression: postfix_expression{
 
 multiplicative_expression: unary_expression{
     $$ = (op_binary_astnode*) $1;
+    std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 
 }
 | multiplicative_expression '*' unary_expression{
@@ -492,6 +549,7 @@ multiplicative_expression: unary_expression{
 
 postfix_expression: primary_expression{
     $$ = $1;
+    std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
 | postfix_expression '[' expression ']'{
     $$ = new arrayref_astnode($1, $3);
@@ -501,6 +559,7 @@ postfix_expression: primary_expression{
 }
 | IDENTIFIER '(' expression_list ')'{
     //TODO funcall
+    $$ = new funcall_astnode(new identifier_astnode($1), $3);
 }
 | postfix_expression '.' IDENTIFIER{
     $$ = new member_astnode($1, new identifier_astnode($3));
@@ -549,8 +608,11 @@ primary_expression: IDENTIFIER{
         }
         else{
             $$->typeNode = entry->type;
+            std::cerr << __LINE__ << $$->typeNode.typeName<<std::endl;
         }
+ 
     }
+    std::cerr<<"bloom"<<std::endl;
 }
 | INT_CONSTANT{
     $$ = new intconst_astnode($1);
@@ -572,8 +634,13 @@ primary_expression: IDENTIFIER{
 ;
 
 expression_list: expression{
+    $$ = std::vector<exp_astnode*>();
+    $$.push_back($1);
+    std::cerr << __LINE__ << (*($$.rbegin()))->typeNode.typeName<<std::endl;
 }
 | expression_list ',' expression{
+    $1.push_back($3);
+    $$ = $1;
 }
 ;
 
@@ -640,6 +707,7 @@ declarator_list: declarator{
 //grammar definition.
 void IPL::Parser::error( const location_type &l, const std::string &err_message )
 {
-   std::cerr << "Error: " << err_message << " at " << l.end << "\n";
+   std::cout << "Error at line " << l.begin.line << ": " << err_message << "\n";
    exit(1);
+
 }
