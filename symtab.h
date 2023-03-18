@@ -47,6 +47,7 @@ public:
     SymTab::ST_LPG lpgtype;
     SymTab *lst;
     void *astnodeptr;
+public:
     SymEntry(typespec_astnode type, SymTab::ST_HL_type hltype, SymTab::ST_LPG lpgtype, size_t size, size_t offset) : type(type), hltype(hltype), lpgtype(lpgtype), size(size), offset(offset) {}
     SymEntry(){};
     void printJson(string varname);

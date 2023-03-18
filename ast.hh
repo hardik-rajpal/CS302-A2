@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 #include <set>
-
 enum base_type {
     INT,
     FLOAT,
@@ -42,6 +41,11 @@ public:
     bool compatibleWith(typespec_astnode t2);
     bool isNumeric();
     
+};
+struct offsetcomp{
+    bool operator()(std::pair<long long, typespec_astnode> p1, std::pair<long long, typespec_astnode> p2)const{
+        return p1.first<p2.first;
+    }
 };
 class exp_astnode: public abstract_astnode {
 public:
@@ -140,12 +144,9 @@ class fundeclarator_astnode: public abstract_astnode{
     fundeclarator_astnode(std::string name,std::vector<typespec_astnode> ptypes);
     void print();
 };
-class funcall_astnode: public exp_astnode {
-public:
-    funcall_astnode(exp_astnode*, exp_astnode*);
-    void print();
-private:
-    exp_astnode* exp1, *exp2;
+
+class explist_astnode: public exp_astnode {
+
 };
 
 class pointer_astnode: public exp_astnode {
@@ -221,5 +222,14 @@ private:
     exp_astnode* exp;
     identifier_astnode* identifier;
 };
-#endif
     
+class funcall_astnode: public exp_astnode, public statement_astnode {
+public:
+    funcall_astnode(identifier_astnode*, std::vector<exp_astnode*>);
+    void print();
+private:
+    identifier_astnode* id;
+    std::vector<exp_astnode*> exp_list;
+};
+
+#endif

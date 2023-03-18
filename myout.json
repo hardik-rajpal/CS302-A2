@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 {
 "stringconst": ""Enter a three-digit integer""
 }
 {
 "stringconst": ""%d""
 }
+=======
+Error at line 17: Expected "int" but argument is of type "struct pair"
+>>>>>>> semchecks

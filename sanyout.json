@@ -1,6 +1,25 @@
 {
   "globalST": [
     [
+<<<<<<< HEAD
+=======
+      "bar",
+      "fun",
+      "global",
+      0,
+      0,
+      "void"
+    ],
+    [
+      "foo",
+      "fun",
+      "global",
+      0,
+      0,
+      "void"
+    ],
+    [
+>>>>>>> semchecks
       "main",
       "fun",
       "global",
@@ -9,6 +28,7 @@
       "int"
     ],
     [
+<<<<<<< HEAD
       "mod",
       "fun",
       "global",
@@ -18,6 +38,9 @@
     ],
     [
       "struct person",
+=======
+      "struct pair",
+>>>>>>> semchecks
       "struct",
       "global",
       32,
@@ -27,10 +50,17 @@
   ],
   "structs": [
     {
+<<<<<<< HEAD
       "name": "struct person",
       "localST": [
         [
           "age",
+=======
+      "name": "struct pair",
+      "localST": [
+        [
+          "a",
+>>>>>>> semchecks
           "var",
           "local",
           4,
@@ -38,6 +68,7 @@
           "int"
         ],
         [
+<<<<<<< HEAD
           "id",
           "var",
           "local",
@@ -47,6 +78,9 @@
         ],
         [
           "weight",
+=======
+          "b",
+>>>>>>> semchecks
           "var",
           "local",
           4,
@@ -58,6 +92,7 @@
   ],
   "functions": [
     {
+<<<<<<< HEAD
       "name": "main",
       "localST": [
         [
@@ -99,11 +134,72 @@
           4,
           -16,
           "int"
+=======
+      "name": "bar",
+      "localST": [],
+      "ast": {
+        "seq": []
+      }
+    },
+    {
+      "name": "foo",
+      "localST": [
+        [
+          "p",
+          "var",
+          "param",
+          8,
+          16,
+          "struct pair"
+        ],
+        [
+          "q",
+          "var",
+          "param",
+          4,
+          12,
+          "int"
         ]
       ],
       "ast": {
         "seq": [
           {
+            "assignS": {
+              "left": {
+                "member": {
+                  "struct": {
+                    "identifier": "p"
+                  },
+                  "field": {
+                    "identifier": "a"
+                  }
+                }
+              },
+              "right": {
+                "identifier": "q"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "main",
+      "localST": [
+        [
+          "p",
+          "var",
+          "local",
+          8,
+          -8,
+          "struct pair"
+>>>>>>> semchecks
+        ]
+      ],
+      "ast": {
+        "seq": [
+          {
+<<<<<<< HEAD
             "proccall": {
               "fname": {
                 "identifier": "printf"
@@ -142,12 +238,28 @@
               },
               "right": {
                 "intconst": 0
+=======
+            "assignS": {
+              "left": {
+                "member": {
+                  "struct": {
+                    "identifier": "p"
+                  },
+                  "field": {
+                    "identifier": "a"
+                  }
+                }
+              },
+              "right": {
+                "intconst": 4
+>>>>>>> semchecks
               }
             }
           },
           {
             "assignS": {
               "left": {
+<<<<<<< HEAD
                 "identifier": "num"
               },
               "right": {
@@ -172,12 +284,18 @@
                   "op": "NE_OP_INT",
                   "left": {
                     "identifier": "originalNum"
+=======
+                "member": {
+                  "struct": {
+                    "identifier": "p"
+>>>>>>> semchecks
                   },
-                  "right": {
-                    "intconst": 0
+                  "field": {
+                    "identifier": "b"
                   }
                 }
               },
+<<<<<<< HEAD
               "stmt": {
                 "seq": [
                   {
@@ -255,10 +373,15 @@
                     }
                   }
                 ]
+=======
+              "right": {
+                "intconst": 10
+>>>>>>> semchecks
               }
             }
           },
           {
+<<<<<<< HEAD
             "if": {
               "cond": {
                 "op_binary": {
@@ -301,16 +424,41 @@
                   ]
                 }
               }
+=======
+            "proccall": {
+              "fname": {
+                "identifier": "foo"
+              },
+              "params": [
+                {
+                  "identifier": "p"
+                },
+                {
+                  "member": {
+                    "struct": {
+                      "identifier": "p"
+                    },
+                    "field": {
+                      "identifier": "a"
+                    }
+                  }
+                }
+              ]
+>>>>>>> semchecks
             }
           },
           {
             "return": {
+<<<<<<< HEAD
               "op_unary": {
                 "op": "TO_INT",
                 "child": {
                   "floatconst": 4
                 }
               }
+=======
+              "intconst": 0
+>>>>>>> semchecks
             }
           }
         ]

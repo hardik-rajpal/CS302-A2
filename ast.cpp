@@ -172,14 +172,14 @@ pointer_astnode::pointer_astnode(exp_astnode* exp): exp(exp) {}
 void pointer_astnode::print() {
 }
 
-funcall_astnode::funcall_astnode(exp_astnode* exp1, exp_astnode* exp2): exp1(exp1), exp2(exp2) {}
+funcall_astnode::funcall_astnode(identifier_astnode* id, std::vector<exp_astnode*> exp_list): id(id), exp_list(exp_list) {}
 
 void funcall_astnode::print() {
-    std::cout << "\"funcall\": {\n";
-    this->exp1->print();
-    std::cout << ",\n";
-    this->exp2->print();
-    std::cout << "\n}";
+    printAst(
+        "proccall", "al",
+        "fname", id,
+        "params", exp_list
+    );
 }
 
 arrayref_astnode::arrayref_astnode(exp_astnode* exp1, exp_astnode* exp2): exp1(exp1), exp2(exp2) {
