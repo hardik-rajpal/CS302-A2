@@ -1,6 +1,6 @@
 
 struct person {
-   int **id[2][3];
+   int id;
    float weight;
    int age;
 };
@@ -10,6 +10,7 @@ int main()
   int n,i;
   struct person *ptr;
   struct person persons[30];
+  
   
   printf("Enter the number of persons (<= 30): ");
   scanf("%d", &n);

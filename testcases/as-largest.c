@@ -7,7 +7,7 @@ int main() {
 
   for (i = 0; i < n; i = i + 1) {
     printf("Enter number%d: ", i + 1);
-    scanf("%lf", arr[i]);
+    scanf("%f", &arr[i]);
   }
 
   
@@ -18,7 +18,7 @@ int main() {
     else ;
   }
 
-  printf("Largest element = %.2lf", arr[0]);
+  printf("Largest element = %f", arr[0]);
 
   return 0;
 }

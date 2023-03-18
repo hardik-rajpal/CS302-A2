@@ -33,6 +33,7 @@ public:
     std::string typeName;
     int typeWidth;
     int numptrstars = 0;
+    bool islval = true;
     std::vector<int> arrsizes;
     typespec_astnode();
     std::string genTypeName();

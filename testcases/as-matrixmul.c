@@ -1,3 +1,4 @@
+
 int main()
 {
     int a[3][3], b[3][3], c[3][3];
@@ -7,7 +8,7 @@ int main()
     {
         for (j = 0; j < 3; j = j + 1)
         {
-            scanf("%d", a[i][j]);
+            scanf("%d", &a[i][j]);
             c[i][j] = 0;
         }
     }
@@ -16,7 +17,7 @@ int main()
     {
         for (j = 0; j < 3; j = j + 1)
         {
-            scanf("%d", b[i][j]);
+            scanf("%d", &b[i][j]);
         }
     }
     for (i = 0; i < 3; i = i + 1)

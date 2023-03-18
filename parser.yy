@@ -373,16 +373,21 @@ statement: ';'{
 
 assignment_expression: unary_expression '=' expression{
     if(Symbols::symTabConstructed){
-        std::cerr<<__LINE__<<std::endl;
+        // std::cerr<<__LINE__<<std::endl;
         if($1->typeNode.compatibleWith($3->typeNode)){
-        std::cerr<<__LINE__<<std::endl;
+            // std::cerr<<__LINE__<<std::endl;
+            if(!($1->typeNode.islval)){
+                error(@$,"Error: "+$1->typeNode.typeName +" is not an lval.");
+            }
+            
+            
             if($1->typeNode.typeName!=$3->typeNode.typeName){
-        std::cerr<<__LINE__<<std::endl;
+                // std::cerr<<__LINE__<<std::endl;
                 if ($1->typeNode.isNumeric()){
-        std::cerr<<__LINE__<<std::endl;
+                    // std::cerr<<__LINE__<<std::endl;
                     std::string ltypename = $1->typeNode.typeName;
                     std::transform(ltypename.begin(), ltypename.end(), ltypename.begin(), [](auto c) { return std::toupper(c); });
-                    std::cerr << ltypename << std::endl;
+                    // std::cerr << ltypename << std::endl;
                     std::string utypename = "TO_" + ltypename;
                     $$ = new assignE_astnode($1, new op_unary_astnode(utypename, $3));
                 }
@@ -413,6 +418,9 @@ expression: logical_and_expression{
     $$ = $1;
 }
 | expression OR_OP logical_and_expression{
+    if(Symbols::symTabConstructed){
+        $$ = new op_binary_astnode("OR_OP",$1,$3);
+    }
 }
 ;
 
@@ -421,7 +429,7 @@ logical_and_expression: equality_expression{
 }
 | logical_and_expression AND_OP equality_expression{
     if(Symbols::symTabConstructed){   
-        $$ = new op_binary_astnode("AND?", $1, $3);
+        $$ = new op_binary_astnode("AND_OP", $1, $3);
     }
 }
 ;
@@ -527,7 +535,11 @@ unary_expression: postfix_expression{
     $$ = $1;
 }
 | unary_operator unary_expression{
-    if(Symbols::symTabConstructed){   
+    if(Symbols::symTabConstructed){
+        //validity checks.
+        if($1=="ADDRESS"&&(!$2->typeNode.islval)){
+            error(@$,"Tried to get address of rval: "+$2->typeNode.typeName);
+        }
         $$ = new op_unary_astnode($1, $2);
         if($$->typeNode.typeName==$2->typeNode.typeName){
             error(@$,"Tried to dereference " + $2->typeNode.typeName);
@@ -640,23 +652,25 @@ primary_expression: IDENTIFIER{
     if(Symbols::symTabConstructed){   
         $$ = new intconst_astnode($1);
         $$->typeNode = intc;
+        $$->typeNode.islval = false;
     }
 }
 | FLOAT_CONSTANT{
     if(Symbols::symTabConstructed){   
         $$ = new floatconst_astnode($1);
         $$->typeNode = floatc;
+        $$->typeNode.islval = false;
     }
 }
 | STRING_LITERAL{
     if(Symbols::symTabConstructed){   
         $$ = new stringconst_astnode($1);
         $$->typeNode = stringc;
+        $$->typeNode.islval = false;
         $$->print();
     }
 }
 | '(' expression ')'{
-    //TODO
     $$ = $2;
 }
 ;
@@ -666,7 +680,7 @@ expression_list: expression{
 | expression_list ',' expression{
 }
 ;
-
+//TODO: ++ PP or -- as INC_OP here.
 unary_operator: '-'{
     $$ = std::string("UMINUS?");
 }
@@ -735,8 +749,9 @@ declarator_list: declarator{
 
 %%
 //grammar definition.
-void IPL::Parser::error( const location_type &l, const std::string &err_message )
+void 
+IPL::Parser::error( const location_type &l, const std::string &err_message )
 {
-   std::cout << "Error: " << err_message << " at " << l.end << "\n";
-   exit(1);
+    std::cout << "Error at line " << l.begin.line << ": " << err_message <<"\n";
+    exit(1);
 }

@@ -129,9 +129,11 @@ void op_binary_astnode::print() {
 op_unary_astnode::op_unary_astnode(std::string op, exp_astnode* exp): op(op), exp(exp) {
     //TODO validity checks
     if(op=="TO_FLOAT"){
-        typeNode = typespec_astnode::floatc;        //parser generated
+        //parser generated==>error free.
+        typeNode = typespec_astnode::floatc;
     }
     else if(op=="TO_INT"){
+        //parser generated==>error free.
         typeNode = typespec_astnode::intc;
     }
     else{
@@ -139,8 +141,10 @@ op_unary_astnode::op_unary_astnode(std::string op, exp_astnode* exp): op(op), ex
     }
     if(op=="DEREF"){
         typeNode.deref();
+        //error checking done by parser.
     }
     else if(op=="ADDRESS"){
+        //must be an lvalue.
         typeNode.addressOf();
     }
 }

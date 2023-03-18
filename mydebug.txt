@@ -1,8 +1,3 @@
 Parsing round 1 done
 gonna update exp1
 int
-376
-378
-380
-382
-INT

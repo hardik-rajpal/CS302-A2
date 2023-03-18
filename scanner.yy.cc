@@ -349,7 +349,7 @@ static const flex_int16_t yy_accept[102] =
 static const YY_CHAR yy_ec[256] =
     {   0,
         1,    1,    1,    1,    1,    1,    1,    1,    2,    3,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    2,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    4,    5,    6,    7,    7,    7,    8,    7,    9,
        10,   11,   12,   13,   14,   15,   16,   17,   18,   19,
@@ -648,7 +648,7 @@ YY_DECL
 
   /** Code executed at the beginning of yylex **/
 #line 30 "scanner.l"
-      yylval = lval;
+    yylval = lval;
     loc = location;
 
 
