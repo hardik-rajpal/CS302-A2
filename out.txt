@@ -1,6 +1,0 @@
-pushed onto stack
-"stringconst": "Enter value for disp[%d][%d]:"
-"stringconst": "%d"
-"stringconst": "Two Dimensional array elements:\n"
-"stringconst": "%d "
-"stringconst": "\n"
