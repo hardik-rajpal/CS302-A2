@@ -7,6 +7,7 @@
 #include "scanner.hh"
 #include "parser.tab.hh"
 #include "symtab.h"
+#undef YYDEBUG
 int main(const int argc, const char **argv)
 {
 

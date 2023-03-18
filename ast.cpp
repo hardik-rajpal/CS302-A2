@@ -238,7 +238,7 @@ void typespec_astnode::deref(){
         numptrstars--;
     }
     else{
-        std::cout<<"Error in deref funcall."<<std::endl;
+        //nothing done=> typeName unchanged=> error check in parser.yy
         return;
     }
     typeName = genTypeName();
@@ -258,6 +258,36 @@ std::string typespec_astnode::genTypeName(){
     }
     return tn;
 }
+bool typespec_astnode::compatibleWith(typespec_astnode t2){
+    if((numptrstars+arrsizes.size())==0){
+        //int, float or struct smt var.
+        if((t2.numptrstars+t2.arrsizes.size())!=0){
+            return false;
+        }
+        //Note: struct names need to match, as in gcc.
+        return (baseTypeName==t2.baseTypeName);
+    }
+    else{
+        if(numptrstars+arrsizes.size()!=t2.numptrstars+t2.arrsizes.size()){
+            return false;
+        }
+        if(arrsizes.size()!=0){
+            return false;
+        }
+        //arrsizes = 0;=>numptrstars!=0;
+        if(t2.arrsizes.size()==1){
+            if(typeName.substr(0,4)=="void"){
+                return true;
+            }
+            else{
+                return baseTypeName==t2.baseTypeName;
+            }
+        }
+        return false;
+        //number of ptrs+ arr[] == number of ptrs + arr[]
+    }
+}
+
 return_astnode::return_astnode(exp_astnode* exp): exp(exp) { };
 void return_astnode::print() {
     printAst(

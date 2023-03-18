@@ -36,6 +36,7 @@ public:
     std::string genTypeName();
     void deref();
     void addressOf();
+    bool compatibleWith(typespec_astnode t2);
     
 };
 class exp_astnode: public abstract_astnode {
@@ -126,6 +127,7 @@ public:
     assignE_astnode(exp_astnode* exp1, exp_astnode* exp2);
     void print();
     exp_astnode* exp1, *exp2;
+    exp_astnode* expres;
 };
 class fundeclarator_astnode: public abstract_astnode{
     public:

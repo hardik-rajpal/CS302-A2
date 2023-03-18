@@ -1,9 +1,6 @@
-int main()
-{
-  {
-    i = 1;
-    {
-      j = i++++;
-    }
-  }
+int main(){
+  int ***a[10];
+  int ****b;
+  b = a;
+  return 0;
 }
