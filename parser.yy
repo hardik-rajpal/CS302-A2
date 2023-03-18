@@ -380,7 +380,7 @@ assignment_expression: unary_expression '=' expression{
     if(Symbols::symTabConstructed){
         // std::cerr<<__LINE__<<std::endl;
         std::cerr<<$1->typeNode.typeName<<" = "<<$3->typeNode.typeName<<std::endl;
-        if($1->typeNode.compatibleWith($3->typeNode)){
+        if(($1->typeNode.compatibleWith($3->typeNode))){
             // std::cerr<<__LINE__<<std::endl;
             if(!($1->typeNode.islval)){
                 error(@$,"Error: "+$1->typeNode.typeName +" is not an lval.");
@@ -453,7 +453,7 @@ procedure_call: IDENTIFIER '(' ')' ';'{
         std::reverse(exp_list.begin(), exp_list.end());
         int i = 0;
         for (auto item: expected) {
-            if (item.second.compatibleWith(exp_list[i]->typeNode)) {
+            if (!item.second.compatibleWith(exp_list[i]->typeNode)) {
                 error(@$, "Expected \"" + item.second.typeName + "\" but argument is of type \"" + exp_list[i]->typeNode.typeName + "\"");
             }
             i++;
@@ -466,7 +466,7 @@ procedure_call: IDENTIFIER '(' ')' ';'{
 
 expression: logical_and_expression{
     $$ = $1;
-    std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
+    // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
 | expression OR_OP logical_and_expression{
     if(Symbols::symTabConstructed){
@@ -477,7 +477,7 @@ expression: logical_and_expression{
 
 logical_and_expression: equality_expression{
     $$ = $1;
-    std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
+    // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
 | logical_and_expression AND_OP equality_expression{
     if(Symbols::symTabConstructed){   
@@ -488,7 +488,7 @@ logical_and_expression: equality_expression{
 
 equality_expression: relational_expression{
     $$ = $1;
-    std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
+    // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
 | equality_expression EQ_OP relational_expression {
     if(Symbols::symTabConstructed){   
@@ -504,7 +504,7 @@ equality_expression: relational_expression{
 
 relational_expression: additive_expression{
     $$ = $1;
-    std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
+    // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
 | relational_expression '<' additive_expression{
     if(Symbols::symTabConstructed){
@@ -558,7 +558,7 @@ relational_expression: additive_expression{
 
 additive_expression: multiplicative_expression{
     $$ = $1;
-    std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
+    // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
 | additive_expression '+' multiplicative_expression{
     if(Symbols::symTabConstructed){
@@ -588,7 +588,7 @@ additive_expression: multiplicative_expression{
 
 unary_expression: postfix_expression{
     $$ = $1;
-    std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
+    // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
 | unary_operator unary_expression{
     if(Symbols::symTabConstructed){
@@ -638,8 +638,9 @@ multiplicative_expression: unary_expression{
 ;
 
 postfix_expression: primary_expression{
+
     $$ = $1;
-    std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
+    // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
 | postfix_expression '[' expression ']'{
     if(Symbols::symTabConstructed){   
@@ -703,7 +704,7 @@ primary_expression: IDENTIFIER{
         }
         else{
             $$->typeNode = entry->type;
-            std::cerr << __LINE__ << $$->typeNode.typeName<<std::endl;
+            // std::cerr << __LINE__ << $$->typeNode.typeName<<std::endl;
         }
  
     }
@@ -739,7 +740,7 @@ primary_expression: IDENTIFIER{
 expression_list: expression{
     $$ = std::vector<exp_astnode*>();
     $$.push_back($1);
-    std::cerr << __LINE__ << (*($$.rbegin()))->typeNode.typeName<<std::endl;
+    // std::cerr << __LINE__ << (*($$.rbegin()))->typeNode.typeName<<std::endl;
 }
 | expression_list ',' expression{
     $1.push_back($3);

@@ -14,6 +14,6 @@ int main() {
     struct pair p;
     p.a = 4;
     p.b = 10;
-    foo(p, p);
+    foo(p, p.a);
     return 0;
 }

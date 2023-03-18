@@ -7,7 +7,7 @@ enum base_type {
     INT,
     FLOAT,
     INT_PTR,
-    FLOAT_PTR,
+    FLOAT_PTR
 };
 
 class abstract_astnode {

@@ -48,10 +48,7 @@
 
     #include "ast.hh"
     #include "location.hh"
-<<<<<<< HEAD
-=======
     #include <set>
->>>>>>> semchecks
     #include <algorithm>
    namespace IPL {
       class Scanner;
@@ -192,11 +189,7 @@
 
 #line 5 "parser.yy"
 namespace IPL {
-<<<<<<< HEAD
-#line 199 "parser.tab.hh"
-=======
 #line 193 "parser.tab.hh"
->>>>>>> semchecks
 
 
 
@@ -1668,12 +1661,8 @@ switch (yytype)
 
 #line 5 "parser.yy"
 } // IPL
-<<<<<<< HEAD
-#line 1954 "parser.tab.hh"
-=======
 #line 1665 "parser.tab.hh"
 
->>>>>>> semchecks
 
 
 
