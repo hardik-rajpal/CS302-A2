@@ -96,8 +96,6 @@ op_binary_astnode::op_binary_astnode(std::string op, exp_astnode* exp1, exp_astn
     std::set<std::string> boolops={
         "OR_OP",
         "AND_OP",
-        "EQ_OP_INT","NE_OP_INT","LT_OP_INT","GT_OP_INT","LE_OP_INT","GE_OP_INT",
-        "EQ_OP_FLOAT","NE_OP_FLOAT","LT_OP_FLOAT","GT_OP_FLOAT","LE_OP_FLOAT","GE_OP_FLOAT",
     };
     if(boolops.count(op)){
         typeNode = typespec_astnode::intc;

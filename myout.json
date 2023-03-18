@@ -197,7 +197,7 @@
                             },
                             "guard": {
                                 "op_binary": {
-                                    "op": "LT?",
+                                    "op": "LT_OP_INT",
                                     "left": {
                                         "identifier": "x"
                                     },
@@ -231,7 +231,7 @@
                         "if": {
                             "cond": {
                                 "op_binary": {
-                                    "op": "GT?",
+                                    "op": "GT_OP_INT",
                                     "left": {
                                         "identifier": "y"
                                     },

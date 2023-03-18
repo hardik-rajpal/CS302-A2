@@ -409,16 +409,52 @@ relational_expression: additive_expression{
     $$ = $1;
 }
 | relational_expression '<' additive_expression{
-    $$ = new op_binary_astnode("LT?", $1, $3);
+    $$ = new op_binary_astnode("LT_OP?", $1, $3);
+    if(Symbols::symTabConstructed){
+        $$->op = $$->op.substr(0,$$->op.size()-1);
+        if($$->typeNode.baseTypeName=="float"){
+            $$->op += "_FLOAT";
+        }
+        else{
+            $$->op += "_INT";
+        }
+    }
 }
 | relational_expression '>' additive_expression{
-    $$ = new op_binary_astnode("GT?", $1, $3);
+    $$ = new op_binary_astnode("GT_OP?", $1, $3);
+    if(Symbols::symTabConstructed){
+        $$->op = $$->op.substr(0,$$->op.size()-1);
+        if($$->typeNode.baseTypeName=="float"){
+            $$->op += "_FLOAT";
+        }
+        else{
+            $$->op += "_INT";
+        }
+    }
 }
 | relational_expression LE_OP additive_expression{
-    $$ = new op_binary_astnode("LE?", $1, $3);
+    $$ = new op_binary_astnode("LE_OP?", $1, $3);
+    if(Symbols::symTabConstructed){
+        $$->op = $$->op.substr(0,$$->op.size()-1);
+        if($$->typeNode.baseTypeName=="float"){
+            $$->op += "_FLOAT";
+        }
+        else{
+            $$->op += "_INT";
+        }
+    }
 }
 | relational_expression GE_OP additive_expression{
-    $$ = new op_binary_astnode("GE?", $1, $3);
+    $$ = new op_binary_astnode("GE_OP?", $1, $3);
+    if(Symbols::symTabConstructed){
+        $$->op = $$->op.substr(0,$$->op.size()-1);
+        if($$->typeNode.baseTypeName=="float"){
+            $$->op += "_FLOAT";
+        }
+        else{
+            $$->op += "_INT";
+        }
+    }
 }
 ;
 
@@ -428,7 +464,7 @@ additive_expression: multiplicative_expression{
 | additive_expression '+' multiplicative_expression{
     $$ = new op_binary_astnode("PLUS?", $1, $3);
     if(Symbols::symTabConstructed){
-        $$->op = "PLUS";
+        $$->op = $$->op.substr(0,$$->op.size()-1);
         if($$->typeNode.baseTypeName=="float"){
             $$->op += "_FLOAT";
         }
@@ -440,7 +476,7 @@ additive_expression: multiplicative_expression{
 | additive_expression '-' multiplicative_expression{
     $$ = new op_binary_astnode("MINUS?", $1, $3);
     if(Symbols::symTabConstructed){
-        $$->op = "MINUS";
+        $$->op = $$->op.substr(0,$$->op.size()-1);
         if($$->typeNode.baseTypeName=="float"){
             $$->op += "_FLOAT";
         }
@@ -467,7 +503,7 @@ multiplicative_expression: unary_expression{
     $$ = new op_binary_astnode("MULT?", $1, $3);
     //operator and expression match check here.
     if(Symbols::symTabConstructed){
-        $$->op = "MULT";
+        $$->op = $$->op.substr(0,$$->op.size()-1);
         if($$->typeNode.baseTypeName=="float"){
             $$->op += "_FLOAT";
         }
@@ -479,7 +515,7 @@ multiplicative_expression: unary_expression{
 | multiplicative_expression '/' unary_expression{
     $$ = new op_binary_astnode("DIV?", $1, $3);
     if(Symbols::symTabConstructed){
-        $$->op = "DIV";
+        $$->op = $$->op.substr(0,$$->op.size()-1);
         if($$->typeNode.baseTypeName=="float"){
             $$->op += "_FLOAT";
         }
@@ -507,15 +543,16 @@ postfix_expression: primary_expression{
     std::cerr<<"using this rule"<<std::endl;
     if(Symbols::symTabConstructed){
         std::string structName = $1->typeNode.typeName;
-        std::cerr<<"symtab constr, structname: "<<structName<<std::endl;
+        // std::cerr<<"symtab constr, structname: "<<structName<<std::endl;
         SymEntry* memberEntry = Symbols::getSymEntry(Symbols::slsts[structName],$3,true);
         if(memberEntry){
             $$->typeNode = memberEntry->type;
-            std::cerr<<"Member "<<$3<<" found in "<<structName<<std::endl;
+            // std::cerr<<"Member "<<$3<<" found in "<<structName<<std::endl;
         }
         else{
-            std::cerr<<"Member "<<$3<<" not found in "<<structName<<std::endl;
-            error(@$,"Member DNE");
+            // std::cerr<<"Member "<<$3<<" not found in "<<structName<<std::endl;
+            string errormsg = "Member "+$3+" not found in "+structName;
+            error(@$,errormsg);
         }
     }
 }
@@ -531,7 +568,8 @@ postfix_expression: primary_expression{
             $$->typeNode = memberEntry->type;
         }
         else{
-            error(@$,"Member DNE");
+            string errormsg = "Member "+$3+" not found in "+structName;
+            error(@$,errormsg);
         }
     }
 }
@@ -545,7 +583,8 @@ primary_expression: IDENTIFIER{
     if(Symbols::symTabConstructed){
         SymEntry * entry = Symbols::getSymEntry(ststack.top(),$1);
         if(!entry){
-            error(@$,"Symbol not found.");
+            std::string errormsg = "Symbol "+$1+" not found.";
+            error(@$,errormsg);
         }
         else{
             $$->typeNode = entry->type;
