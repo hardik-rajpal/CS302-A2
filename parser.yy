@@ -374,6 +374,7 @@ statement: ';'{
 assignment_expression: unary_expression '=' expression{
     if(Symbols::symTabConstructed){
         // std::cerr<<__LINE__<<std::endl;
+        std::cerr<<$1->typeNode.typeName<<" = "<<$3->typeNode.typeName<<std::endl;
         if($1->typeNode.compatibleWith($3->typeNode)){
             // std::cerr<<__LINE__<<std::endl;
             if(!($1->typeNode.islval)){
