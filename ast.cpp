@@ -136,6 +136,9 @@ op_unary_astnode::op_unary_astnode(std::string op, exp_astnode* exp): op(op), ex
         //parser generated==>error free.
         typeNode = typespec_astnode::intc;
     }
+    else if(op=="NOT"){
+        typeNode = typespec_astnode::intc;
+    }
     else{
         typeNode = exp->typeNode;
     }

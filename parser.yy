@@ -129,6 +129,7 @@ begin_nterm: {
 } translation_unit {
     if(!Symbols::symTabConstructed){
         Symbols::symTabConstructed = true;
+        // ststack.top()->printJson();
         // std::cerr<<"Parsing round 1 done"<<std::endl;
     }
     else{
@@ -289,7 +290,10 @@ parameter_list: parameter_declaration{
 parameter_declaration: type_specifier declarator{
     $$ = $1;
     if(!Symbols::symTabConstructed){
-        ststack.top()->rows[topvarname] = SymEntry(toptype,SymTab::ST_HL_type::VAR,SymTab::ST_LPG::PARAM,toptype.typeWidth,0);
+        if($2.typeName=="void"){
+            error(@$,"Cannot declare variable of type \"void\"");
+        }
+        ststack.top()->rows[topvarname] = SymEntry($2,SymTab::ST_HL_type::VAR,SymTab::ST_LPG::PARAM,$2.typeWidth,0);
         ststack.top()->rows[topvarname].offset = ststack.top()->getParamOffset(ststack.top()->rows[topvarname].size);
     }
 }
@@ -306,8 +310,8 @@ declarator_arr: IDENTIFIER{
     $$ = $1;
     if(!Symbols::symTabConstructed){
         typespec_astnode tstmp = $1;
-        $$.typeWidth = ((tstmp).typeWidth) * (std::stoi($3));
         $$.arrsizes.insert($$.arrsizes.begin(),std::stoi($3));
+        $$.typeWidth = $$.genTypeWidth();
         $$.typeName = $$.genTypeName();
     }
 };
@@ -650,7 +654,7 @@ unary_expression: postfix_expression{
                 error(@$,"Tried to get address of rval: "+$2->typeNode.typeName);
             }
             if($$->typeNode.typeName==$2->typeNode.typeName){
-                error(@$,"Tried to dereference " + $2->typeNode.typeName);
+                error(@$,"Invalid operand type \"" + $2->typeNode.typeName +"\" of unary *");
             }
         }
     }
@@ -807,7 +811,7 @@ primary_expression: IDENTIFIER{
         $$ = new identifier_astnode($1);
         SymEntry * entry = Symbols::getSymEntry(ststack.top(),$1);
         if(!entry){
-            std::string errormsg = "Symbol "+$1+" not found.";
+            std::string errormsg = "Variable \""+$1+"\" not declared";
             error(@$,errormsg);
         }
         else{
@@ -907,6 +911,9 @@ declarator_list: declarator{
         // std::cerr<<topvarname<<": "<<size<<" "<<std::endl;
         int offset = ststack.top()->getNewOffset(size);
         SymTab* st = ststack.top();
+        if($1.typeName=="void"){
+            error(@$,"Cannot declare variable of type \"void\"");
+        }
         st->rows[topvarname] = SymEntry($1,SymTab::ST_HL_type::VAR,SymTab::ST_LPG::LOCAL,size,offset);
     }
 }
@@ -915,6 +922,9 @@ declarator_list: declarator{
     string type = $3.typeName;
     int size = $3.typeWidth;
     if(!Symbols::symTabConstructed){
+        if($3.typeName=="void"){
+            error(@$,"Cannot declare variable of type \"void\"");
+        }
         int offset = ststack.top()->getNewOffset(size);
         ststack.top()->rows[topvarname] = SymEntry($3,SymTab::ST_HL_type::VAR,SymTab::ST_LPG::LOCAL,size,offset);
     }
