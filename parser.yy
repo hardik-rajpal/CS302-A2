@@ -385,11 +385,13 @@ statement: ';'{
         else{
             $$ = new return_astnode($2);
             if(rt.isNumeric()){
-                std::string ltypename = rt.typeName;
-                std::transform(ltypename.begin(), ltypename.end(), ltypename.begin(), [](auto c) { return std::toupper(c); });
-                // std::cerr << ltypename << std::endl;
-                std::string utypename = "TO_" + ltypename;
-                $$ = new return_astnode(new op_unary_astnode(utypename, $2));
+                if (rt.typeName != $2->typeNode.typeName) {
+                    std::string ltypename = rt.typeName;
+                    std::transform(ltypename.begin(), ltypename.end(), ltypename.begin(), [](auto c) { return std::toupper(c); });
+                    // std::cerr << ltypename << std::endl;
+                    std::string utypename = "TO_" + ltypename;
+                    $$ = new return_astnode(new op_unary_astnode(utypename, $2));
+                }
             }
         }
     }

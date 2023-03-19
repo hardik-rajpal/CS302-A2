@@ -195,11 +195,11 @@ arrayref_astnode::arrayref_astnode(exp_astnode* exp1, exp_astnode* exp2): exp1(e
 }
 
 void arrayref_astnode::print() {
-    std::cout << "\"arrayref\": {\n";
-    this->exp1->print();
-    std::cout << ",\n";
-    this->exp2->print();
-    std::cout << "\n}";
+    printAst(
+        "arrayref", "aa",
+        "array", this->exp1,
+        "index", this->exp2
+    );
 }
 
 deref_astnode::deref_astnode(exp_astnode* exp): exp(exp) {}
