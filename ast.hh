@@ -34,6 +34,7 @@ public:
     int numptrstars = 0;
     bool islval = true;
     std::vector<int> arrsizes;
+public:
     typespec_astnode();
     std::string genTypeName();
     void deref();

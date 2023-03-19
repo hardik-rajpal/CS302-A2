@@ -431,13 +431,14 @@ procedure_call: IDENTIFIER '(' ')' ';'{
             error(@$, "Procedure \"" + $1 + "\" called with too few arguments");
         }
         $$ = new funcall_astnode(new identifier_astnode($1), std::vector<exp_astnode*>());
+        $$->typeNode = Symbols::getSymEntry(Symbols::gst, $1)->type;
     }
 }
 | IDENTIFIER '(' expression_list ')' ';'{
     if (Symbols::symTabConstructed) {
         std::string function_name = $1;
         SymTab* fstab = Symbols::flsts[function_name];
-    std::set<std::pair<long long, typespec_astnode>,struct offsetcomp> expected;
+        std::set<std::pair<long long, typespec_astnode>,struct offsetcomp> expected;
         for (auto row: fstab->rows) {
             if (row.second.lpgtype == SymTab::PARAM) {
                 expected.insert(std::make_pair(row.second.offset, row.second.type));
@@ -460,6 +461,7 @@ procedure_call: IDENTIFIER '(' ')' ';'{
         }
 
         $$ = new funcall_astnode(new identifier_astnode($1), $3);
+        $$->typeNode = Symbols::getSymEntry(Symbols::gst, $1)->type;
     }
 }
 ;
@@ -638,9 +640,7 @@ multiplicative_expression: unary_expression{
 ;
 
 postfix_expression: primary_expression{
-
     $$ = $1;
-    // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
 | postfix_expression '[' expression ']'{
     if(Symbols::symTabConstructed){   
@@ -648,11 +648,54 @@ postfix_expression: primary_expression{
     }
 }
 | IDENTIFIER '(' ')'{
-    // TODO
+    if (Symbols::symTabConstructed) {
+        std::string function_name = $1;
+        SymTab* fstab = Symbols::flsts[function_name];
+        if (fstab == nullptr) {
+            error(@$, "Procedure \"" + $1 + "\" not declared");
+        }
+        std::set<std::pair<long long, std::string>> expected;
+        for (auto row: fstab->rows) {
+            if (row.second.lpgtype == SymTab::PARAM) {
+                expected.insert(std::make_pair(row.second.offset, row.second.type.typeName));
+            }
+        }
+        if (!expected.empty()) {
+            error(@$, "Procedure \"" + $1 + "\" called with too few arguments");
+        }
+        $$ = new funcall_astnode(new identifier_astnode($1), std::vector<exp_astnode*>());
+        $$->typeNode = Symbols::getSymEntry(Symbols::gst, $1)->type;
+    }
 }
 | IDENTIFIER '(' expression_list ')'{
-    //TODO funcall
-    $$ = new funcall_astnode(new identifier_astnode($1), $3);
+    if (Symbols::symTabConstructed) {
+        std::string function_name = $1;
+        SymTab* fstab = Symbols::flsts[function_name];
+        std::set<std::pair<long long, typespec_astnode>,struct offsetcomp> expected;
+        for (auto row: fstab->rows) {
+            if (row.second.lpgtype == SymTab::PARAM) {
+                expected.insert(std::make_pair(row.second.offset, row.second.type));
+            }
+        }
+        if ($3.size() < expected.size()) {
+            error(@$, "Procedure \"" + $1 + "\" called with too few arguments");
+        }
+        else if ($3.size() > expected.size()) {
+            error(@$, "Procedure \"" + $1 + "\" called with too many arguments");
+        }
+        std::vector<exp_astnode*> exp_list = $3;
+        std::reverse(exp_list.begin(), exp_list.end());
+        int i = 0;
+        for (auto item: expected) {
+            if (!item.second.compatibleWith(exp_list[i]->typeNode)) {
+                error(@$, "Expected \"" + item.second.typeName + "\" but argument is of type \"" + exp_list[i]->typeNode.typeName + "\"");
+            }
+            i++;
+        }
+
+        $$ = new funcall_astnode(new identifier_astnode($1), $3);
+        $$->typeNode = Symbols::getSymEntry(Symbols::gst, $1)->type;
+    }
 }
 | postfix_expression '.' IDENTIFIER{
     if(Symbols::symTabConstructed){
@@ -663,10 +706,8 @@ postfix_expression: primary_expression{
         SymEntry* memberEntry = Symbols::getSymEntry(Symbols::slsts[structName],$3,true);
         if(memberEntry){
             $$->typeNode = memberEntry->type;
-            // std::cerr<<"Member "<<$3<<" found in "<<structName<<std::endl;
         }
         else{
-            // std::cerr<<"Member "<<$3<<" not found in "<<structName<<std::endl;
             string errormsg = "Member "+$3+" not found in "+structName;
             error(@$,errormsg);
         }
@@ -690,7 +731,7 @@ postfix_expression: primary_expression{
     }
 }
 | postfix_expression INC_OP{
-    
+
 }
 ;
 

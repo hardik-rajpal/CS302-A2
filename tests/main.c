@@ -1,19 +1,16 @@
 struct pair {
-    int a;
-    int b;
+    int a, b;
 };
 
-void bar() {
-}
-
-void foo(struct pair p, int q) {
-    p.a = q;
+int foo(int x) {
+    return x * x;
 }
 
 int main() {
+    int x;
+    int y;
     struct pair p;
-    p.a = 4;
-    p.b = 10;
-    foo(p, p.a);
+    x = 10;
+    p = foo(x) + 1;
     return 0;
 }

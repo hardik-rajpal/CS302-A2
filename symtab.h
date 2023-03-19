@@ -59,6 +59,6 @@ public:
     static map<string, SymTab *> flsts;
     static map<string, SymTab *> slsts;
     static int getStructBaseTypeWidth(string structname);
-    static SymEntry* getSymEntry(SymTab * tst, string symbol,bool isMember=false);
+    static SymEntry* getSymEntry(SymTab * tst, string symbol, bool isMember=false);
 };
 #endif
