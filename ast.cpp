@@ -315,6 +315,9 @@ bool typespec_astnode::compatibleWith(typespec_astnode t2){
             return false;
         }
         //arrsizes = 0;=>numptrstars!=0;
+        if(t2.arrsizes.size()==0){
+            return baseTypeName==t2.baseTypeName;
+        }
         if(t2.arrsizes.size()==1){
             if(typeName.substr(0,4)=="void"){
                 return true;
@@ -323,6 +326,7 @@ bool typespec_astnode::compatibleWith(typespec_astnode t2){
                 return baseTypeName==t2.baseTypeName;
             }
         }
+
         return false;
         //number of ptrs+ arr[] == number of ptrs + arr[]
     }

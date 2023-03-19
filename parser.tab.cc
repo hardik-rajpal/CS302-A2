@@ -1464,44 +1464,37 @@ namespace IPL {
   case 4: // translation_unit: struct_specifier
 #line 140 "parser.yy"
                                   {
-    if(!Symbols::symTabConstructed){
-        for(auto entry: ststack.top()->rows){
-            if(entry.second.size==0&&entry.second.hltype==SymTab::ST_HL_type::STRUCT){
-                ststack.top()->rows[entry.first].size = Symbols::getStructBaseTypeWidth(entry.first);
-            }
-        }
-    }
 }
-#line 1476 "parser.tab.cc"
+#line 1469 "parser.tab.cc"
     break;
 
   case 5: // translation_unit: function_definition
-#line 149 "parser.yy"
+#line 142 "parser.yy"
                      {
     yylhs.value.as < std::vector<abstract_astnode*> > () = std::vector<abstract_astnode*>();
     yylhs.value.as < std::vector<abstract_astnode*> > ().push_back(yystack_[0].value.as < statement_astnode* > ());
 }
-#line 1485 "parser.tab.cc"
+#line 1478 "parser.tab.cc"
     break;
 
   case 6: // translation_unit: translation_unit struct_specifier
-#line 153 "parser.yy"
+#line 146 "parser.yy"
                                    {
 }
-#line 1492 "parser.tab.cc"
+#line 1485 "parser.tab.cc"
     break;
 
   case 7: // translation_unit: translation_unit function_definition
-#line 155 "parser.yy"
+#line 148 "parser.yy"
                                       {
     yylhs.value.as < std::vector<abstract_astnode*> > () = yystack_[1].value.as < std::vector<abstract_astnode*> > ();
     yylhs.value.as < std::vector<abstract_astnode*> > ().push_back(yystack_[0].value.as < statement_astnode* > ());
 }
-#line 1501 "parser.tab.cc"
+#line 1494 "parser.tab.cc"
     break;
 
   case 8: // $@2: %empty
-#line 161 "parser.yy"
+#line 154 "parser.yy"
                                     {
     string structName = "struct " + yystack_[0].value.as < std::string > ();
     if(!Symbols::symTabConstructed){
@@ -1511,14 +1504,21 @@ namespace IPL {
     }
     ststack.push(Symbols::slsts[structName]);
 }
-#line 1515 "parser.tab.cc"
+#line 1508 "parser.tab.cc"
     break;
 
   case 9: // struct_specifier: STRUCT IDENTIFIER $@2 '{' declaration_list '}' ';'
-#line 169 "parser.yy"
+#line 162 "parser.yy"
                              {
     // if(!Symbols::symTabConstructed){
-        ststack.pop();
+    ststack.pop();
+    if(!Symbols::symTabConstructed){
+        for(auto entry: ststack.top()->rows){
+            if(entry.second.size==0&&entry.second.hltype==SymTab::ST_HL_type::STRUCT){
+                ststack.top()->rows[entry.first].size = Symbols::getStructBaseTypeWidth(entry.first);
+            }
+        }
+    }
     // }
 }
 #line 1525 "parser.tab.cc"
@@ -2379,7 +2379,7 @@ namespace IPL {
 #line 778 "parser.yy"
                                       {
     if(Symbols::symTabConstructed){
-        yylhs.value.as < exp_astnode* > () = new member_astnode(new arrow_astnode(yystack_[2].value.as < exp_astnode* > (), new identifier_astnode(yystack_[0].value.as < std::string > ())), new identifier_astnode(yystack_[0].value.as < std::string > ()));
+        yylhs.value.as < exp_astnode* > () = new arrow_astnode(yystack_[2].value.as < exp_astnode* > (), new identifier_astnode(yystack_[0].value.as < std::string > ()));
         typespec_astnode dereftype = yystack_[2].value.as < exp_astnode* > ()->typeNode;
         dereftype.deref();
         std::string structName  = dereftype.typeName;
@@ -3031,7 +3031,7 @@ namespace IPL {
   const short
   Parser::yyrline_[] =
   {
-       0,   114,   114,   114,   140,   149,   153,   155,   161,   161,
+       0,   114,   114,   114,   140,   142,   146,   148,   154,   154,
      175,   183,   195,   204,   212,   226,   226,   259,   275,   281,
      289,   298,   305,   315,   318,   327,   330,   333,   338,   343,
      351,   357,   362,   367,   370,   373,   376,   379,   401,   432,

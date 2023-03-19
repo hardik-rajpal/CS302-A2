@@ -138,13 +138,6 @@ begin_nterm: {
 }
 
 translation_unit: struct_specifier{
-    if(!Symbols::symTabConstructed){
-        for(auto entry: ststack.top()->rows){
-            if(entry.second.size==0&&entry.second.hltype==SymTab::ST_HL_type::STRUCT){
-                ststack.top()->rows[entry.first].size = Symbols::getStructBaseTypeWidth(entry.first);
-            }
-        }
-    }
 }
 | function_definition{
     $$ = std::vector<abstract_astnode*>();
@@ -168,7 +161,14 @@ struct_specifier: STRUCT IDENTIFIER {
     ststack.push(Symbols::slsts[structName]);
 }'{' declaration_list '}' ';'{
     // if(!Symbols::symTabConstructed){
-        ststack.pop();
+    ststack.pop();
+    if(!Symbols::symTabConstructed){
+        for(auto entry: ststack.top()->rows){
+            if(entry.second.size==0&&entry.second.hltype==SymTab::ST_HL_type::STRUCT){
+                ststack.top()->rows[entry.first].size = Symbols::getStructBaseTypeWidth(entry.first);
+            }
+        }
+    }
     // }
 };
 
@@ -777,7 +777,7 @@ postfix_expression: primary_expression{
 }
 | postfix_expression PTR_OP IDENTIFIER{
     if(Symbols::symTabConstructed){
-        $$ = new member_astnode(new arrow_astnode($1, new identifier_astnode($3)), new identifier_astnode($3));
+        $$ = new arrow_astnode($1, new identifier_astnode($3));
         typespec_astnode dereftype = $1->typeNode;
         dereftype.deref();
         std::string structName  = dereftype.typeName;
