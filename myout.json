@@ -1,24 +1,5 @@
-<<<<<<< Updated upstream
-Error at line 14: Incompatible types: tried to assign int to struct pair
-=======
 {
     "globalST": [
-        [
-            "bar",
-            "fun",
-            "global",
-            0,
-            0,
-            "void"
-        ],
-        [
-            "foo",
-            "fun",
-            "global",
-            0,
-            0,
-            "void"
-        ],
         [
             "main",
             "fun",
@@ -28,92 +9,83 @@ Error at line 14: Incompatible types: tried to assign int to struct pair
             "int"
         ],
         [
-            "struct pair",
+            "mod",
+            "fun",
+            "global",
+            0,
+            0,
+            "int"
+        ],
+        [
+            "struct person",
             "struct",
             "global",
-            8,
+            32,
             "-",
             "-"
         ]
     ],
     "structs": [
         {
-            "name": "struct pair",
+            "name": "struct person",
             "localST": [
                 [
-                    "a",
+                    "age",
                     "var",
                     "local",
                     4,
-                    0,
+                    28,
                     "int"
                 ],
                 [
-                    "b",
+                    "id",
+                    "var",
+                    "local",
+                    24,
+                    0,
+                    "int**[2][3]"
+                ],
+                [
+                    "weight",
                     "var",
                     "local",
                     4,
-                    4,
-                    "int"
+                    24,
+                    "float"
                 ]
             ]
         }
     ],
     "functions": [
         {
-            "name": "bar",
-            "localST": [],
-            "ast": {
-                "seq": []
-            }
-        },
-        {
-            "name": "foo",
-            "localST": [
-                [
-                    "p",
-                    "var",
-                    "param",
-                    8,
-                    16,
-                    "struct pair"
-                ],
-                [
-                    "q",
-                    "var",
-                    "param",
-                    4,
-                    12,
-                    "int"
-                ]
-            ],
-            "ast": {
-                "seq": [
-                    {
-                        "assignS": {
-                            "left": {
-                                "member": {
-                                    "struct": {
-                                        "identifier": "p"
-                                    },
-                                    "field": {
-                                        "identifier": "a"
-                                    }
-                                }
-                            },
-                            "right": {
-                                "identifier": "q"
-                            }
-                        }
-                    }
-                ]
-            }
-        },
-        {
             "name": "main",
             "localST": [
                 [
-                    "l",
+                    "arr",
+                    "var",
+                    "local",
+                    8,
+                    -24,
+                    "int[2]"
+                ],
+                [
+                    "num",
+                    "var",
+                    "local",
+                    4,
+                    -4,
+                    "int"
+                ],
+                [
+                    "originalNum",
+                    "var",
+                    "local",
+                    4,
+                    -8,
+                    "int"
+                ],
+                [
+                    "remainder",
                     "var",
                     "local",
                     4,
@@ -121,66 +93,42 @@ Error at line 14: Incompatible types: tried to assign int to struct pair
                     "int"
                 ],
                 [
-                    "p",
+                    "result",
                     "var",
                     "local",
-                    8,
-                    -8,
-                    "struct pair"
+                    4,
+                    -16,
+                    "int"
                 ]
             ],
             "ast": {
                 "seq": [
                     {
-                        "assignS": {
-                            "left": {
-                                "member": {
-                                    "struct": {
-                                        "identifier": "p"
-                                    },
-                                    "field": {
-                                        "identifier": "a"
-                                    }
-                                }
+                        "proccall": {
+                            "fname": {
+                                "identifier": "printf"
                             },
-                            "right": {
-                                "intconst": 4
-                            }
-                        }
-                    },
-                    {
-                        "assignS": {
-                            "left": {
-                                "member": {
-                                    "struct": {
-                                        "identifier": "p"
-                                    },
-                                    "field": {
-                                        "identifier": "b"
-                                    }
+                            "params": [
+                                {
+                                    "stringconst": "Enter a three-digit integer"
                                 }
-                            },
-                            "right": {
-                                "intconst": 10
-                            }
+                            ]
                         }
                     },
                     {
                         "proccall": {
                             "fname": {
-                                "identifier": "foo"
+                                "identifier": "scanf"
                             },
                             "params": [
                                 {
-                                    "identifier": "p"
+                                    "stringconst": "%d"
                                 },
                                 {
-                                    "member": {
-                                        "struct": {
-                                            "identifier": "p"
-                                        },
-                                        "field": {
-                                            "identifier": "a"
+                                    "op_unary": {
+                                        "op": "ADDRESS",
+                                        "child": {
+                                            "identifier": "num"
                                         }
                                     }
                                 }
@@ -190,31 +138,207 @@ Error at line 14: Incompatible types: tried to assign int to struct pair
                     {
                         "assignS": {
                             "left": {
-                                "identifier": "l"
+                                "identifier": "result"
                             },
                             "right": {
-                                "op_unary": {
-                                    "op": "UMINUS",
-                                    "child": {
-                                        "op_unary": {
-                                            "op": "UMINUS",
-                                            "child": {
-                                                "identifier": "l"
+                                "intconst": 0
+                            }
+                        }
+                    },
+                    {
+                        "assignS": {
+                            "left": {
+                                "identifier": "num"
+                            },
+                            "right": {
+                                "intconst": 153
+                            }
+                        }
+                    },
+                    {
+                        "assignS": {
+                            "left": {
+                                "identifier": "originalNum"
+                            },
+                            "right": {
+                                "identifier": "num"
+                            }
+                        }
+                    },
+                    {
+                        "while": {
+                            "cond": {
+                                "op_binary": {
+                                    "op": "NE_OP_INT",
+                                    "left": {
+                                        "identifier": "originalNum"
+                                    },
+                                    "right": {
+                                        "intconst": 0
+                                    }
+                                }
+                            },
+                            "stmt": {
+                                "seq": [
+                                    {
+                                        "assignS": {
+                                            "left": {
+                                                "identifier": "remainder"
+                                            },
+                                            "right": {
+                                                "funcall": {
+                                                    "fname": {
+                                                        "identifier": "mod"
+                                                    },
+                                                    "params": [
+                                                        {
+                                                            "identifier": "originalNum"
+                                                        },
+                                                        {
+                                                            "intconst": 10
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "assignS": {
+                                            "left": {
+                                                "identifier": "result"
+                                            },
+                                            "right": {
+                                                "op_binary": {
+                                                    "op": "PLUS_INT",
+                                                    "left": {
+                                                        "identifier": "result"
+                                                    },
+                                                    "right": {
+                                                        "op_binary": {
+                                                            "op": "MULT_INT",
+                                                            "left": {
+                                                                "op_binary": {
+                                                                    "op": "MULT_INT",
+                                                                    "left": {
+                                                                        "identifier": "remainder"
+                                                                    },
+                                                                    "right": {
+                                                                        "identifier": "remainder"
+                                                                    }
+                                                                }
+                                                            },
+                                                            "right": {
+                                                                "identifier": "remainder"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "assignS": {
+                                            "left": {
+                                                "identifier": "originalNum"
+                                            },
+                                            "right": {
+                                                "op_binary": {
+                                                    "op": "DIV_INT",
+                                                    "left": {
+                                                        "identifier": "originalNum"
+                                                    },
+                                                    "right": {
+                                                        "intconst": 10
+                                                    }
+                                                }
                                             }
                                         }
                                     }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "if": {
+                            "cond": {
+                                "op_binary": {
+                                    "op": "EQ_OP_INT",
+                                    "left": {
+                                        "identifier": "result"
+                                    },
+                                    "right": {
+                                        "identifier": "num"
+                                    }
+                                }
+                            },
+                            "then": {
+                                "proccall": {
+                                    "fname": {
+                                        "identifier": "printf"
+                                    },
+                                    "params": [
+                                        {
+                                            "stringconst": "%d is an Armstrong number."
+                                        },
+                                        {
+                                            "identifier": "num"
+                                        }
+                                    ]
+                                }
+                            },
+                            "else": {
+                                "proccall": {
+                                    "fname": {
+                                        "identifier": "printf"
+                                    },
+                                    "params": [
+                                        {
+                                            "stringconst": "%d is not an Armstrong number."
+                                        },
+                                        {
+                                            "identifier": "num"
+                                        }
+                                    ]
                                 }
                             }
                         }
                     },
                     {
                         "return": {
-                            "intconst": 0
+                            "op_unary": {
+                                "op": "TO_INT",
+                                "child": {
+                                    "floatconst": 4
+                                }
+                            }
                         }
                     }
                 ]
             }
+        },
+        {
+            "name": "mod",
+            "localST": [
+                [
+                    "a",
+                    "var",
+                    "param",
+                    4,
+                    16,
+                    "int"
+                ],
+                [
+                    "b",
+                    "var",
+                    "param",
+                    4,
+                    12,
+                    "int"
+                ]
+            ],
+            "ast": {
+                "seq": []
+            }
         }
     ]
 }
->>>>>>> Stashed changes

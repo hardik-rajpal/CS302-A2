@@ -6,20 +6,16 @@ bloom
 bloom
 bloom
 bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
 Parsing round 1 done
 bloom
-using this rule
-bloom
-int = int
-bloom
-using this rule
-int = int
-bloom
-using this rule
-int = int
-bloom
-bloom
-using this rule
-bloom
-bloom
-int = int

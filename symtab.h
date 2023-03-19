@@ -13,6 +13,7 @@ class SymTab
 public:
     string type = "global";
     abstract_astnode * ptr;
+    typespec_astnode* rettype;
     enum ST_type
     {
         INT,
@@ -60,5 +61,6 @@ public:
     static map<string, SymTab *> slsts;
     static int getStructBaseTypeWidth(string structname);
     static SymEntry* getSymEntry(SymTab * tst, string symbol, bool isMember=false);
+    static void initGST();
 };
 #endif

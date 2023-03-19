@@ -26,7 +26,7 @@ class statement_astnode: public abstract_astnode {
 class typespec_astnode{
     std::set<std::string> numtypes= {"int","float"};
 public:
-    static typespec_astnode structc, intc, floatc,stringc;
+    static typespec_astnode structc, intc, floatc,stringc, voidc;
     int baseTypeWidth;
     std::string baseTypeName;
     std::string typeName;
@@ -41,6 +41,7 @@ public:
     void addressOf();
     bool compatibleWith(typespec_astnode t2);
     bool isNumeric();
+    int genTypeWidth();
     
 };
 struct offsetcomp{
@@ -226,11 +227,12 @@ private:
     
 class funcall_astnode: public exp_astnode, public statement_astnode {
 public:
-    funcall_astnode(identifier_astnode*, std::vector<exp_astnode*>);
+    funcall_astnode(identifier_astnode*, std::vector<exp_astnode*>, bool);
     void print();
 private:
     identifier_astnode* id;
     std::vector<exp_astnode*> exp_list;
+    bool is_proc;
 };
 
 #endif

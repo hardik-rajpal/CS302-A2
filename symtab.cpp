@@ -210,3 +210,7 @@ int SymTab::getParamOffset(size_t posSize)
     }
     return newOffset;
 }
+void Symbols::initGST(){
+    // gst->rows["printf"] = SymEntry(typespec_astnode::voidc,SymTab::ST_HL_type::FUN,SymTab::ST_LPG::GLOBAL,0,0);
+    // gst->rows["scanf"] = SymEntry(typespec_astnode::voidc,SymTab::ST_HL_type::FUN,SymTab::ST_LPG::GLOBAL,0,0);
+}

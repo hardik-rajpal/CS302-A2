@@ -56,7 +56,7 @@
 #define yylex IPL::Parser::scanner.yylex
 stack<SymTab*> ststack;
 int retType;
-typespec_astnode structc,intc,floatc,stringc;
+typespec_astnode structc,intc,voidc,floatc,stringc;
 typespec_astnode toptype;
 string topvarname;
 }
@@ -116,8 +116,10 @@ begin_nterm: {
     intc = typespec_astnode::intc;
     floatc = typespec_astnode::floatc;
     stringc = typespec_astnode::stringc;
+    voidc = typespec_astnode::voidc;
     if(!Symbols::symTabConstructed){
         Symbols::gst = new SymTab();
+        Symbols::initGST();
     }
     else{
         // std::cout<<"Here again";
@@ -227,6 +229,8 @@ fun_declarator: IDENTIFIER '('{
         ststack.top()->rows[name] = SymEntry(toptype,SymTab::ST_HL_type::FUN,SymTab::ST_LPG::GLOBAL,0,0);
         Symbols::flsts[name] = new SymTab();
         Symbols::flsts[name]->type = "function";
+        Symbols::flsts[name]->rettype = new typespec_astnode();
+        *(Symbols::flsts[name]->rettype) = toptype;
     }
     ststack.push(Symbols::flsts[name]);
 } parameter_list ')'{
@@ -257,6 +261,9 @@ fun_declarator: IDENTIFIER '('{
     if(!Symbols::symTabConstructed){
         ststack.top()->rows[name] = SymEntry(toptype,SymTab::ST_HL_type::FUN,SymTab::ST_LPG::GLOBAL,0,0);
         Symbols::flsts[name] = new SymTab();
+        Symbols::flsts[name]->rettype = new typespec_astnode;
+        Symbols::flsts[name]->type = "function";
+        *(Symbols::flsts[name]->rettype) = toptype;
     }
     else{
         $$ = new fundeclarator_astnode(name,std::vector<typespec_astnode>());
@@ -300,8 +307,8 @@ declarator_arr: IDENTIFIER{
     if(!Symbols::symTabConstructed){
         typespec_astnode tstmp = $1;
         $$.typeWidth = ((tstmp).typeWidth) * (std::stoi($3));
-        $$.typeName = (tstmp).typeName+"["+($3)+"]";
-        $$.arrsizes.push_back(std::stoi($3));
+        $$.arrsizes.insert($$.arrsizes.begin(),std::stoi($3));
+        $$.typeName = $$.genTypeName();
     }
 };
 
@@ -310,9 +317,9 @@ declarator: declarator_arr{
 }
 | '*' declarator {
     $$ = $2;
-    $$.typeWidth = 4;
-    $$.baseTypeWidth = $2.typeWidth;
+    $$.baseTypeWidth = 4;
     $$.numptrstars+=1;
+    $$.typeWidth = $$.genTypeWidth();
     $$.typeName = $$.genTypeName();
 }
 ;
@@ -371,7 +378,20 @@ statement: ';'{
 }
 | RETURN expression ';'{
     if(Symbols::symTabConstructed){
-        $$ = new return_astnode($2);
+        typespec_astnode rt = *(ststack.top()->rettype);
+        if (!rt.compatibleWith($2->typeNode)) {
+            error(@$, "Function must return "+ rt.typeName+" but returns "+$2->typeNode.typeName );
+        }
+        else{
+            $$ = new return_astnode($2);
+            if(rt.isNumeric()){
+                std::string ltypename = rt.typeName;
+                std::transform(ltypename.begin(), ltypename.end(), ltypename.begin(), [](auto c) { return std::toupper(c); });
+                // std::cerr << ltypename << std::endl;
+                std::string utypename = "TO_" + ltypename;
+                $$ = new return_astnode(new op_unary_astnode(utypename, $2));
+            }
+        }
     }
 }
 ;
@@ -417,51 +437,64 @@ assignment_statement: assignment_expression ';'{
 procedure_call: IDENTIFIER '(' ')' ';'{
     if (Symbols::symTabConstructed) {
         std::string function_name = $1;
-        SymTab* fstab = Symbols::flsts[function_name];
-        if (fstab == nullptr) {
-            error(@$, "Procedure \"" + $1 + "\" not declared");
-        }
-        std::set<std::pair<long long, std::string>> expected;
-        for (auto row: fstab->rows) {
-            if (row.second.lpgtype == SymTab::PARAM) {
-                expected.insert(std::make_pair(row.second.offset, row.second.type.typeName));
+        if(!($1=="printf"||$1=="scanf")){
+            SymTab* fstab = Symbols::flsts[function_name];
+            if (fstab == nullptr) {
+                error(@$, "Procedure \"" + $1 + "\" not declared");
             }
+        //Arg checks.
+            std::set<std::pair<long long, std::string>> expected;
+            for (auto row: fstab->rows) {
+                if (row.second.lpgtype == SymTab::PARAM) {
+                    expected.insert(std::make_pair(row.second.offset, row.second.type.typeName));
+                }
+            }
+            if (!expected.empty()) {
+                error(@$, "Procedure \"" + $1 + "\" called with too few arguments");
+            }
+            $$ = new funcall_astnode(new identifier_astnode($1), std::vector<exp_astnode*>(), true);
+            $$->typeNode = Symbols::getSymEntry(Symbols::gst, $1)->type;
         }
-        if (!expected.empty()) {
-            error(@$, "Procedure \"" + $1 + "\" called with too few arguments");
+        else {
+            $$ = new funcall_astnode(new identifier_astnode($1), std::vector<exp_astnode*>(), true);
+            $$->typeNode = voidc;
         }
-        $$ = new funcall_astnode(new identifier_astnode($1), std::vector<exp_astnode*>());
-        $$->typeNode = Symbols::getSymEntry(Symbols::gst, $1)->type;
     }
 }
 | IDENTIFIER '(' expression_list ')' ';'{
     if (Symbols::symTabConstructed) {
         std::string function_name = $1;
-        SymTab* fstab = Symbols::flsts[function_name];
-        std::set<std::pair<long long, typespec_astnode>,struct offsetcomp> expected;
-        for (auto row: fstab->rows) {
-            if (row.second.lpgtype == SymTab::PARAM) {
-                expected.insert(std::make_pair(row.second.offset, row.second.type));
+        if(!($1=="printf"||$1=="scanf")){
+            SymTab* fstab = Symbols::flsts[function_name];
+            std::set<std::pair<long long, typespec_astnode>,struct offsetcomp> expected;
+            for (auto row: fstab->rows) {
+                if (row.second.lpgtype == SymTab::PARAM) {
+                    expected.insert(std::make_pair(row.second.offset, row.second.type));
+                }
             }
-        }
-        if ($3.size() < expected.size()) {
-            error(@$, "Procedure \"" + $1 + "\" called with too few arguments");
-        }
-        else if ($3.size() > expected.size()) {
-            error(@$, "Procedure \"" + $1 + "\" called with too many arguments");
-        }
-        std::vector<exp_astnode*> exp_list = $3;
-        std::reverse(exp_list.begin(), exp_list.end());
-        int i = 0;
-        for (auto item: expected) {
-            if (!item.second.compatibleWith(exp_list[i]->typeNode)) {
-                error(@$, "Expected \"" + item.second.typeName + "\" but argument is of type \"" + exp_list[i]->typeNode.typeName + "\"");
+            if ($3.size() < expected.size()) {
+                error(@$, "Procedure \"" + $1 + "\" called with too few arguments");
             }
-            i++;
-        }
+            else if ($3.size() > expected.size()) {
+                error(@$, "Procedure \"" + $1 + "\" called with too many arguments");
+            }
+            std::vector<exp_astnode*> exp_list = $3;
+            std::reverse(exp_list.begin(), exp_list.end());
+            int i = 0;
+            for (auto item: expected) {
+                if (!item.second.compatibleWith(exp_list[i]->typeNode)) {
+                    error(@$, "Expected \"" + item.second.typeName + "\" but argument is of type \"" + exp_list[i]->typeNode.typeName + "\"");
+                }
+                i++;
+            }
 
-        $$ = new funcall_astnode(new identifier_astnode($1), $3);
-        $$->typeNode = Symbols::getSymEntry(Symbols::gst, $1)->type;
+            $$ = new funcall_astnode(new identifier_astnode($1), $3, true);
+            $$->typeNode = Symbols::getSymEntry(Symbols::gst, $1)->type;
+        }
+        else {
+            $$ = new funcall_astnode(new identifier_astnode($1), $3, true);
+            $$->typeNode = voidc;
+        }
     }
 }
 ;
@@ -494,12 +527,26 @@ equality_expression: relational_expression{
 }
 | equality_expression EQ_OP relational_expression {
     if(Symbols::symTabConstructed){   
-        $$ = new op_binary_astnode("EQ?", $1, $3);
+        $$ = new op_binary_astnode("EQ_OP?", $1, $3);
+        $$->op = $$->op.substr(0,$$->op.size()-1);
+        if($$->typeNode.baseTypeName=="float"){
+            $$->op += "_FLOAT";
+        }
+        else{
+            $$->op += "_INT";
+        }
     }
 }
 | equality_expression NE_OP relational_expression{
     if(Symbols::symTabConstructed){   
-        $$ = new op_binary_astnode("NE?", $1, $3);
+        $$ = new op_binary_astnode("NE_OP?", $1, $3);
+        $$->op = $$->op.substr(0,$$->op.size()-1);
+        if($$->typeNode.baseTypeName=="float"){
+            $$->op += "_FLOAT";
+        }
+        else{
+            $$->op += "_INT";
+        }
     }
 }
 ;
@@ -652,51 +699,62 @@ postfix_expression: primary_expression{
 | IDENTIFIER '(' ')'{
     if (Symbols::symTabConstructed) {
         std::string function_name = $1;
-        SymTab* fstab = Symbols::flsts[function_name];
-        if (fstab == nullptr) {
-            error(@$, "Procedure \"" + $1 + "\" not declared");
-        }
-        std::set<std::pair<long long, std::string>> expected;
-        for (auto row: fstab->rows) {
-            if (row.second.lpgtype == SymTab::PARAM) {
-                expected.insert(std::make_pair(row.second.offset, row.second.type.typeName));
+        if(!($1=="printf"||$1=="scanf")){
+            SymTab* fstab = Symbols::flsts[function_name];
+            if (fstab == nullptr) {
+                error(@$, "Procedure \"" + $1 + "\" not declared");
             }
+            std::set<std::pair<long long, std::string>> expected;
+            for (auto row: fstab->rows) {
+                if (row.second.lpgtype == SymTab::PARAM) {
+                    expected.insert(std::make_pair(row.second.offset, row.second.type.typeName));
+                }
+            }
+            if (!expected.empty()) {
+                error(@$, "Procedure \"" + $1 + "\" called with too few arguments");
+            }
+            $$ = new funcall_astnode(new identifier_astnode($1), std::vector<exp_astnode*>(), false);
+            $$->typeNode = Symbols::getSymEntry(Symbols::gst, $1)->type;
         }
-        if (!expected.empty()) {
-            error(@$, "Procedure \"" + $1 + "\" called with too few arguments");
+        else {
+            $$ = new funcall_astnode(new identifier_astnode($1), std::vector<exp_astnode*>(), false);
+            $$->typeNode = voidc;
         }
-        $$ = new funcall_astnode(new identifier_astnode($1), std::vector<exp_astnode*>());
-        $$->typeNode = Symbols::getSymEntry(Symbols::gst, $1)->type;
     }
 }
 | IDENTIFIER '(' expression_list ')'{
     if (Symbols::symTabConstructed) {
         std::string function_name = $1;
-        SymTab* fstab = Symbols::flsts[function_name];
-        std::set<std::pair<long long, typespec_astnode>,struct offsetcomp> expected;
-        for (auto row: fstab->rows) {
-            if (row.second.lpgtype == SymTab::PARAM) {
-                expected.insert(std::make_pair(row.second.offset, row.second.type));
+        if(!($1=="printf"||$1=="scanf")){
+            SymTab* fstab = Symbols::flsts[function_name];
+            std::set<std::pair<long long, typespec_astnode>,struct offsetcomp> expected;
+            for (auto row: fstab->rows) {
+                if (row.second.lpgtype == SymTab::PARAM) {
+                    expected.insert(std::make_pair(row.second.offset, row.second.type));
+                }
             }
-        }
-        if ($3.size() < expected.size()) {
-            error(@$, "Procedure \"" + $1 + "\" called with too few arguments");
-        }
-        else if ($3.size() > expected.size()) {
-            error(@$, "Procedure \"" + $1 + "\" called with too many arguments");
-        }
-        std::vector<exp_astnode*> exp_list = $3;
-        std::reverse(exp_list.begin(), exp_list.end());
-        int i = 0;
-        for (auto item: expected) {
-            if (!item.second.compatibleWith(exp_list[i]->typeNode)) {
-                error(@$, "Expected \"" + item.second.typeName + "\" but argument is of type \"" + exp_list[i]->typeNode.typeName + "\"");
+            if ($3.size() < expected.size()) {
+                error(@$, "Procedure \"" + $1 + "\" called with too few arguments");
             }
-            i++;
+            else if ($3.size() > expected.size()) {
+                error(@$, "Procedure \"" + $1 + "\" called with too many arguments");
+            }
+            std::vector<exp_astnode*> exp_list = $3;
+            std::reverse(exp_list.begin(), exp_list.end());
+            int i = 0;
+            for (auto item: expected) {
+                if (!item.second.compatibleWith(exp_list[i]->typeNode)) {
+                    error(@$, "Expected \"" + item.second.typeName + "\" but argument is of type \"" + exp_list[i]->typeNode.typeName + "\"");
+                }
+                i++;
+            }
+            $$ = new funcall_astnode(new identifier_astnode($1), $3, false);
+            $$->typeNode = Symbols::getSymEntry(Symbols::gst, $1)->type;
         }
-
-        $$ = new funcall_astnode(new identifier_astnode($1), $3);
-        $$->typeNode = Symbols::getSymEntry(Symbols::gst, $1)->type;
+        else {
+            $$ = new funcall_astnode(new identifier_astnode($1), $3, false);
+            $$->typeNode = voidc;
+        }
     }
 }
 | postfix_expression '.' IDENTIFIER{
@@ -777,7 +835,7 @@ primary_expression: IDENTIFIER{
         $$ = new stringconst_astnode($1);
         $$->typeNode = stringc;
         $$->typeNode.islval = false;
-        $$->print();
+        // $$->print();
     }
 }
 | '(' expression ')'{

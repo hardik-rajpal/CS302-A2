@@ -55,7 +55,7 @@
 #define yylex IPL::Parser::scanner.yylex
 stack<SymTab*> ststack;
 int retType;
-typespec_astnode structc,intc,floatc,stringc;
+typespec_astnode structc,intc,voidc,floatc,stringc;
 typespec_astnode toptype;
 string topvarname;
 
@@ -1432,8 +1432,10 @@ namespace IPL {
     intc = typespec_astnode::intc;
     floatc = typespec_astnode::floatc;
     stringc = typespec_astnode::stringc;
+    voidc = typespec_astnode::voidc;
     if(!Symbols::symTabConstructed){
         Symbols::gst = new SymTab();
+        Symbols::initGST();
     }
     else{
         // std::cout<<"Here again";
@@ -1441,11 +1443,11 @@ namespace IPL {
     ststack.push(Symbols::gst);
 
 }
-#line 1445 "parser.tab.cc"
+#line 1447 "parser.tab.cc"
     break;
 
   case 3: // begin_nterm: $@1 translation_unit
-#line 127 "parser.yy"
+#line 129 "parser.yy"
                    {
     if(!Symbols::symTabConstructed){
         Symbols::symTabConstructed = true;
@@ -1456,11 +1458,11 @@ namespace IPL {
         // std::cout<<"here again"<<std::endl;
     }
 }
-#line 1460 "parser.tab.cc"
+#line 1462 "parser.tab.cc"
     break;
 
   case 4: // translation_unit: struct_specifier
-#line 138 "parser.yy"
+#line 140 "parser.yy"
                                   {
     if(!Symbols::symTabConstructed){
         for(auto entry: ststack.top()->rows){
@@ -1470,36 +1472,36 @@ namespace IPL {
         }
     }
 }
-#line 1474 "parser.tab.cc"
+#line 1476 "parser.tab.cc"
     break;
 
   case 5: // translation_unit: function_definition
-#line 147 "parser.yy"
+#line 149 "parser.yy"
                      {
     yylhs.value.as < std::vector<abstract_astnode*> > () = std::vector<abstract_astnode*>();
     yylhs.value.as < std::vector<abstract_astnode*> > ().push_back(yystack_[0].value.as < statement_astnode* > ());
 }
-#line 1483 "parser.tab.cc"
+#line 1485 "parser.tab.cc"
     break;
 
   case 6: // translation_unit: translation_unit struct_specifier
-#line 151 "parser.yy"
+#line 153 "parser.yy"
                                    {
 }
-#line 1490 "parser.tab.cc"
+#line 1492 "parser.tab.cc"
     break;
 
   case 7: // translation_unit: translation_unit function_definition
-#line 153 "parser.yy"
+#line 155 "parser.yy"
                                       {
     yylhs.value.as < std::vector<abstract_astnode*> > () = yystack_[1].value.as < std::vector<abstract_astnode*> > ();
     yylhs.value.as < std::vector<abstract_astnode*> > ().push_back(yystack_[0].value.as < statement_astnode* > ());
 }
-#line 1499 "parser.tab.cc"
+#line 1501 "parser.tab.cc"
     break;
 
   case 8: // $@2: %empty
-#line 159 "parser.yy"
+#line 161 "parser.yy"
                                     {
     string structName = "struct " + yystack_[0].value.as < std::string > ();
     if(!Symbols::symTabConstructed){
@@ -1509,21 +1511,21 @@ namespace IPL {
     }
     ststack.push(Symbols::slsts[structName]);
 }
-#line 1513 "parser.tab.cc"
+#line 1515 "parser.tab.cc"
     break;
 
   case 9: // struct_specifier: STRUCT IDENTIFIER $@2 '{' declaration_list '}' ';'
-#line 167 "parser.yy"
+#line 169 "parser.yy"
                              {
     // if(!Symbols::symTabConstructed){
         ststack.pop();
     // }
 }
-#line 1523 "parser.tab.cc"
+#line 1525 "parser.tab.cc"
     break;
 
   case 10: // function_definition: type_specifier fun_declarator compound_statement
-#line 173 "parser.yy"
+#line 175 "parser.yy"
                                                                      {
     if(Symbols::symTabConstructed){
         ststack.top()->ptr = new seq_astnode(yystack_[0].value.as < std::vector<statement_astnode*> > ());
@@ -1531,11 +1533,11 @@ namespace IPL {
     yylhs.value.as < statement_astnode* > () = nullptr;
     ststack.pop();
 }
-#line 1535 "parser.tab.cc"
+#line 1537 "parser.tab.cc"
     break;
 
   case 11: // type_specifier: VOID
-#line 181 "parser.yy"
+#line 183 "parser.yy"
                     {
     typespec_astnode ts;
     ts.baseTypeWidth = 0;
@@ -1548,11 +1550,11 @@ namespace IPL {
     }
 
 }
-#line 1552 "parser.tab.cc"
+#line 1554 "parser.tab.cc"
     break;
 
   case 12: // type_specifier: INT
-#line 193 "parser.yy"
+#line 195 "parser.yy"
      {
     // retType = SymTab::ST_type::INT;
     typespec_astnode ts = intc;
@@ -1562,11 +1564,11 @@ namespace IPL {
     }
 
 }
-#line 1566 "parser.tab.cc"
+#line 1568 "parser.tab.cc"
     break;
 
   case 13: // type_specifier: FLOAT
-#line 202 "parser.yy"
+#line 204 "parser.yy"
        {
     // retType = SymTab::ST_type::FLOAT;
     typespec_astnode ts = floatc;
@@ -1575,11 +1577,11 @@ namespace IPL {
         toptype = ts;
     }
 }
-#line 1579 "parser.tab.cc"
+#line 1581 "parser.tab.cc"
     break;
 
   case 14: // type_specifier: STRUCT IDENTIFIER
-#line 210 "parser.yy"
+#line 212 "parser.yy"
                    {
     // retType = SymTab::ST_type::STRUCT_TYPE;
     typespec_astnode ts;
@@ -1592,25 +1594,27 @@ namespace IPL {
         toptype = ts;
     }
 }
-#line 1596 "parser.tab.cc"
+#line 1598 "parser.tab.cc"
     break;
 
   case 15: // $@3: %empty
-#line 224 "parser.yy"
+#line 226 "parser.yy"
                               {
     std::string name = yystack_[1].value.as < std::string > ();
     if(!Symbols::symTabConstructed){
         ststack.top()->rows[name] = SymEntry(toptype,SymTab::ST_HL_type::FUN,SymTab::ST_LPG::GLOBAL,0,0);
         Symbols::flsts[name] = new SymTab();
         Symbols::flsts[name]->type = "function";
+        Symbols::flsts[name]->rettype = new typespec_astnode();
+        *(Symbols::flsts[name]->rettype) = toptype;
     }
     ststack.push(Symbols::flsts[name]);
 }
-#line 1610 "parser.tab.cc"
+#line 1614 "parser.tab.cc"
     break;
 
   case 16: // fun_declarator: IDENTIFIER '(' $@3 parameter_list ')'
-#line 232 "parser.yy"
+#line 236 "parser.yy"
                     {
     yylhs.value.as < fundeclarator_astnode* > () = NULL;
     if(!Symbols::symTabConstructed){
@@ -1634,49 +1638,52 @@ namespace IPL {
         yylhs.value.as < fundeclarator_astnode* > () = new fundeclarator_astnode(name, vect);
     }
 }
-#line 1638 "parser.tab.cc"
+#line 1642 "parser.tab.cc"
     break;
 
   case 17: // fun_declarator: IDENTIFIER '(' ')'
-#line 255 "parser.yy"
+#line 259 "parser.yy"
                     {
     std::string name = yystack_[2].value.as < std::string > ();
     if(!Symbols::symTabConstructed){
         ststack.top()->rows[name] = SymEntry(toptype,SymTab::ST_HL_type::FUN,SymTab::ST_LPG::GLOBAL,0,0);
         Symbols::flsts[name] = new SymTab();
+        Symbols::flsts[name]->rettype = new typespec_astnode;
+        Symbols::flsts[name]->type = "function";
+        *(Symbols::flsts[name]->rettype) = toptype;
     }
     else{
         yylhs.value.as < fundeclarator_astnode* > () = new fundeclarator_astnode(name,std::vector<typespec_astnode>());
     }
     ststack.push(Symbols::flsts[name]);
 }
-#line 1654 "parser.tab.cc"
+#line 1661 "parser.tab.cc"
     break;
 
   case 18: // parameter_list: parameter_declaration
-#line 268 "parser.yy"
+#line 275 "parser.yy"
                                      {
     if(Symbols::symTabConstructed){
         yylhs.value.as < std::vector<typespec_astnode> > () = std::vector<typespec_astnode>();
         yylhs.value.as < std::vector<typespec_astnode> > ().push_back(yystack_[0].value.as < typespec_astnode > ());
     }
 }
-#line 1665 "parser.tab.cc"
+#line 1672 "parser.tab.cc"
     break;
 
   case 19: // parameter_list: parameter_declaration ',' parameter_list
-#line 274 "parser.yy"
+#line 281 "parser.yy"
                                            {
     if(Symbols::symTabConstructed){
         yylhs.value.as < std::vector<typespec_astnode> > () = yystack_[0].value.as < std::vector<typespec_astnode> > ();
         yylhs.value.as < std::vector<typespec_astnode> > ().push_back(yystack_[2].value.as < typespec_astnode > ());
     }
 }
-#line 1676 "parser.tab.cc"
+#line 1683 "parser.tab.cc"
     break;
 
   case 20: // parameter_declaration: type_specifier declarator
-#line 282 "parser.yy"
+#line 289 "parser.yy"
                                                 {
     yylhs.value.as < typespec_astnode > () = yystack_[1].value.as < typespec_astnode > ();
     if(!Symbols::symTabConstructed){
@@ -1684,11 +1691,11 @@ namespace IPL {
         ststack.top()->rows[topvarname].offset = ststack.top()->getParamOffset(ststack.top()->rows[topvarname].size);
     }
 }
-#line 1688 "parser.tab.cc"
+#line 1695 "parser.tab.cc"
     break;
 
   case 21: // declarator_arr: IDENTIFIER
-#line 291 "parser.yy"
+#line 298 "parser.yy"
                           {
     yylhs.value.as < typespec_astnode > () = toptype;
     yylhs.value.as < typespec_astnode > ().typeWidth = yylhs.value.as < typespec_astnode > ().baseTypeWidth;
@@ -1696,79 +1703,79 @@ namespace IPL {
         topvarname = yystack_[0].value.as < std::string > ();
     }
 }
-#line 1700 "parser.tab.cc"
+#line 1707 "parser.tab.cc"
     break;
 
   case 22: // declarator_arr: declarator_arr '[' INT_CONSTANT ']'
-#line 298 "parser.yy"
+#line 305 "parser.yy"
                                      {
     yylhs.value.as < typespec_astnode > () = yystack_[3].value.as < typespec_astnode > ();
     if(!Symbols::symTabConstructed){
         typespec_astnode tstmp = yystack_[3].value.as < typespec_astnode > ();
         yylhs.value.as < typespec_astnode > ().typeWidth = ((tstmp).typeWidth) * (std::stoi(yystack_[1].value.as < std::string > ()));
-        yylhs.value.as < typespec_astnode > ().typeName = (tstmp).typeName+"["+(yystack_[1].value.as < std::string > ())+"]";
-        yylhs.value.as < typespec_astnode > ().arrsizes.push_back(std::stoi(yystack_[1].value.as < std::string > ()));
+        yylhs.value.as < typespec_astnode > ().arrsizes.insert(yylhs.value.as < typespec_astnode > ().arrsizes.begin(),std::stoi(yystack_[1].value.as < std::string > ()));
+        yylhs.value.as < typespec_astnode > ().typeName = yylhs.value.as < typespec_astnode > ().genTypeName();
     }
 }
-#line 1714 "parser.tab.cc"
+#line 1721 "parser.tab.cc"
     break;
 
   case 23: // declarator: declarator_arr
-#line 308 "parser.yy"
+#line 315 "parser.yy"
                           {
     yylhs.value.as < typespec_astnode > () = yystack_[0].value.as < typespec_astnode > ();
 }
-#line 1722 "parser.tab.cc"
+#line 1729 "parser.tab.cc"
     break;
 
   case 24: // declarator: '*' declarator
-#line 311 "parser.yy"
+#line 318 "parser.yy"
                  {
     yylhs.value.as < typespec_astnode > () = yystack_[0].value.as < typespec_astnode > ();
-    yylhs.value.as < typespec_astnode > ().typeWidth = 4;
-    yylhs.value.as < typespec_astnode > ().baseTypeWidth = yystack_[0].value.as < typespec_astnode > ().typeWidth;
+    yylhs.value.as < typespec_astnode > ().baseTypeWidth = 4;
     yylhs.value.as < typespec_astnode > ().numptrstars+=1;
+    yylhs.value.as < typespec_astnode > ().typeWidth = yylhs.value.as < typespec_astnode > ().genTypeWidth();
     yylhs.value.as < typespec_astnode > ().typeName = yylhs.value.as < typespec_astnode > ().genTypeName();
 }
-#line 1734 "parser.tab.cc"
+#line 1741 "parser.tab.cc"
     break;
 
   case 25: // compound_statement: '{' '}'
-#line 320 "parser.yy"
+#line 327 "parser.yy"
                            {
     yylhs.value.as < std::vector<statement_astnode*> > () = std::vector<statement_astnode*>();
 }
-#line 1742 "parser.tab.cc"
+#line 1749 "parser.tab.cc"
     break;
 
   case 26: // compound_statement: '{' statement_list '}'
-#line 323 "parser.yy"
+#line 330 "parser.yy"
                         {
     yylhs.value.as < std::vector<statement_astnode*> > () = yystack_[1].value.as < std::vector<statement_astnode*> > ();
 }
-#line 1750 "parser.tab.cc"
+#line 1757 "parser.tab.cc"
     break;
 
   case 27: // compound_statement: '{' declaration_list '}'
-#line 326 "parser.yy"
+#line 333 "parser.yy"
                            {
     //TODO
     yylhs.value.as < std::vector<statement_astnode*> > () = std::vector<statement_astnode*>();
 
 }
-#line 1760 "parser.tab.cc"
+#line 1767 "parser.tab.cc"
     break;
 
   case 28: // compound_statement: '{' declaration_list statement_list '}'
-#line 331 "parser.yy"
+#line 338 "parser.yy"
                                          {
     yylhs.value.as < std::vector<statement_astnode*> > () = yystack_[1].value.as < std::vector<statement_astnode*> > ();
 }
-#line 1768 "parser.tab.cc"
+#line 1775 "parser.tab.cc"
     break;
 
   case 29: // statement_list: statement
-#line 336 "parser.yy"
+#line 343 "parser.yy"
                           {
     std::vector<statement_astnode*> temp;
     statement_astnode* stmt = yystack_[0].value.as < statement_astnode* > ();
@@ -1777,82 +1784,95 @@ namespace IPL {
     }
     yylhs.value.as < std::vector<statement_astnode*> > () = temp;
 }
-#line 1781 "parser.tab.cc"
+#line 1788 "parser.tab.cc"
     break;
 
   case 30: // statement_list: statement_list statement
-#line 344 "parser.yy"
+#line 351 "parser.yy"
                           {
     yystack_[1].value.as < std::vector<statement_astnode*> > ().push_back(yystack_[0].value.as < statement_astnode* > ());
     yylhs.value.as < std::vector<statement_astnode*> > () = yystack_[1].value.as < std::vector<statement_astnode*> > ();
 }
-#line 1790 "parser.tab.cc"
+#line 1797 "parser.tab.cc"
     break;
 
   case 31: // statement: ';'
-#line 350 "parser.yy"
+#line 357 "parser.yy"
               {
     if(Symbols::symTabConstructed){   
         yylhs.value.as < statement_astnode* > () = new empty_astnode();
     }
 }
-#line 1800 "parser.tab.cc"
+#line 1807 "parser.tab.cc"
     break;
 
   case 32: // statement: '{' statement_list '}'
-#line 355 "parser.yy"
+#line 362 "parser.yy"
                         {
     if(Symbols::symTabConstructed){   
         yylhs.value.as < statement_astnode* > () = new seq_astnode(yystack_[1].value.as < std::vector<statement_astnode*> > ());
     }
 }
-#line 1810 "parser.tab.cc"
+#line 1817 "parser.tab.cc"
     break;
 
   case 33: // statement: selection_statement
-#line 360 "parser.yy"
+#line 367 "parser.yy"
                      {
     yylhs.value.as < statement_astnode* > () = yystack_[0].value.as < statement_astnode* > ();
 }
-#line 1818 "parser.tab.cc"
+#line 1825 "parser.tab.cc"
     break;
 
   case 34: // statement: iteration_statement
-#line 363 "parser.yy"
+#line 370 "parser.yy"
                      {
     yylhs.value.as < statement_astnode* > () = yystack_[0].value.as < statement_astnode* > ();
 }
-#line 1826 "parser.tab.cc"
+#line 1833 "parser.tab.cc"
     break;
 
   case 35: // statement: assignment_statement
-#line 366 "parser.yy"
+#line 373 "parser.yy"
                       {
     yylhs.value.as < statement_astnode* > () = yystack_[0].value.as < statement_astnode* > ();
 }
-#line 1834 "parser.tab.cc"
+#line 1841 "parser.tab.cc"
     break;
 
   case 36: // statement: procedure_call
-#line 369 "parser.yy"
+#line 376 "parser.yy"
                 {
     yylhs.value.as < statement_astnode* > () = yystack_[0].value.as < funcall_astnode* > ();
 }
-#line 1842 "parser.tab.cc"
+#line 1849 "parser.tab.cc"
     break;
 
   case 37: // statement: RETURN expression ';'
-#line 372 "parser.yy"
+#line 379 "parser.yy"
                        {
     if(Symbols::symTabConstructed){
-        yylhs.value.as < statement_astnode* > () = new return_astnode(yystack_[1].value.as < exp_astnode* > ());
+        typespec_astnode rt = *(ststack.top()->rettype);
+        if (!rt.compatibleWith(yystack_[1].value.as < exp_astnode* > ()->typeNode)) {
+            error(yylhs.location, "Function must return "+ rt.typeName+" but returns "+yystack_[1].value.as < exp_astnode* > ()->typeNode.typeName );
+        }
+        else{
+            yylhs.value.as < statement_astnode* > () = new return_astnode(yystack_[1].value.as < exp_astnode* > ());
+            if(rt.isNumeric()){
+                std::string ltypename = rt.typeName;
+                std::transform(ltypename.begin(), ltypename.end(), ltypename.begin(), [](auto c) { return std::toupper(c); });
+                // std::cerr << ltypename << std::endl;
+                std::string utypename = "TO_" + ltypename;
+                yylhs.value.as < statement_astnode* > () = new return_astnode(new op_unary_astnode(utypename, yystack_[1].value.as < exp_astnode* > ()));
+            }
+        }
     }
 }
-#line 1852 "parser.tab.cc"
+#line 1872 "parser.tab.cc"
     break;
 
   case 38: // assignment_expression: unary_expression '=' expression
-#line 379 "parser.yy"
+#line 399 "parser.yy"
                                                       {
     if(Symbols::symTabConstructed){
         // std::cerr<<__LINE__<<std::endl;
@@ -1882,237 +1902,184 @@ namespace IPL {
         }
     }
 }
-#line 1886 "parser.tab.cc"
+#line 1906 "parser.tab.cc"
     break;
 
   case 39: // assignment_statement: assignment_expression ';'
-#line 410 "parser.yy"
+#line 430 "parser.yy"
                                                {
     if(Symbols::symTabConstructed){
         yylhs.value.as < statement_astnode* > () = new assignS_astnode(yystack_[1].value.as < assignE_astnode* > ()->exp1, yystack_[1].value.as < assignE_astnode* > ()->exp2);
     }
 }
-#line 1896 "parser.tab.cc"
+#line 1916 "parser.tab.cc"
     break;
 
   case 40: // procedure_call: IDENTIFIER '(' ')' ';'
-#line 417 "parser.yy"
+#line 437 "parser.yy"
                                       {
     if (Symbols::symTabConstructed) {
         std::string function_name = yystack_[3].value.as < std::string > ();
-        SymTab* fstab = Symbols::flsts[function_name];
-        if (fstab == nullptr) {
-            error(yylhs.location, "Procedure \"" + yystack_[3].value.as < std::string > () + "\" not declared");
-        }
-        std::set<std::pair<long long, std::string>> expected;
-        for (auto row: fstab->rows) {
-            if (row.second.lpgtype == SymTab::PARAM) {
-                expected.insert(std::make_pair(row.second.offset, row.second.type.typeName));
+        if(!(yystack_[3].value.as < std::string > ()=="printf"||yystack_[3].value.as < std::string > ()=="scanf")){
+            SymTab* fstab = Symbols::flsts[function_name];
+            if (fstab == nullptr) {
+                error(yylhs.location, "Procedure \"" + yystack_[3].value.as < std::string > () + "\" not declared");
             }
+        //Arg checks.
+            std::set<std::pair<long long, std::string>> expected;
+            for (auto row: fstab->rows) {
+                if (row.second.lpgtype == SymTab::PARAM) {
+                    expected.insert(std::make_pair(row.second.offset, row.second.type.typeName));
+                }
+            }
+            if (!expected.empty()) {
+                error(yylhs.location, "Procedure \"" + yystack_[3].value.as < std::string > () + "\" called with too few arguments");
+            }
+            yylhs.value.as < funcall_astnode* > () = new funcall_astnode(new identifier_astnode(yystack_[3].value.as < std::string > ()), std::vector<exp_astnode*>(), true);
+            yylhs.value.as < funcall_astnode* > ()->typeNode = Symbols::getSymEntry(Symbols::gst, yystack_[3].value.as < std::string > ())->type;
         }
-        if (!expected.empty()) {
-            error(yylhs.location, "Procedure \"" + yystack_[3].value.as < std::string > () + "\" called with too few arguments");
+        else {
+            yylhs.value.as < funcall_astnode* > () = new funcall_astnode(new identifier_astnode(yystack_[3].value.as < std::string > ()), std::vector<exp_astnode*>(), true);
+            yylhs.value.as < funcall_astnode* > ()->typeNode = voidc;
         }
-        yylhs.value.as < funcall_astnode* > () = new funcall_astnode(new identifier_astnode(yystack_[3].value.as < std::string > ()), std::vector<exp_astnode*>());
-        yylhs.value.as < funcall_astnode* > ()->typeNode = Symbols::getSymEntry(Symbols::gst, yystack_[3].value.as < std::string > ())->type;
     }
 }
-<<<<<<< Updated upstream
-#line 2001 "parser.tab.cc"
-    break;
-
-  case 41:
-#line 437 "parser.yy"
-=======
-#line 1920 "parser.tab.cc"
+#line 1948 "parser.tab.cc"
     break;
 
   case 41: // procedure_call: IDENTIFIER '(' expression_list ')' ';'
-#line 436 "parser.yy"
->>>>>>> Stashed changes
+#line 464 "parser.yy"
                                         {
     if (Symbols::symTabConstructed) {
         std::string function_name = yystack_[4].value.as < std::string > ();
-        SymTab* fstab = Symbols::flsts[function_name];
-        std::set<std::pair<long long, typespec_astnode>,struct offsetcomp> expected;
-        for (auto row: fstab->rows) {
-            if (row.second.lpgtype == SymTab::PARAM) {
-                expected.insert(std::make_pair(row.second.offset, row.second.type));
+        if(!(yystack_[4].value.as < std::string > ()=="printf"||yystack_[4].value.as < std::string > ()=="scanf")){
+            SymTab* fstab = Symbols::flsts[function_name];
+            std::set<std::pair<long long, typespec_astnode>,struct offsetcomp> expected;
+            for (auto row: fstab->rows) {
+                if (row.second.lpgtype == SymTab::PARAM) {
+                    expected.insert(std::make_pair(row.second.offset, row.second.type));
+                }
             }
-        }
-        if (yystack_[2].value.as < std::vector<exp_astnode*> > ().size() < expected.size()) {
-            error(yylhs.location, "Procedure \"" + yystack_[4].value.as < std::string > () + "\" called with too few arguments");
-        }
-        else if (yystack_[2].value.as < std::vector<exp_astnode*> > ().size() > expected.size()) {
-            error(yylhs.location, "Procedure \"" + yystack_[4].value.as < std::string > () + "\" called with too many arguments");
-        }
-        std::vector<exp_astnode*> exp_list = yystack_[2].value.as < std::vector<exp_astnode*> > ();
-        std::reverse(exp_list.begin(), exp_list.end());
-        int i = 0;
-        for (auto item: expected) {
-            if (!item.second.compatibleWith(exp_list[i]->typeNode)) {
-                error(yylhs.location, "Expected \"" + item.second.typeName + "\" but argument is of type \"" + exp_list[i]->typeNode.typeName + "\"");
+            if (yystack_[2].value.as < std::vector<exp_astnode*> > ().size() < expected.size()) {
+                error(yylhs.location, "Procedure \"" + yystack_[4].value.as < std::string > () + "\" called with too few arguments");
             }
-            i++;
-        }
+            else if (yystack_[2].value.as < std::vector<exp_astnode*> > ().size() > expected.size()) {
+                error(yylhs.location, "Procedure \"" + yystack_[4].value.as < std::string > () + "\" called with too many arguments");
+            }
+            std::vector<exp_astnode*> exp_list = yystack_[2].value.as < std::vector<exp_astnode*> > ();
+            std::reverse(exp_list.begin(), exp_list.end());
+            int i = 0;
+            for (auto item: expected) {
+                if (!item.second.compatibleWith(exp_list[i]->typeNode)) {
+                    error(yylhs.location, "Expected \"" + item.second.typeName + "\" but argument is of type \"" + exp_list[i]->typeNode.typeName + "\"");
+                }
+                i++;
+            }
 
-        yylhs.value.as < funcall_astnode* > () = new funcall_astnode(new identifier_astnode(yystack_[4].value.as < std::string > ()), yystack_[2].value.as < std::vector<exp_astnode*> > ());
-        yylhs.value.as < funcall_astnode* > ()->typeNode = Symbols::getSymEntry(Symbols::gst, yystack_[4].value.as < std::string > ())->type;
+            yylhs.value.as < funcall_astnode* > () = new funcall_astnode(new identifier_astnode(yystack_[4].value.as < std::string > ()), yystack_[2].value.as < std::vector<exp_astnode*> > (), true);
+            yylhs.value.as < funcall_astnode* > ()->typeNode = Symbols::getSymEntry(Symbols::gst, yystack_[4].value.as < std::string > ())->type;
+        }
+        else {
+            yylhs.value.as < funcall_astnode* > () = new funcall_astnode(new identifier_astnode(yystack_[4].value.as < std::string > ()), yystack_[2].value.as < std::vector<exp_astnode*> > (), true);
+            yylhs.value.as < funcall_astnode* > ()->typeNode = voidc;
+        }
     }
 }
-<<<<<<< Updated upstream
-#line 2036 "parser.tab.cc"
-    break;
-
-  case 42:
-#line 469 "parser.yy"
-=======
-#line 1954 "parser.tab.cc"
+#line 1989 "parser.tab.cc"
     break;
 
   case 42: // expression: logical_and_expression
-#line 467 "parser.yy"
->>>>>>> Stashed changes
+#line 502 "parser.yy"
                                   {
     yylhs.value.as < exp_astnode* > () = yystack_[0].value.as < op_binary_astnode* > ();
     // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
-<<<<<<< Updated upstream
-#line 2045 "parser.tab.cc"
-    break;
-
-  case 43:
-#line 473 "parser.yy"
-=======
-#line 1963 "parser.tab.cc"
+#line 1998 "parser.tab.cc"
     break;
 
   case 43: // expression: expression OR_OP logical_and_expression
-#line 471 "parser.yy"
->>>>>>> Stashed changes
+#line 506 "parser.yy"
                                          {
     if(Symbols::symTabConstructed){
         yylhs.value.as < exp_astnode* > () = new op_binary_astnode("OR_OP",yystack_[2].value.as < exp_astnode* > (),yystack_[0].value.as < op_binary_astnode* > ());
     }
 }
-<<<<<<< Updated upstream
-#line 2055 "parser.tab.cc"
-    break;
-
-  case 44:
-#line 480 "parser.yy"
-=======
-#line 1973 "parser.tab.cc"
+#line 2008 "parser.tab.cc"
     break;
 
   case 44: // logical_and_expression: equality_expression
-#line 478 "parser.yy"
->>>>>>> Stashed changes
+#line 513 "parser.yy"
                                            {
     yylhs.value.as < op_binary_astnode* > () = yystack_[0].value.as < op_binary_astnode* > ();
     // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
-<<<<<<< Updated upstream
-#line 2064 "parser.tab.cc"
-    break;
-
-  case 45:
-#line 484 "parser.yy"
-=======
-#line 1982 "parser.tab.cc"
+#line 2017 "parser.tab.cc"
     break;
 
   case 45: // logical_and_expression: logical_and_expression AND_OP equality_expression
-#line 482 "parser.yy"
->>>>>>> Stashed changes
+#line 517 "parser.yy"
                                                    {
     if(Symbols::symTabConstructed){   
         yylhs.value.as < op_binary_astnode* > () = new op_binary_astnode("AND_OP", yystack_[2].value.as < op_binary_astnode* > (), yystack_[0].value.as < op_binary_astnode* > ());
     }
 }
-<<<<<<< Updated upstream
-#line 2074 "parser.tab.cc"
-    break;
-
-  case 46:
-#line 491 "parser.yy"
-=======
-#line 1992 "parser.tab.cc"
+#line 2027 "parser.tab.cc"
     break;
 
   case 46: // equality_expression: relational_expression
-#line 489 "parser.yy"
->>>>>>> Stashed changes
+#line 524 "parser.yy"
                                           {
     yylhs.value.as < op_binary_astnode* > () = yystack_[0].value.as < op_binary_astnode* > ();
     // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
-<<<<<<< Updated upstream
-#line 2083 "parser.tab.cc"
-    break;
-
-  case 47:
-#line 495 "parser.yy"
-=======
-#line 2001 "parser.tab.cc"
+#line 2036 "parser.tab.cc"
     break;
 
   case 47: // equality_expression: equality_expression EQ_OP relational_expression
-#line 493 "parser.yy"
->>>>>>> Stashed changes
+#line 528 "parser.yy"
                                                   {
     if(Symbols::symTabConstructed){   
-        yylhs.value.as < op_binary_astnode* > () = new op_binary_astnode("EQ?", yystack_[2].value.as < op_binary_astnode* > (), yystack_[0].value.as < op_binary_astnode* > ());
+        yylhs.value.as < op_binary_astnode* > () = new op_binary_astnode("EQ_OP?", yystack_[2].value.as < op_binary_astnode* > (), yystack_[0].value.as < op_binary_astnode* > ());
+        yylhs.value.as < op_binary_astnode* > ()->op = yylhs.value.as < op_binary_astnode* > ()->op.substr(0,yylhs.value.as < op_binary_astnode* > ()->op.size()-1);
+        if(yylhs.value.as < op_binary_astnode* > ()->typeNode.baseTypeName=="float"){
+            yylhs.value.as < op_binary_astnode* > ()->op += "_FLOAT";
+        }
+        else{
+            yylhs.value.as < op_binary_astnode* > ()->op += "_INT";
+        }
     }
 }
-<<<<<<< Updated upstream
-#line 2093 "parser.tab.cc"
-    break;
-
-  case 48:
-#line 500 "parser.yy"
-=======
-#line 2011 "parser.tab.cc"
+#line 2053 "parser.tab.cc"
     break;
 
   case 48: // equality_expression: equality_expression NE_OP relational_expression
-#line 498 "parser.yy"
->>>>>>> Stashed changes
+#line 540 "parser.yy"
                                                  {
     if(Symbols::symTabConstructed){   
-        yylhs.value.as < op_binary_astnode* > () = new op_binary_astnode("NE?", yystack_[2].value.as < op_binary_astnode* > (), yystack_[0].value.as < op_binary_astnode* > ());
+        yylhs.value.as < op_binary_astnode* > () = new op_binary_astnode("NE_OP?", yystack_[2].value.as < op_binary_astnode* > (), yystack_[0].value.as < op_binary_astnode* > ());
+        yylhs.value.as < op_binary_astnode* > ()->op = yylhs.value.as < op_binary_astnode* > ()->op.substr(0,yylhs.value.as < op_binary_astnode* > ()->op.size()-1);
+        if(yylhs.value.as < op_binary_astnode* > ()->typeNode.baseTypeName=="float"){
+            yylhs.value.as < op_binary_astnode* > ()->op += "_FLOAT";
+        }
+        else{
+            yylhs.value.as < op_binary_astnode* > ()->op += "_INT";
+        }
     }
 }
-<<<<<<< Updated upstream
-#line 2103 "parser.tab.cc"
-    break;
-
-  case 49:
-#line 507 "parser.yy"
-=======
-#line 2021 "parser.tab.cc"
+#line 2070 "parser.tab.cc"
     break;
 
   case 49: // relational_expression: additive_expression
-#line 505 "parser.yy"
->>>>>>> Stashed changes
+#line 554 "parser.yy"
                                           {
     yylhs.value.as < op_binary_astnode* > () = yystack_[0].value.as < op_binary_astnode* > ();
     // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
-<<<<<<< Updated upstream
-#line 2112 "parser.tab.cc"
-    break;
-
-  case 50:
-#line 511 "parser.yy"
-=======
-#line 2030 "parser.tab.cc"
+#line 2079 "parser.tab.cc"
     break;
 
   case 50: // relational_expression: relational_expression '<' additive_expression
-#line 509 "parser.yy"
->>>>>>> Stashed changes
+#line 558 "parser.yy"
                                                {
     if(Symbols::symTabConstructed){
         yylhs.value.as < op_binary_astnode* > () = new op_binary_astnode("LT_OP?", yystack_[2].value.as < op_binary_astnode* > (), yystack_[0].value.as < op_binary_astnode* > ());
@@ -2125,19 +2092,11 @@ namespace IPL {
         }
     }
 }
-<<<<<<< Updated upstream
-#line 2129 "parser.tab.cc"
-    break;
-
-  case 51:
-#line 523 "parser.yy"
-=======
-#line 2047 "parser.tab.cc"
+#line 2096 "parser.tab.cc"
     break;
 
   case 51: // relational_expression: relational_expression '>' additive_expression
-#line 521 "parser.yy"
->>>>>>> Stashed changes
+#line 570 "parser.yy"
                                                {
     if(Symbols::symTabConstructed){
         yylhs.value.as < op_binary_astnode* > () = new op_binary_astnode("GT_OP?", yystack_[2].value.as < op_binary_astnode* > (), yystack_[0].value.as < op_binary_astnode* > ());
@@ -2150,19 +2109,11 @@ namespace IPL {
         }
     }
 }
-<<<<<<< Updated upstream
-#line 2146 "parser.tab.cc"
-    break;
-
-  case 52:
-#line 535 "parser.yy"
-=======
-#line 2064 "parser.tab.cc"
+#line 2113 "parser.tab.cc"
     break;
 
   case 52: // relational_expression: relational_expression LE_OP additive_expression
-#line 533 "parser.yy"
->>>>>>> Stashed changes
+#line 582 "parser.yy"
                                                  {
     if(Symbols::symTabConstructed){
         yylhs.value.as < op_binary_astnode* > () = new op_binary_astnode("LE_OP?", yystack_[2].value.as < op_binary_astnode* > (), yystack_[0].value.as < op_binary_astnode* > ());
@@ -2175,19 +2126,11 @@ namespace IPL {
         }
     }
 }
-<<<<<<< Updated upstream
-#line 2163 "parser.tab.cc"
-    break;
-
-  case 53:
-#line 547 "parser.yy"
-=======
-#line 2081 "parser.tab.cc"
+#line 2130 "parser.tab.cc"
     break;
 
   case 53: // relational_expression: relational_expression GE_OP additive_expression
-#line 545 "parser.yy"
->>>>>>> Stashed changes
+#line 594 "parser.yy"
                                                  {
     if(Symbols::symTabConstructed){
         yylhs.value.as < op_binary_astnode* > () = new op_binary_astnode("GE_OP?", yystack_[2].value.as < op_binary_astnode* > (), yystack_[0].value.as < op_binary_astnode* > ());
@@ -2200,36 +2143,20 @@ namespace IPL {
         }
     }
 }
-<<<<<<< Updated upstream
-#line 2180 "parser.tab.cc"
-    break;
-
-  case 54:
-#line 561 "parser.yy"
-=======
-#line 2098 "parser.tab.cc"
+#line 2147 "parser.tab.cc"
     break;
 
   case 54: // additive_expression: multiplicative_expression
-#line 559 "parser.yy"
->>>>>>> Stashed changes
+#line 608 "parser.yy"
                                               {
     yylhs.value.as < op_binary_astnode* > () = yystack_[0].value.as < op_binary_astnode* > ();
     // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
-<<<<<<< Updated upstream
-#line 2189 "parser.tab.cc"
-    break;
-
-  case 55:
-#line 565 "parser.yy"
-=======
-#line 2107 "parser.tab.cc"
+#line 2156 "parser.tab.cc"
     break;
 
   case 55: // additive_expression: additive_expression '+' multiplicative_expression
-#line 563 "parser.yy"
->>>>>>> Stashed changes
+#line 612 "parser.yy"
                                                    {
     if(Symbols::symTabConstructed){
         yylhs.value.as < op_binary_astnode* > () = new op_binary_astnode("PLUS?", yystack_[2].value.as < op_binary_astnode* > (), yystack_[0].value.as < op_binary_astnode* > ());
@@ -2242,19 +2169,11 @@ namespace IPL {
         }
     }
 }
-<<<<<<< Updated upstream
-#line 2206 "parser.tab.cc"
-    break;
-
-  case 56:
-#line 577 "parser.yy"
-=======
-#line 2124 "parser.tab.cc"
+#line 2173 "parser.tab.cc"
     break;
 
   case 56: // additive_expression: additive_expression '-' multiplicative_expression
-#line 575 "parser.yy"
->>>>>>> Stashed changes
+#line 624 "parser.yy"
                                                    {
     if(Symbols::symTabConstructed){
         yylhs.value.as < op_binary_astnode* > () = new op_binary_astnode("MINUS?", yystack_[2].value.as < op_binary_astnode* > (), yystack_[0].value.as < op_binary_astnode* > ());
@@ -2267,36 +2186,20 @@ namespace IPL {
         }
     }
 }
-<<<<<<< Updated upstream
-#line 2223 "parser.tab.cc"
-    break;
-
-  case 57:
-#line 591 "parser.yy"
-=======
-#line 2141 "parser.tab.cc"
+#line 2190 "parser.tab.cc"
     break;
 
   case 57: // unary_expression: postfix_expression
-#line 589 "parser.yy"
->>>>>>> Stashed changes
+#line 638 "parser.yy"
                                     {
     yylhs.value.as < exp_astnode* > () = yystack_[0].value.as < exp_astnode* > ();
     // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
-<<<<<<< Updated upstream
-#line 2232 "parser.tab.cc"
-    break;
-
-  case 58:
-#line 595 "parser.yy"
-=======
-#line 2150 "parser.tab.cc"
+#line 2199 "parser.tab.cc"
     break;
 
   case 58: // unary_expression: unary_operator unary_expression
-#line 593 "parser.yy"
->>>>>>> Stashed changes
+#line 642 "parser.yy"
                                  {
     if(Symbols::symTabConstructed){
         //validity checks.
@@ -2311,36 +2214,22 @@ namespace IPL {
         }
     }
 }
-<<<<<<< Updated upstream
-#line 2249 "parser.tab.cc"
-    break;
-
-  case 59:
-=======
-#line 2169 "parser.tab.cc"
+#line 2218 "parser.tab.cc"
     break;
 
   case 59: // multiplicative_expression: unary_expression
->>>>>>> Stashed changes
-#line 609 "parser.yy"
+#line 658 "parser.yy"
                                            {
     if(Symbols::symTabConstructed){   
         yylhs.value.as < op_binary_astnode* > () = (op_binary_astnode*) yystack_[0].value.as < exp_astnode* > ();
     }
 
 }
-<<<<<<< Updated upstream
-#line 2260 "parser.tab.cc"
-    break;
-
-  case 60:
-=======
-#line 2180 "parser.tab.cc"
+#line 2229 "parser.tab.cc"
     break;
 
   case 60: // multiplicative_expression: multiplicative_expression '*' unary_expression
->>>>>>> Stashed changes
-#line 615 "parser.yy"
+#line 664 "parser.yy"
                                                 {
     //operator and expression match check here.
     if(Symbols::symTabConstructed){
@@ -2354,18 +2243,11 @@ namespace IPL {
         }
     }
 }
-<<<<<<< Updated upstream
-#line 2278 "parser.tab.cc"
-    break;
-
-  case 61:
-=======
-#line 2198 "parser.tab.cc"
+#line 2247 "parser.tab.cc"
     break;
 
   case 61: // multiplicative_expression: multiplicative_expression '/' unary_expression
->>>>>>> Stashed changes
-#line 628 "parser.yy"
+#line 677 "parser.yy"
                                                 {
     if(Symbols::symTabConstructed){
         yylhs.value.as < op_binary_astnode* > () = new op_binary_astnode("DIV?", yystack_[2].value.as < op_binary_astnode* > (), yystack_[0].value.as < exp_astnode* > ());
@@ -2378,112 +2260,100 @@ namespace IPL {
         }
     }
 }
-<<<<<<< Updated upstream
-#line 2295 "parser.tab.cc"
-    break;
-
-  case 62:
-=======
-#line 2215 "parser.tab.cc"
+#line 2264 "parser.tab.cc"
     break;
 
   case 62: // postfix_expression: primary_expression
->>>>>>> Stashed changes
-#line 642 "parser.yy"
+#line 691 "parser.yy"
                                       {
     yylhs.value.as < exp_astnode* > () = yystack_[0].value.as < exp_astnode* > ();
 }
-#line 2225 "parser.tab.cc"
+#line 2272 "parser.tab.cc"
     break;
 
   case 63: // postfix_expression: postfix_expression '[' expression ']'
-#line 647 "parser.yy"
+#line 694 "parser.yy"
                                        {
     if(Symbols::symTabConstructed){   
         yylhs.value.as < exp_astnode* > () = new arrayref_astnode(yystack_[3].value.as < exp_astnode* > (), yystack_[1].value.as < exp_astnode* > ());
     }
 }
-#line 2235 "parser.tab.cc"
+#line 2282 "parser.tab.cc"
     break;
 
   case 64: // postfix_expression: IDENTIFIER '(' ')'
-#line 652 "parser.yy"
+#line 699 "parser.yy"
                     {
     if (Symbols::symTabConstructed) {
         std::string function_name = yystack_[2].value.as < std::string > ();
-        SymTab* fstab = Symbols::flsts[function_name];
-        if (fstab == nullptr) {
-            error(yylhs.location, "Procedure \"" + yystack_[2].value.as < std::string > () + "\" not declared");
-        }
-        std::set<std::pair<long long, std::string>> expected;
-        for (auto row: fstab->rows) {
-            if (row.second.lpgtype == SymTab::PARAM) {
-                expected.insert(std::make_pair(row.second.offset, row.second.type.typeName));
+        if(!(yystack_[2].value.as < std::string > ()=="printf"||yystack_[2].value.as < std::string > ()=="scanf")){
+            SymTab* fstab = Symbols::flsts[function_name];
+            if (fstab == nullptr) {
+                error(yylhs.location, "Procedure \"" + yystack_[2].value.as < std::string > () + "\" not declared");
             }
+            std::set<std::pair<long long, std::string>> expected;
+            for (auto row: fstab->rows) {
+                if (row.second.lpgtype == SymTab::PARAM) {
+                    expected.insert(std::make_pair(row.second.offset, row.second.type.typeName));
+                }
+            }
+            if (!expected.empty()) {
+                error(yylhs.location, "Procedure \"" + yystack_[2].value.as < std::string > () + "\" called with too few arguments");
+            }
+            yylhs.value.as < exp_astnode* > () = new funcall_astnode(new identifier_astnode(yystack_[2].value.as < std::string > ()), std::vector<exp_astnode*>(), false);
+            yylhs.value.as < exp_astnode* > ()->typeNode = Symbols::getSymEntry(Symbols::gst, yystack_[2].value.as < std::string > ())->type;
         }
-        if (!expected.empty()) {
-            error(yylhs.location, "Procedure \"" + yystack_[2].value.as < std::string > () + "\" called with too few arguments");
+        else {
+            yylhs.value.as < exp_astnode* > () = new funcall_astnode(new identifier_astnode(yystack_[2].value.as < std::string > ()), std::vector<exp_astnode*>(), false);
+            yylhs.value.as < exp_astnode* > ()->typeNode = voidc;
         }
-        yylhs.value.as < exp_astnode* > () = new funcall_astnode(new identifier_astnode(yystack_[2].value.as < std::string > ()), std::vector<exp_astnode*>());
-        yylhs.value.as < exp_astnode* > ()->typeNode = Symbols::getSymEntry(Symbols::gst, yystack_[2].value.as < std::string > ())->type;
     }
 }
-<<<<<<< Updated upstream
-#line 2338 "parser.tab.cc"
-    break;
-
-  case 65:
-#line 670 "parser.yy"
-=======
-#line 2243 "parser.tab.cc"
+#line 2313 "parser.tab.cc"
     break;
 
   case 65: // postfix_expression: IDENTIFIER '(' expression_list ')'
-#line 655 "parser.yy"
->>>>>>> Stashed changes
+#line 725 "parser.yy"
                                     {
     if (Symbols::symTabConstructed) {
         std::string function_name = yystack_[3].value.as < std::string > ();
-        SymTab* fstab = Symbols::flsts[function_name];
-        std::set<std::pair<long long, typespec_astnode>,struct offsetcomp> expected;
-        for (auto row: fstab->rows) {
-            if (row.second.lpgtype == SymTab::PARAM) {
-                expected.insert(std::make_pair(row.second.offset, row.second.type));
+        if(!(yystack_[3].value.as < std::string > ()=="printf"||yystack_[3].value.as < std::string > ()=="scanf")){
+            SymTab* fstab = Symbols::flsts[function_name];
+            std::set<std::pair<long long, typespec_astnode>,struct offsetcomp> expected;
+            for (auto row: fstab->rows) {
+                if (row.second.lpgtype == SymTab::PARAM) {
+                    expected.insert(std::make_pair(row.second.offset, row.second.type));
+                }
             }
-        }
-        if (yystack_[1].value.as < std::vector<exp_astnode*> > ().size() < expected.size()) {
-            error(yylhs.location, "Procedure \"" + yystack_[3].value.as < std::string > () + "\" called with too few arguments");
-        }
-        else if (yystack_[1].value.as < std::vector<exp_astnode*> > ().size() > expected.size()) {
-            error(yylhs.location, "Procedure \"" + yystack_[3].value.as < std::string > () + "\" called with too many arguments");
-        }
-        std::vector<exp_astnode*> exp_list = yystack_[1].value.as < std::vector<exp_astnode*> > ();
-        std::reverse(exp_list.begin(), exp_list.end());
-        int i = 0;
-        for (auto item: expected) {
-            if (!item.second.compatibleWith(exp_list[i]->typeNode)) {
-                error(yylhs.location, "Expected \"" + item.second.typeName + "\" but argument is of type \"" + exp_list[i]->typeNode.typeName + "\"");
+            if (yystack_[1].value.as < std::vector<exp_astnode*> > ().size() < expected.size()) {
+                error(yylhs.location, "Procedure \"" + yystack_[3].value.as < std::string > () + "\" called with too few arguments");
             }
-            i++;
+            else if (yystack_[1].value.as < std::vector<exp_astnode*> > ().size() > expected.size()) {
+                error(yylhs.location, "Procedure \"" + yystack_[3].value.as < std::string > () + "\" called with too many arguments");
+            }
+            std::vector<exp_astnode*> exp_list = yystack_[1].value.as < std::vector<exp_astnode*> > ();
+            std::reverse(exp_list.begin(), exp_list.end());
+            int i = 0;
+            for (auto item: expected) {
+                if (!item.second.compatibleWith(exp_list[i]->typeNode)) {
+                    error(yylhs.location, "Expected \"" + item.second.typeName + "\" but argument is of type \"" + exp_list[i]->typeNode.typeName + "\"");
+                }
+                i++;
+            }
+            yylhs.value.as < exp_astnode* > () = new funcall_astnode(new identifier_astnode(yystack_[3].value.as < std::string > ()), yystack_[1].value.as < std::vector<exp_astnode*> > (), false);
+            yylhs.value.as < exp_astnode* > ()->typeNode = Symbols::getSymEntry(Symbols::gst, yystack_[3].value.as < std::string > ())->type;
         }
-
-        yylhs.value.as < exp_astnode* > () = new funcall_astnode(new identifier_astnode(yystack_[3].value.as < std::string > ()), yystack_[1].value.as < std::vector<exp_astnode*> > ());
-        yylhs.value.as < exp_astnode* > ()->typeNode = Symbols::getSymEntry(Symbols::gst, yystack_[3].value.as < std::string > ())->type;
+        else {
+            yylhs.value.as < exp_astnode* > () = new funcall_astnode(new identifier_astnode(yystack_[3].value.as < std::string > ()), yystack_[1].value.as < std::vector<exp_astnode*> > (), false);
+            yylhs.value.as < exp_astnode* > ()->typeNode = voidc;
+        }
     }
 }
-<<<<<<< Updated upstream
-#line 2373 "parser.tab.cc"
-    break;
-
-  case 66:
-#line 700 "parser.yy"
-=======
-#line 2252 "parser.tab.cc"
+#line 2353 "parser.tab.cc"
     break;
 
   case 66: // postfix_expression: postfix_expression '.' IDENTIFIER
-#line 659 "parser.yy"
->>>>>>> Stashed changes
+#line 760 "parser.yy"
                                    {
     if(Symbols::symTabConstructed){
         yylhs.value.as < exp_astnode* > () = new member_astnode(yystack_[2].value.as < exp_astnode* > (), new identifier_astnode(yystack_[0].value.as < std::string > ()));
@@ -2500,19 +2370,11 @@ namespace IPL {
         }
     }
 }
-<<<<<<< Updated upstream
-#line 2394 "parser.tab.cc"
-    break;
-
-  case 67:
-#line 716 "parser.yy"
-=======
-#line 2275 "parser.tab.cc"
+#line 2374 "parser.tab.cc"
     break;
 
   case 67: // postfix_expression: postfix_expression PTR_OP IDENTIFIER
-#line 677 "parser.yy"
->>>>>>> Stashed changes
+#line 776 "parser.yy"
                                       {
     if(Symbols::symTabConstructed){
         yylhs.value.as < exp_astnode* > () = new member_astnode(new arrow_astnode(yystack_[2].value.as < exp_astnode* > (), new identifier_astnode(yystack_[0].value.as < std::string > ())), new identifier_astnode(yystack_[0].value.as < std::string > ()));
@@ -2530,26 +2392,11 @@ namespace IPL {
         }
     }
 }
-<<<<<<< Updated upstream
-#line 2416 "parser.tab.cc"
-    break;
-
-  case 68:
-#line 733 "parser.yy"
-                           {
-
-}
-#line 2424 "parser.tab.cc"
-    break;
-
-  case 69:
-#line 738 "parser.yy"
-=======
-#line 2297 "parser.tab.cc"
+#line 2396 "parser.tab.cc"
     break;
 
   case 68: // postfix_expression: postfix_expression INC_OP
-#line 694 "parser.yy"
+#line 793 "parser.yy"
                            {
     if(Symbols::symTabConstructed){
         //type checks for $1
@@ -2558,12 +2405,11 @@ namespace IPL {
         yylhs.value.as < exp_astnode* > ()->typeNode = yystack_[1].value.as < exp_astnode* > ()->typeNode;
     }
 }
-#line 2310 "parser.tab.cc"
+#line 2409 "parser.tab.cc"
     break;
 
   case 69: // primary_expression: IDENTIFIER
-#line 704 "parser.yy"
->>>>>>> Stashed changes
+#line 803 "parser.yy"
                               {
     if(Symbols::symTabConstructed){
         yylhs.value.as < exp_astnode* > () = new identifier_astnode(yystack_[0].value.as < std::string > ());
@@ -2580,19 +2426,11 @@ namespace IPL {
     }
     std::cerr<<"bloom"<<std::endl;
 }
-<<<<<<< Updated upstream
-#line 2445 "parser.tab.cc"
-    break;
-
-  case 70:
-#line 754 "parser.yy"
-=======
-#line 2331 "parser.tab.cc"
+#line 2430 "parser.tab.cc"
     break;
 
   case 70: // primary_expression: INT_CONSTANT
-#line 720 "parser.yy"
->>>>>>> Stashed changes
+#line 819 "parser.yy"
               {
     if(Symbols::symTabConstructed){   
         yylhs.value.as < exp_astnode* > () = new intconst_astnode(yystack_[0].value.as < std::string > ());
@@ -2600,19 +2438,11 @@ namespace IPL {
         yylhs.value.as < exp_astnode* > ()->typeNode.islval = false;
     }
 }
-<<<<<<< Updated upstream
-#line 2457 "parser.tab.cc"
-    break;
-
-  case 71:
-#line 761 "parser.yy"
-=======
-#line 2343 "parser.tab.cc"
+#line 2442 "parser.tab.cc"
     break;
 
   case 71: // primary_expression: FLOAT_CONSTANT
-#line 727 "parser.yy"
->>>>>>> Stashed changes
+#line 826 "parser.yy"
                 {
     if(Symbols::symTabConstructed){   
         yylhs.value.as < exp_astnode* > () = new floatconst_astnode(yystack_[0].value.as < std::string > ());
@@ -2620,251 +2450,134 @@ namespace IPL {
         yylhs.value.as < exp_astnode* > ()->typeNode.islval = false;
     }
 }
-<<<<<<< Updated upstream
-#line 2469 "parser.tab.cc"
-    break;
-
-  case 72:
-#line 768 "parser.yy"
-=======
-#line 2355 "parser.tab.cc"
+#line 2454 "parser.tab.cc"
     break;
 
   case 72: // primary_expression: STRING_LITERAL
-#line 734 "parser.yy"
->>>>>>> Stashed changes
+#line 833 "parser.yy"
                 {
     if(Symbols::symTabConstructed){   
         yylhs.value.as < exp_astnode* > () = new stringconst_astnode(yystack_[0].value.as < std::string > ());
         yylhs.value.as < exp_astnode* > ()->typeNode = stringc;
         yylhs.value.as < exp_astnode* > ()->typeNode.islval = false;
-        yylhs.value.as < exp_astnode* > ()->print();
+        // $$->print();
     }
 }
-<<<<<<< Updated upstream
-#line 2482 "parser.tab.cc"
-    break;
-
-  case 73:
-#line 776 "parser.yy"
-                    {
-    yylhs.value.as < exp_astnode* > () = yystack_[1].value.as < exp_astnode* > ();
-}
-#line 2490 "parser.tab.cc"
-    break;
-
-  case 74:
-#line 781 "parser.yy"
-=======
-#line 2368 "parser.tab.cc"
+#line 2467 "parser.tab.cc"
     break;
 
   case 73: // primary_expression: '(' expression ')'
-#line 742 "parser.yy"
+#line 841 "parser.yy"
                     {
     yylhs.value.as < exp_astnode* > () = yystack_[1].value.as < exp_astnode* > ();
 }
-#line 2376 "parser.tab.cc"
+#line 2475 "parser.tab.cc"
     break;
 
   case 74: // expression_list: expression
-#line 747 "parser.yy"
->>>>>>> Stashed changes
+#line 846 "parser.yy"
                            {
     yylhs.value.as < std::vector<exp_astnode*> > () = std::vector<exp_astnode*>();
     yylhs.value.as < std::vector<exp_astnode*> > ().push_back(yystack_[0].value.as < exp_astnode* > ());
     // std::cerr << __LINE__ << (*($$.rbegin()))->typeNode.typeName<<std::endl;
 }
-<<<<<<< Updated upstream
-#line 2500 "parser.tab.cc"
-    break;
-
-  case 75:
-#line 786 "parser.yy"
-=======
-#line 2386 "parser.tab.cc"
+#line 2485 "parser.tab.cc"
     break;
 
   case 75: // expression_list: expression_list ',' expression
-#line 752 "parser.yy"
->>>>>>> Stashed changes
+#line 851 "parser.yy"
                                 {
     yystack_[2].value.as < std::vector<exp_astnode*> > ().push_back(yystack_[0].value.as < exp_astnode* > ());
     yylhs.value.as < std::vector<exp_astnode*> > () = yystack_[2].value.as < std::vector<exp_astnode*> > ();
 }
-<<<<<<< Updated upstream
-#line 2509 "parser.tab.cc"
-    break;
-
-  case 76:
-#line 792 "parser.yy"
-                   {
-    yylhs.value.as < std::string > () = std::string("UMINUS?");
-}
-#line 2517 "parser.tab.cc"
-    break;
-
-  case 77:
-#line 795 "parser.yy"
-     {
-    yylhs.value.as < std::string > () = std::string("NOT");
-}
-#line 2525 "parser.tab.cc"
-    break;
-
-  case 78:
-#line 798 "parser.yy"
-     {
-    yylhs.value.as < std::string > () = std::string("ADDRESS");
-}
-#line 2533 "parser.tab.cc"
-    break;
-
-  case 79:
-#line 801 "parser.yy"
-     {
-    yylhs.value.as < std::string > () = std::string("DEREF");
-}
-#line 2541 "parser.tab.cc"
-    break;
-
-  case 80:
-#line 806 "parser.yy"
-=======
-#line 2395 "parser.tab.cc"
+#line 2494 "parser.tab.cc"
     break;
 
   case 76: // unary_operator: '-'
-#line 758 "parser.yy"
+#line 856 "parser.yy"
                    {
-    yylhs.value.as < std::string > () = std::string("UMINUS?");
+    yylhs.value.as < std::string > () = std::string("UMINUS");
 }
-#line 2403 "parser.tab.cc"
+#line 2502 "parser.tab.cc"
     break;
 
   case 77: // unary_operator: '!'
-#line 761 "parser.yy"
+#line 859 "parser.yy"
      {
     yylhs.value.as < std::string > () = std::string("NOT");
 }
-#line 2411 "parser.tab.cc"
+#line 2510 "parser.tab.cc"
     break;
 
   case 78: // unary_operator: '&'
-#line 764 "parser.yy"
+#line 862 "parser.yy"
      {
     yylhs.value.as < std::string > () = std::string("ADDRESS");
 }
-#line 2419 "parser.tab.cc"
+#line 2518 "parser.tab.cc"
     break;
 
   case 79: // unary_operator: '*'
-#line 767 "parser.yy"
+#line 865 "parser.yy"
      {
     yylhs.value.as < std::string > () = std::string("DEREF");
 }
-#line 2427 "parser.tab.cc"
+#line 2526 "parser.tab.cc"
     break;
 
   case 80: // selection_statement: IF '(' expression ')' statement ELSE statement
-#line 772 "parser.yy"
->>>>>>> Stashed changes
+#line 870 "parser.yy"
                                                                    {
     if(Symbols::symTabConstructed){   
         yylhs.value.as < statement_astnode* > () = new if_astnode(yystack_[4].value.as < exp_astnode* > (), yystack_[2].value.as < statement_astnode* > (), yystack_[0].value.as < statement_astnode* > ());
     }
 }
-<<<<<<< Updated upstream
-#line 2551 "parser.tab.cc"
-    break;
-
-  case 81:
-#line 813 "parser.yy"
-=======
-#line 2437 "parser.tab.cc"
+#line 2536 "parser.tab.cc"
     break;
 
   case 81: // iteration_statement: WHILE '(' expression ')' statement
-#line 779 "parser.yy"
->>>>>>> Stashed changes
+#line 877 "parser.yy"
                                                        {
     if(Symbols::symTabConstructed){   
         yylhs.value.as < statement_astnode* > () = new while_astnode(yystack_[2].value.as < exp_astnode* > (), yystack_[0].value.as < statement_astnode* > ());
     }
 }
-<<<<<<< Updated upstream
-#line 2561 "parser.tab.cc"
-    break;
-
-  case 82:
-#line 818 "parser.yy"
-=======
-#line 2447 "parser.tab.cc"
+#line 2546 "parser.tab.cc"
     break;
 
   case 82: // iteration_statement: FOR '(' assignment_expression ';' expression ';' assignment_expression ')' statement
-#line 784 "parser.yy"
->>>>>>> Stashed changes
+#line 882 "parser.yy"
                                                                                       {
     if(Symbols::symTabConstructed){   
         yylhs.value.as < statement_astnode* > () = new for_astnode(yystack_[6].value.as < assignE_astnode* > (), yystack_[4].value.as < exp_astnode* > (), yystack_[2].value.as < assignE_astnode* > (), yystack_[0].value.as < statement_astnode* > ());
     }
 }
-<<<<<<< Updated upstream
-#line 2571 "parser.tab.cc"
-    break;
-
-  case 83:
-#line 825 "parser.yy"
-                             {
-}
-#line 2578 "parser.tab.cc"
-    break;
-
-  case 84:
-#line 827 "parser.yy"
-                              {
-}
-#line 2585 "parser.tab.cc"
-    break;
-
-  case 85:
-#line 831 "parser.yy"
-                                               {
-}
-#line 2592 "parser.tab.cc"
-    break;
-
-  case 86:
-#line 835 "parser.yy"
-=======
-#line 2457 "parser.tab.cc"
+#line 2556 "parser.tab.cc"
     break;
 
   case 83: // declaration_list: declaration
-#line 791 "parser.yy"
+#line 889 "parser.yy"
                              {
 }
-#line 2464 "parser.tab.cc"
+#line 2563 "parser.tab.cc"
     break;
 
   case 84: // declaration_list: declaration_list declaration
-#line 793 "parser.yy"
+#line 891 "parser.yy"
                               {
 }
-#line 2471 "parser.tab.cc"
+#line 2570 "parser.tab.cc"
     break;
 
   case 85: // declaration: type_specifier declarator_list ';'
-#line 797 "parser.yy"
+#line 895 "parser.yy"
                                                {
 }
-#line 2478 "parser.tab.cc"
+#line 2577 "parser.tab.cc"
     break;
 
   case 86: // declarator_list: declarator
-#line 801 "parser.yy"
->>>>>>> Stashed changes
+#line 899 "parser.yy"
                            {
     yylhs.value.as < typespec_astnode > () = yystack_[0].value.as < typespec_astnode > ();
     // std::cerr<<$1.typeName<<" has "<<$1.numptrstars<<" stars"<<std::endl;
@@ -2877,19 +2590,11 @@ namespace IPL {
         st->rows[topvarname] = SymEntry(yystack_[0].value.as < typespec_astnode > (),SymTab::ST_HL_type::VAR,SymTab::ST_LPG::LOCAL,size,offset);
     }
 }
-<<<<<<< Updated upstream
-#line 2609 "parser.tab.cc"
-    break;
-
-  case 87:
-#line 847 "parser.yy"
-=======
-#line 2495 "parser.tab.cc"
+#line 2594 "parser.tab.cc"
     break;
 
   case 87: // declarator_list: declarator_list ',' declarator
-#line 813 "parser.yy"
->>>>>>> Stashed changes
+#line 911 "parser.yy"
                                 {
     yylhs.value.as < typespec_astnode > () = yystack_[0].value.as < typespec_astnode > ();
     string type = yystack_[0].value.as < typespec_astnode > ().typeName;
@@ -2899,19 +2604,11 @@ namespace IPL {
         ststack.top()->rows[topvarname] = SymEntry(yystack_[0].value.as < typespec_astnode > (),SymTab::ST_HL_type::VAR,SymTab::ST_LPG::LOCAL,size,offset);
     }
 }
-<<<<<<< Updated upstream
-#line 2623 "parser.tab.cc"
+#line 2608 "parser.tab.cc"
     break;
 
 
-#line 2627 "parser.tab.cc"
-=======
-#line 2509 "parser.tab.cc"
-    break;
-
-
-#line 2513 "parser.tab.cc"
->>>>>>> Stashed changes
+#line 2612 "parser.tab.cc"
 
             default:
               break;
@@ -3332,23 +3029,15 @@ namespace IPL {
   const short
   Parser::yyrline_[] =
   {
-       0,   114,   114,   114,   138,   147,   151,   153,   159,   159,
-     173,   181,   193,   202,   210,   224,   224,   255,   268,   274,
-     282,   291,   298,   308,   311,   320,   323,   326,   331,   336,
-     344,   350,   355,   360,   363,   366,   369,   372,   379,   410,
-<<<<<<< Updated upstream
-     417,   437,   469,   473,   480,   484,   491,   495,   500,   507,
-     511,   523,   535,   547,   561,   565,   577,   591,   595,   609,
-     615,   628,   642,   645,   650,   670,   700,   716,   733,   738,
-     754,   761,   768,   776,   781,   786,   792,   795,   798,   801,
-     806,   813,   818,   825,   827,   831,   835,   847
-=======
-     417,   436,   467,   471,   478,   482,   489,   493,   498,   505,
-     509,   521,   533,   545,   559,   563,   575,   589,   593,   609,
-     615,   628,   642,   647,   652,   655,   659,   677,   694,   704,
-     720,   727,   734,   742,   747,   752,   758,   761,   764,   767,
-     772,   779,   784,   791,   793,   797,   801,   813
->>>>>>> Stashed changes
+       0,   114,   114,   114,   140,   149,   153,   155,   161,   161,
+     175,   183,   195,   204,   212,   226,   226,   259,   275,   281,
+     289,   298,   305,   315,   318,   327,   330,   333,   338,   343,
+     351,   357,   362,   367,   370,   373,   376,   379,   399,   430,
+     437,   464,   502,   506,   513,   517,   524,   528,   540,   554,
+     558,   570,   582,   594,   608,   612,   624,   638,   642,   658,
+     664,   677,   691,   694,   699,   725,   760,   776,   793,   803,
+     819,   826,   833,   841,   846,   851,   856,   859,   862,   865,
+     870,   877,   882,   889,   891,   895,   899,   911
   };
 
   void
@@ -3429,15 +3118,9 @@ namespace IPL {
 
 #line 5 "parser.yy"
 } // IPL
-<<<<<<< Updated upstream
 #line 3122 "parser.tab.cc"
 
-#line 858 "parser.yy"
-=======
-#line 3023 "parser.tab.cc"
-
-#line 824 "parser.yy"
->>>>>>> Stashed changes
+#line 922 "parser.yy"
 
 //grammar definition.
 void 

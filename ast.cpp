@@ -3,7 +3,7 @@
 #include <set>
 #include "ast.hh"
 #include "util.hh"
-typespec_astnode typespec_astnode::intc,typespec_astnode::floatc,typespec_astnode::stringc,typespec_astnode::structc;
+typespec_astnode typespec_astnode::voidc,typespec_astnode::intc,typespec_astnode::floatc,typespec_astnode::stringc,typespec_astnode::structc;
 identifier_astnode::identifier_astnode(std::string id) : id(id) { }
 
 void identifier_astnode::print() {
@@ -19,7 +19,7 @@ stringconst_astnode::stringconst_astnode(std::string value) : value(value) { }
 void stringconst_astnode::print() {
     printAst(
         NULL, "s",
-        "stringconst", this->value.c_str()
+        "stringconst", this->value.substr(1,this->value.length()-2).c_str()
     );
 }
 intconst_astnode::intconst_astnode(std::string value) : value(std::stoi(value)) { }
@@ -172,11 +172,18 @@ pointer_astnode::pointer_astnode(exp_astnode* exp): exp(exp) {}
 void pointer_astnode::print() {
 }
 
-funcall_astnode::funcall_astnode(identifier_astnode* id, std::vector<exp_astnode*> exp_list): id(id), exp_list(exp_list) {}
+funcall_astnode::funcall_astnode(identifier_astnode* id, std::vector<exp_astnode*> exp_list, bool is_proc): id(id), exp_list(exp_list), is_proc(is_proc) {}
 
 void funcall_astnode::print() {
+    if (is_proc)
     printAst(
         "proccall", "al",
+        "fname", id,
+        "params", exp_list
+    );
+    else 
+    printAst(
+        "funcall", "al",
         "fname", id,
         "params", exp_list
     );
@@ -229,22 +236,33 @@ fundeclarator_astnode::fundeclarator_astnode(std::string name,std::vector<typesp
 
 }
 typespec_astnode::typespec_astnode(){
+    typespec_astnode::voidc.baseTypeName = "void";
+    typespec_astnode::voidc.baseTypeWidth = 0;
+    typespec_astnode::voidc.typeName = typespec_astnode::voidc.baseTypeName;
+    typespec_astnode::voidc.typeWidth = typespec_astnode::voidc.baseTypeWidth;
     typespec_astnode::structc.baseTypeWidth = 0;
     typespec_astnode::structc.baseTypeName = "struct";
-    typespec_astnode::structc.typeName = "struct";
-    typespec_astnode::structc.typeWidth = 0;
+    typespec_astnode::structc.typeName = typespec_astnode::structc.baseTypeName;
+    typespec_astnode::structc.typeWidth = typespec_astnode::structc.baseTypeWidth;
     typespec_astnode::intc.baseTypeWidth = 4;
     typespec_astnode::intc.baseTypeName = "int";
-    typespec_astnode::intc.typeName = "int";
-    typespec_astnode::intc.typeWidth = 4;
+    typespec_astnode::intc.typeName = typespec_astnode::intc.baseTypeName;
+    typespec_astnode::intc.typeWidth = typespec_astnode::intc.baseTypeWidth;
     typespec_astnode::floatc.baseTypeWidth = 4;
     typespec_astnode::floatc.baseTypeName = "float";
-    typespec_astnode::floatc.typeName = "float";
-    typespec_astnode::floatc.typeWidth = 4;
+    typespec_astnode::floatc.typeName = typespec_astnode::floatc.baseTypeName;
+    typespec_astnode::floatc.typeWidth = typespec_astnode::floatc.baseTypeWidth;
     typespec_astnode::stringc.baseTypeWidth = 0;
     typespec_astnode::stringc.baseTypeName = "string";
-    typespec_astnode::stringc.typeName = "string";
-    typespec_astnode::stringc.typeWidth = 0;
+    typespec_astnode::stringc.typeName = typespec_astnode::stringc.baseTypeName;
+    typespec_astnode::stringc.typeWidth = typespec_astnode::stringc.baseTypeWidth;
+}
+int typespec_astnode::genTypeWidth(){
+    int btw = baseTypeWidth;
+    for(auto size:arrsizes){
+        btw*=size;
+    }
+    return btw;
 }
 void typespec_astnode::deref(){
     if(arrsizes.size()>0){
