@@ -1,1 +1,106 @@
-Error at line 7: Incompatible types: tried to assign int to int*
+{
+    "globalST": [
+        [
+            "main",
+            "fun",
+            "global",
+            0,
+            0,
+            "int"
+        ]
+    ],
+    "structs": [],
+    "functions": [
+        {
+            "name": "main",
+            "localST": [
+                [
+                    "a",
+                    "var",
+                    "local",
+                    4,
+                    -4,
+                    "int*"
+                ],
+                [
+                    "b",
+                    "var",
+                    "local",
+                    4,
+                    -8,
+                    "int*"
+                ],
+                [
+                    "c",
+                    "var",
+                    "local",
+                    4,
+                    -12,
+                    "float"
+                ],
+                [
+                    "d",
+                    "var",
+                    "local",
+                    4,
+                    -16,
+                    "int"
+                ]
+            ],
+            "ast": {
+                "seq": [
+                    {
+                        "assignS": {
+                            "left": {
+                                "identifier": "d"
+                            },
+                            "right": {
+                                "op_unary": {
+                                    "op": "TO_INT",
+                                    "child": {
+                                        "op_unary": {
+                                            "op": "UMINUS",
+                                            "child": {
+                                                "identifier": "c"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "assignS": {
+                            "left": {
+                                "identifier": "a"
+                            },
+                            "right": {
+                                "intconst": 0
+                            }
+                        }
+                    },
+                    {
+                        "assignS": {
+                            "left": {
+                                "identifier": "c"
+                            },
+                            "right": {
+                                "op_unary": {
+                                    "op": "TO_FLOAT",
+                                    "child": {
+                                        "op_unary": {
+                                            "op": "NOT",
+                                            "child": {
+                                                "identifier": "a"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

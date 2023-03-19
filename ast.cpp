@@ -311,6 +311,13 @@ bool typespec_astnode::compatibleWith(typespec_astnode t2){
         return (baseTypeName==t2.baseTypeName);
     }
     else{
+        //handling null ptr case separately.
+        if(t2.isnullval){
+            if(arrsizes.size()!=0){
+                return false;
+            }
+            return true;
+        }
         if(numptrstars+arrsizes.size()!=t2.numptrstars+t2.arrsizes.size()){
             return false;
         }

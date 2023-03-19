@@ -34,7 +34,7 @@
             "program": "${workspaceRoot}/iplC",
             "cwd": "${workspaceFolder}",
             "args": [
-                "testcases/as-test6.c",
+                "testcases/test-dhananjay.c",
                 ">",
                 "myout.json",
                 "2>mydebug.txt"

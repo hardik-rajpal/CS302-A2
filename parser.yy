@@ -423,6 +423,9 @@ assignment_expression: unary_expression '=' expression{
                     std::string utypename = "TO_" + ltypename;
                     $$ = new assignE_astnode($1, new op_unary_astnode(utypename, $3));
                 }
+                else{
+                    $$ = new assignE_astnode($1, $3);
+                }
             }
             else {$$ = new assignE_astnode($1, $3);}
         }
@@ -827,6 +830,9 @@ primary_expression: IDENTIFIER{
         $$ = new intconst_astnode($1);
         $$->typeNode = intc;
         $$->typeNode.islval = false;
+        if($1=="0"){
+            $$->typeNode.isnullval = true;
+        }
     }
 }
 | FLOAT_CONSTANT{

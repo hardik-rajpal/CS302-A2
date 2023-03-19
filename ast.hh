@@ -26,6 +26,7 @@ class statement_astnode: public abstract_astnode {
 class typespec_astnode{
     std::set<std::string> numtypes= {"int","float"};
 public:
+    bool isnullval = false;
     static typespec_astnode structc, intc, floatc,stringc, voidc;
     int baseTypeWidth;
     std::string baseTypeName;
