@@ -3,9 +3,55 @@ bloom
 bloom
 bloom
 bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
+bloom
 Parsing round 1 done
 bloom
 bloom
-int = float
+float = int
 bloom
-int* = int
+bloom
+bloom
+int = int
+bloom
+bloom
+bloom
+int = int
+bloom

@@ -491,13 +491,20 @@ procedure_call: IDENTIFIER '(' ')' ';'{
             std::reverse(exp_list.begin(), exp_list.end());
             int i = 0;
             for (auto item: expected) {
-                if (!item.second.compatibleWith(exp_list[i]->typeNode)) {
+                if (!item.second.compatibleWith(exp_list[i]->typeNode,true)) {
                     error(@$, "Expected \"" + item.second.typeName + "\" but argument is of type \"" + exp_list[i]->typeNode.typeName + "\"");
+                }
+                else if(item.second.typeName != exp_list[i]->typeNode.typeName && item.second.isNumeric() && exp_list[i]->typeNode.isNumeric()) {
+                    std::string ltypename = item.second.typeName;
+                    std::transform(ltypename.begin(), ltypename.end(), ltypename.begin(), [](auto c) { return std::toupper(c); });
+                    // std::cerr << ltypename << std::endl;
+                    std::string utypename = "TO_" + ltypename;
+                    exp_list[i] = new op_unary_astnode(utypename, exp_list[i]);
                 }
                 i++;
             }
 
-            $$ = new funcall_astnode(new identifier_astnode($1), $3, true);
+            $$ = new funcall_astnode(new identifier_astnode($1), exp_list, true);
             $$->typeNode = Symbols::getSymEntry(Symbols::gst, $1)->type;
         }
         else {
@@ -752,12 +759,20 @@ postfix_expression: primary_expression{
             std::reverse(exp_list.begin(), exp_list.end());
             int i = 0;
             for (auto item: expected) {
-                if (!item.second.compatibleWith(exp_list[i]->typeNode)) {
+                if (!item.second.compatibleWith(exp_list[i]->typeNode,true)) {
                     error(@$, "Expected \"" + item.second.typeName + "\" but argument is of type \"" + exp_list[i]->typeNode.typeName + "\"");
+                }
+                else if(item.second.typeName != exp_list[i]->typeNode.typeName && item.second.isNumeric() && exp_list[i]->typeNode.isNumeric()) {
+                    std::string ltypename = item.second.typeName;
+                    std::transform(ltypename.begin(), ltypename.end(), ltypename.begin(), [](auto c) { return std::toupper(c); });
+                    // std::cerr << ltypename << std::endl;
+                    std::string utypename = "TO_" + ltypename;
+                    exp_list[i] = new op_unary_astnode(utypename, exp_list[i]);
                 }
                 i++;
             }
-            $$ = new funcall_astnode(new identifier_astnode($1), $3, false);
+
+            $$ = new funcall_astnode(new identifier_astnode($1), exp_list, false);
             $$->typeNode = Symbols::getSymEntry(Symbols::gst, $1)->type;
         }
         else {

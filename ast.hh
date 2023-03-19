@@ -40,7 +40,7 @@ public:
     std::string genTypeName();
     void deref();
     void addressOf();
-    bool compatibleWith(typespec_astnode t2);
+    bool compatibleWith(typespec_astnode t2, bool isparam=false);
     bool isNumeric();
     int genTypeWidth();
     

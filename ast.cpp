@@ -97,7 +97,10 @@ op_binary_astnode::op_binary_astnode(std::string op, exp_astnode* exp1, exp_astn
         "OR_OP",
         "AND_OP",
     };
-    if(boolops.count(op)){
+    std::set<std::string> boolgens={
+        "LE_OP?","GE_OP?","GT_OP?","LT_OP?","NE_OP?","EQ_OP?"
+    };
+    if(boolops.count(op)||boolgens.count(op)){
         typeNode = typespec_astnode::intc;
     }
     else if(exp1->typeNode.typeName=="float"||exp2->typeNode.typeName=="float"){
@@ -304,7 +307,7 @@ std::string typespec_astnode::genTypeName(){
     }
     return tn;
 }
-bool typespec_astnode::compatibleWith(typespec_astnode t2){
+bool typespec_astnode::compatibleWith(typespec_astnode t2,bool isparam){
     if((numptrstars+arrsizes.size())==0){
         //int, float or struct smt var.
         if((t2.numptrstars+t2.arrsizes.size())!=0){
@@ -324,18 +327,24 @@ bool typespec_astnode::compatibleWith(typespec_astnode t2){
             }
             return true;
         }
+        if(typeName=="void*"||t2.typeName=="void*"){
+            return true;
+        }
         if(numptrstars+arrsizes.size()!=t2.numptrstars+t2.arrsizes.size()){
             return false;
         }
-        if(arrsizes.size()!=0){
+        if((!isparam)&&arrsizes.size()!=0){
             return false;
+        }
+        if(isparam&&(arrsizes.size()==1)&&(numptrstars==0)&&(t2.numptrstars==1)&&(t2.arrsizes.size()==0)){
+            return true;
         }
         //arrsizes = 0;=>numptrstars!=0;
         if(t2.arrsizes.size()==0){
-            return baseTypeName==t2.baseTypeName;
+            return (baseTypeName==t2.baseTypeName)||(t2.baseTypeName=="void"||baseTypeName=="void");
         }
         if(t2.arrsizes.size()==1){
-            if(typeName.substr(0,4)=="void"){
+            if(baseTypeName=="void"){
                 return true;
             }
             else{
