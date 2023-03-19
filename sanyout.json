@@ -1,6 +1,22 @@
 {
   "globalST": [
     [
+      "f",
+      "fun",
+      "global",
+      0,
+      0,
+      "int"
+    ],
+    [
+      "g",
+      "fun",
+      "global",
+      0,
+      0,
+      "int"
+    ],
+    [
       "main",
       "fun",
       "global",
@@ -12,7 +28,7 @@
   "structs": [],
   "functions": [
     {
-      "name": "main",
+      "name": "f",
       "localST": [
         [
           "a",
@@ -20,31 +36,23 @@
           "local",
           4,
           -4,
-          "int*"
+          "int"
         ],
         [
           "b",
           "var",
           "local",
-          4,
-          -8,
-          "int*"
+          32,
+          -36,
+          "int[2][4]"
         ],
         [
           "c",
           "var",
           "local",
-          4,
-          -12,
-          "float"
-        ],
-        [
-          "d",
-          "var",
-          "local",
-          4,
-          -16,
-          "int"
+          48,
+          -84,
+          "int[3][4]"
         ]
       ],
       "ast": {
@@ -52,50 +60,118 @@
           {
             "assignS": {
               "left": {
-                "identifier": "d"
-              },
-              "right": {
-                "op_unary": {
-                  "op": "TO_INT",
-                  "child": {
-                    "op_unary": {
-                      "op": "UMINUS",
-                      "child": {
-                        "identifier": "c"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          {
-            "assignS": {
-              "left": {
                 "identifier": "a"
               },
               "right": {
-                "intconst": 0
+                "op_binary": {
+                  "op": "MINUS_INT",
+                  "left": {
+                    "identifier": "b"
+                  },
+                  "right": {
+                    "identifier": "c"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "g",
+      "localST": [
+        [
+          "a",
+          "var",
+          "local",
+          4,
+          -4,
+          "int"
+        ],
+        [
+          "b",
+          "var",
+          "local",
+          32,
+          -36,
+          "int[2][4]"
+        ],
+        [
+          "c",
+          "var",
+          "local",
+          48,
+          -84,
+          "int[3][4]"
+        ]
+      ],
+      "ast": {
+        "seq": []
+      }
+    },
+    {
+      "name": "main",
+      "localST": [
+        [
+          "x",
+          "var",
+          "local",
+          80,
+          -80,
+          "int[20]"
+        ],
+        [
+          "y",
+          "var",
+          "local",
+          4,
+          -84,
+          "int*"
+        ]
+      ],
+      "ast": {
+        "seq": [
+          {
+            "assignS": {
+              "left": {
+                "identifier": "y"
+              },
+              "right": {
+                "op_binary": {
+                  "op": "PLUS_INT",
+                  "left": {
+                    "identifier": "x"
+                  },
+                  "right": {
+                    "intconst": 1
+                  }
+                }
               }
             }
           },
           {
             "assignS": {
               "left": {
-                "identifier": "c"
+                "identifier": "y"
               },
               "right": {
                 "op_unary": {
-                  "op": "TO_FLOAT",
+                  "op": "PP",
                   "child": {
-                    "op_unary": {
-                      "op": "NOT",
-                      "child": {
-                        "identifier": "a"
-                      }
-                    }
+                    "identifier": "y"
                   }
                 }
+              }
+            }
+          },
+          {
+            "assignS": {
+              "left": {
+                "identifier": "y"
+              },
+              "right": {
+                "intconst": 0
               }
             }
           }
