@@ -93,7 +93,7 @@ return {
   yylval->emplace< std::string >( YYText() );
   return token_type::GE_OP;
 }
-("++"|"--") {
+("++") {
   yylval->emplace< std::string >( YYText() );
   return token_type::INC_OP;
 }

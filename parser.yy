@@ -595,12 +595,14 @@ unary_expression: postfix_expression{
 | unary_operator unary_expression{
     if(Symbols::symTabConstructed){
         //validity checks.
-        if($1=="ADDRESS"&&(!$2->typeNode.islval)){
-            error(@$,"Tried to get address of rval: "+$2->typeNode.typeName);
-        }
         $$ = new op_unary_astnode($1, $2);
-        if($$->typeNode.typeName==$2->typeNode.typeName){
-            error(@$,"Tried to dereference " + $2->typeNode.typeName);
+        if($1=="ADDRESS"||$1=="DEREF"){
+            if($1=="ADDRESS"&&(!$2->typeNode.islval)){
+                error(@$,"Tried to get address of rval: "+$2->typeNode.typeName);
+            }
+            if($$->typeNode.typeName==$2->typeNode.typeName){
+                error(@$,"Tried to dereference " + $2->typeNode.typeName);
+            }
         }
     }
 }
@@ -731,7 +733,12 @@ postfix_expression: primary_expression{
     }
 }
 | postfix_expression INC_OP{
-
+    if(Symbols::symTabConstructed){
+        //type checks for $1
+        
+        $$ = new op_unary_astnode("PP",$1);
+        $$->typeNode = $1->typeNode;
+    }
 }
 ;
 
@@ -788,9 +795,8 @@ expression_list: expression{
     $$ = $1;
 }
 ;
-//TODO: ++ PP or -- as INC_OP here.
 unary_operator: '-'{
-    $$ = std::string("UMINUS?");
+    $$ = std::string("UMINUS");
 }
 | '!'{
     $$ = std::string("NOT");

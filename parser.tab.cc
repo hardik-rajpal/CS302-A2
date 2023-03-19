@@ -1,8 +1,8 @@
-// A Bison parser, made by GNU Bison 3.5.1.
+// A Bison parser, made by GNU Bison 3.8.2.
 
 // Skeleton implementation for Bison LALR(1) parsers in C++
 
-// Copyright (C) 2002-2015, 2018-2020 Free Software Foundation, Inc.
+// Copyright (C) 2002-2015, 2018-2021 Free Software Foundation, Inc.
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 // As a special exception, you may create a larger work that contains
 // part or all of the Bison parser skeleton and distribute that work
@@ -30,8 +30,9 @@
 // This special exception was added by the Free Software Foundation in
 // version 2.2 of Bison.
 
-// Undocumented macros, especially those whose name start with YY_,
-// are private implementation details.  Do not rely on them.
+// DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
+// especially those whose name start with YY_ or yy_.  They are
+// private implementation details that can be changed or removed.
 
 
 
@@ -58,7 +59,7 @@ typespec_astnode structc,intc,floatc,stringc;
 typespec_astnode toptype;
 string topvarname;
 
-#line 62 "parser.tab.cc"
+#line 63 "parser.tab.cc"
 
 
 #ifndef YY_
@@ -72,6 +73,7 @@ string topvarname;
 #  define YY_(msgid) msgid
 # endif
 #endif
+
 
 // Whether we are compiled with exception support.
 #ifndef YY_EXCEPTIONS
@@ -128,13 +130,13 @@ string topvarname;
 # define YY_STACK_PRINT()               \
   do {                                  \
     if (yydebug_)                       \
-      yystack_print_ ();                \
+      yy_stack_print_ ();                \
   } while (false)
 
 #else // !YYDEBUG
 
 # define YYCDEBUG if (false) std::cerr
-# define YY_SYMBOL_PRINT(Title, Symbol)  YYUSE (Symbol)
+# define YY_SYMBOL_PRINT(Title, Symbol)  YY_USE (Symbol)
 # define YY_REDUCE_PRINT(Rule)           static_cast<void> (0)
 # define YY_STACK_PRINT()                static_cast<void> (0)
 
@@ -150,8 +152,7 @@ string topvarname;
 
 #line 5 "parser.yy"
 namespace IPL {
-#line 154 "parser.tab.cc"
-
+#line 156 "parser.tab.cc"
 
   /// Build a parser object.
   Parser::Parser (Scanner  &scanner_yyarg)
@@ -170,218 +171,109 @@ namespace IPL {
   Parser::syntax_error::~syntax_error () YY_NOEXCEPT YY_NOTHROW
   {}
 
-  /*---------------.
-  | Symbol types.  |
-  `---------------*/
+  /*---------.
+  | symbol.  |
+  `---------*/
 
   // basic_symbol.
-#if 201103L <= YY_CPLUSPLUS
-  template <typename Base>
-  Parser::basic_symbol<Base>::basic_symbol (basic_symbol&& that)
-    : Base (std::move (that))
-    , value ()
-    , location (std::move (that.location))
-  {
-    switch (this->type_get ())
-    {
-      case 47: // struct_specifier
-      case 48: // declaration_list
-        value.move< abstract_astnode* > (std::move (that.value));
-        break;
-
-      case 59: // assignment_expression
-        value.move< assignE_astnode* > (std::move (that.value));
-        break;
-
-      case 49: // expression
-      case 50: // unary_expression
-      case 51: // postfix_expression
-      case 52: // primary_expression
-        value.move< exp_astnode* > (std::move (that.value));
-        break;
-
-      case 58: // procedure_call
-        value.move< funcall_astnode* > (std::move (that.value));
-        break;
-
-      case 76: // fun_declarator
-        value.move< fundeclarator_astnode* > (std::move (that.value));
-        break;
-
-      case 53: // logical_and_expression
-      case 54: // equality_expression
-      case 55: // relational_expression
-      case 56: // additive_expression
-      case 57: // multiplicative_expression
-        value.move< op_binary_astnode* > (std::move (that.value));
-        break;
-
-      case 60: // function_definition
-      case 61: // statement
-      case 62: // selection_statement
-      case 63: // iteration_statement
-      case 64: // assignment_statement
-        value.move< statement_astnode* > (std::move (that.value));
-        break;
-
-      case 3: // VOID
-      case 4: // INT
-      case 5: // FLOAT
-      case 6: // STRUCT
-      case 7: // IDENTIFIER
-      case 8: // INT_CONSTANT
-      case 9: // FLOAT_CONSTANT
-      case 10: // STRING_LITERAL
-      case 11: // OR_OP
-      case 12: // AND_OP
-      case 13: // EQ_OP
-      case 14: // NE_OP
-      case 15: // LE_OP
-      case 16: // GE_OP
-      case 17: // INC_OP
-      case 18: // PTR_OP
-      case 19: // IF
-      case 20: // ELSE
-      case 21: // WHILE
-      case 22: // FOR
-      case 23: // RETURN
-      case 24: // OTHERS
-      case 68: // unary_operator
-        value.move< std::string > (std::move (that.value));
-        break;
-
-      case 45: // translation_unit
-      case 46: // begin_nterm
-        value.move< std::vector<abstract_astnode*> > (std::move (that.value));
-        break;
-
-      case 67: // expression_list
-        value.move< std::vector<exp_astnode*> > (std::move (that.value));
-        break;
-
-      case 65: // compound_statement
-      case 66: // statement_list
-        value.move< std::vector<statement_astnode*> > (std::move (that.value));
-        break;
-
-      case 75: // parameter_list
-        value.move< std::vector<typespec_astnode> > (std::move (that.value));
-        break;
-
-      case 69: // type_specifier
-      case 70: // declaration
-      case 71: // declarator_list
-      case 72: // declarator
-      case 73: // declarator_arr
-      case 74: // parameter_declaration
-        value.move< typespec_astnode > (std::move (that.value));
-        break;
-
-      default:
-        break;
-    }
-
-  }
-#endif
-
   template <typename Base>
   Parser::basic_symbol<Base>::basic_symbol (const basic_symbol& that)
     : Base (that)
     , value ()
     , location (that.location)
   {
-    switch (this->type_get ())
+    switch (this->kind ())
     {
-      case 47: // struct_specifier
-      case 48: // declaration_list
+      case symbol_kind::S_struct_specifier: // struct_specifier
+      case symbol_kind::S_declaration_list: // declaration_list
         value.copy< abstract_astnode* > (YY_MOVE (that.value));
         break;
 
-      case 59: // assignment_expression
+      case symbol_kind::S_assignment_expression: // assignment_expression
         value.copy< assignE_astnode* > (YY_MOVE (that.value));
         break;
 
-      case 49: // expression
-      case 50: // unary_expression
-      case 51: // postfix_expression
-      case 52: // primary_expression
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_unary_expression: // unary_expression
+      case symbol_kind::S_postfix_expression: // postfix_expression
+      case symbol_kind::S_primary_expression: // primary_expression
         value.copy< exp_astnode* > (YY_MOVE (that.value));
         break;
 
-      case 58: // procedure_call
+      case symbol_kind::S_procedure_call: // procedure_call
         value.copy< funcall_astnode* > (YY_MOVE (that.value));
         break;
 
-      case 76: // fun_declarator
+      case symbol_kind::S_fun_declarator: // fun_declarator
         value.copy< fundeclarator_astnode* > (YY_MOVE (that.value));
         break;
 
-      case 53: // logical_and_expression
-      case 54: // equality_expression
-      case 55: // relational_expression
-      case 56: // additive_expression
-      case 57: // multiplicative_expression
+      case symbol_kind::S_logical_and_expression: // logical_and_expression
+      case symbol_kind::S_equality_expression: // equality_expression
+      case symbol_kind::S_relational_expression: // relational_expression
+      case symbol_kind::S_additive_expression: // additive_expression
+      case symbol_kind::S_multiplicative_expression: // multiplicative_expression
         value.copy< op_binary_astnode* > (YY_MOVE (that.value));
         break;
 
-      case 60: // function_definition
-      case 61: // statement
-      case 62: // selection_statement
-      case 63: // iteration_statement
-      case 64: // assignment_statement
+      case symbol_kind::S_function_definition: // function_definition
+      case symbol_kind::S_statement: // statement
+      case symbol_kind::S_assignment_statement: // assignment_statement
+      case symbol_kind::S_selection_statement: // selection_statement
+      case symbol_kind::S_iteration_statement: // iteration_statement
         value.copy< statement_astnode* > (YY_MOVE (that.value));
         break;
 
-      case 3: // VOID
-      case 4: // INT
-      case 5: // FLOAT
-      case 6: // STRUCT
-      case 7: // IDENTIFIER
-      case 8: // INT_CONSTANT
-      case 9: // FLOAT_CONSTANT
-      case 10: // STRING_LITERAL
-      case 11: // OR_OP
-      case 12: // AND_OP
-      case 13: // EQ_OP
-      case 14: // NE_OP
-      case 15: // LE_OP
-      case 16: // GE_OP
-      case 17: // INC_OP
-      case 18: // PTR_OP
-      case 19: // IF
-      case 20: // ELSE
-      case 21: // WHILE
-      case 22: // FOR
-      case 23: // RETURN
-      case 24: // OTHERS
-      case 68: // unary_operator
+      case symbol_kind::S_VOID: // VOID
+      case symbol_kind::S_INT: // INT
+      case symbol_kind::S_FLOAT: // FLOAT
+      case symbol_kind::S_STRUCT: // STRUCT
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
+      case symbol_kind::S_INT_CONSTANT: // INT_CONSTANT
+      case symbol_kind::S_FLOAT_CONSTANT: // FLOAT_CONSTANT
+      case symbol_kind::S_STRING_LITERAL: // STRING_LITERAL
+      case symbol_kind::S_OR_OP: // OR_OP
+      case symbol_kind::S_AND_OP: // AND_OP
+      case symbol_kind::S_EQ_OP: // EQ_OP
+      case symbol_kind::S_NE_OP: // NE_OP
+      case symbol_kind::S_LE_OP: // LE_OP
+      case symbol_kind::S_GE_OP: // GE_OP
+      case symbol_kind::S_INC_OP: // INC_OP
+      case symbol_kind::S_PTR_OP: // PTR_OP
+      case symbol_kind::S_IF: // IF
+      case symbol_kind::S_ELSE: // ELSE
+      case symbol_kind::S_WHILE: // WHILE
+      case symbol_kind::S_FOR: // FOR
+      case symbol_kind::S_RETURN: // RETURN
+      case symbol_kind::S_OTHERS: // OTHERS
+      case symbol_kind::S_unary_operator: // unary_operator
         value.copy< std::string > (YY_MOVE (that.value));
         break;
 
-      case 45: // translation_unit
-      case 46: // begin_nterm
+      case symbol_kind::S_begin_nterm: // begin_nterm
+      case symbol_kind::S_translation_unit: // translation_unit
         value.copy< std::vector<abstract_astnode*> > (YY_MOVE (that.value));
         break;
 
-      case 67: // expression_list
+      case symbol_kind::S_expression_list: // expression_list
         value.copy< std::vector<exp_astnode*> > (YY_MOVE (that.value));
         break;
 
-      case 65: // compound_statement
-      case 66: // statement_list
+      case symbol_kind::S_compound_statement: // compound_statement
+      case symbol_kind::S_statement_list: // statement_list
         value.copy< std::vector<statement_astnode*> > (YY_MOVE (that.value));
         break;
 
-      case 75: // parameter_list
+      case symbol_kind::S_parameter_list: // parameter_list
         value.copy< std::vector<typespec_astnode> > (YY_MOVE (that.value));
         break;
 
-      case 69: // type_specifier
-      case 70: // declaration
-      case 71: // declarator_list
-      case 72: // declarator
-      case 73: // declarator_arr
-      case 74: // parameter_declaration
+      case symbol_kind::S_type_specifier: // type_specifier
+      case symbol_kind::S_parameter_declaration: // parameter_declaration
+      case symbol_kind::S_declarator_arr: // declarator_arr
+      case symbol_kind::S_declarator: // declarator
+      case symbol_kind::S_declaration: // declaration
+      case symbol_kind::S_declarator_list: // declarator_list
         value.copy< typespec_astnode > (YY_MOVE (that.value));
         break;
 
@@ -393,11 +285,20 @@ namespace IPL {
 
 
 
+
+  template <typename Base>
+  Parser::symbol_kind_type
+  Parser::basic_symbol<Base>::type_get () const YY_NOEXCEPT
+  {
+    return this->kind ();
+  }
+
+
   template <typename Base>
   bool
   Parser::basic_symbol<Base>::empty () const YY_NOEXCEPT
   {
-    return Base::type_get () == empty_symbol;
+    return this->kind () == symbol_kind::S_YYEMPTY;
   }
 
   template <typename Base>
@@ -405,98 +306,98 @@ namespace IPL {
   Parser::basic_symbol<Base>::move (basic_symbol& s)
   {
     super_type::move (s);
-    switch (this->type_get ())
+    switch (this->kind ())
     {
-      case 47: // struct_specifier
-      case 48: // declaration_list
+      case symbol_kind::S_struct_specifier: // struct_specifier
+      case symbol_kind::S_declaration_list: // declaration_list
         value.move< abstract_astnode* > (YY_MOVE (s.value));
         break;
 
-      case 59: // assignment_expression
+      case symbol_kind::S_assignment_expression: // assignment_expression
         value.move< assignE_astnode* > (YY_MOVE (s.value));
         break;
 
-      case 49: // expression
-      case 50: // unary_expression
-      case 51: // postfix_expression
-      case 52: // primary_expression
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_unary_expression: // unary_expression
+      case symbol_kind::S_postfix_expression: // postfix_expression
+      case symbol_kind::S_primary_expression: // primary_expression
         value.move< exp_astnode* > (YY_MOVE (s.value));
         break;
 
-      case 58: // procedure_call
+      case symbol_kind::S_procedure_call: // procedure_call
         value.move< funcall_astnode* > (YY_MOVE (s.value));
         break;
 
-      case 76: // fun_declarator
+      case symbol_kind::S_fun_declarator: // fun_declarator
         value.move< fundeclarator_astnode* > (YY_MOVE (s.value));
         break;
 
-      case 53: // logical_and_expression
-      case 54: // equality_expression
-      case 55: // relational_expression
-      case 56: // additive_expression
-      case 57: // multiplicative_expression
+      case symbol_kind::S_logical_and_expression: // logical_and_expression
+      case symbol_kind::S_equality_expression: // equality_expression
+      case symbol_kind::S_relational_expression: // relational_expression
+      case symbol_kind::S_additive_expression: // additive_expression
+      case symbol_kind::S_multiplicative_expression: // multiplicative_expression
         value.move< op_binary_astnode* > (YY_MOVE (s.value));
         break;
 
-      case 60: // function_definition
-      case 61: // statement
-      case 62: // selection_statement
-      case 63: // iteration_statement
-      case 64: // assignment_statement
+      case symbol_kind::S_function_definition: // function_definition
+      case symbol_kind::S_statement: // statement
+      case symbol_kind::S_assignment_statement: // assignment_statement
+      case symbol_kind::S_selection_statement: // selection_statement
+      case symbol_kind::S_iteration_statement: // iteration_statement
         value.move< statement_astnode* > (YY_MOVE (s.value));
         break;
 
-      case 3: // VOID
-      case 4: // INT
-      case 5: // FLOAT
-      case 6: // STRUCT
-      case 7: // IDENTIFIER
-      case 8: // INT_CONSTANT
-      case 9: // FLOAT_CONSTANT
-      case 10: // STRING_LITERAL
-      case 11: // OR_OP
-      case 12: // AND_OP
-      case 13: // EQ_OP
-      case 14: // NE_OP
-      case 15: // LE_OP
-      case 16: // GE_OP
-      case 17: // INC_OP
-      case 18: // PTR_OP
-      case 19: // IF
-      case 20: // ELSE
-      case 21: // WHILE
-      case 22: // FOR
-      case 23: // RETURN
-      case 24: // OTHERS
-      case 68: // unary_operator
+      case symbol_kind::S_VOID: // VOID
+      case symbol_kind::S_INT: // INT
+      case symbol_kind::S_FLOAT: // FLOAT
+      case symbol_kind::S_STRUCT: // STRUCT
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
+      case symbol_kind::S_INT_CONSTANT: // INT_CONSTANT
+      case symbol_kind::S_FLOAT_CONSTANT: // FLOAT_CONSTANT
+      case symbol_kind::S_STRING_LITERAL: // STRING_LITERAL
+      case symbol_kind::S_OR_OP: // OR_OP
+      case symbol_kind::S_AND_OP: // AND_OP
+      case symbol_kind::S_EQ_OP: // EQ_OP
+      case symbol_kind::S_NE_OP: // NE_OP
+      case symbol_kind::S_LE_OP: // LE_OP
+      case symbol_kind::S_GE_OP: // GE_OP
+      case symbol_kind::S_INC_OP: // INC_OP
+      case symbol_kind::S_PTR_OP: // PTR_OP
+      case symbol_kind::S_IF: // IF
+      case symbol_kind::S_ELSE: // ELSE
+      case symbol_kind::S_WHILE: // WHILE
+      case symbol_kind::S_FOR: // FOR
+      case symbol_kind::S_RETURN: // RETURN
+      case symbol_kind::S_OTHERS: // OTHERS
+      case symbol_kind::S_unary_operator: // unary_operator
         value.move< std::string > (YY_MOVE (s.value));
         break;
 
-      case 45: // translation_unit
-      case 46: // begin_nterm
+      case symbol_kind::S_begin_nterm: // begin_nterm
+      case symbol_kind::S_translation_unit: // translation_unit
         value.move< std::vector<abstract_astnode*> > (YY_MOVE (s.value));
         break;
 
-      case 67: // expression_list
+      case symbol_kind::S_expression_list: // expression_list
         value.move< std::vector<exp_astnode*> > (YY_MOVE (s.value));
         break;
 
-      case 65: // compound_statement
-      case 66: // statement_list
+      case symbol_kind::S_compound_statement: // compound_statement
+      case symbol_kind::S_statement_list: // statement_list
         value.move< std::vector<statement_astnode*> > (YY_MOVE (s.value));
         break;
 
-      case 75: // parameter_list
+      case symbol_kind::S_parameter_list: // parameter_list
         value.move< std::vector<typespec_astnode> > (YY_MOVE (s.value));
         break;
 
-      case 69: // type_specifier
-      case 70: // declaration
-      case 71: // declarator_list
-      case 72: // declarator
-      case 73: // declarator_arr
-      case 74: // parameter_declaration
+      case symbol_kind::S_type_specifier: // type_specifier
+      case symbol_kind::S_parameter_declaration: // parameter_declaration
+      case symbol_kind::S_declarator_arr: // declarator_arr
+      case symbol_kind::S_declarator: // declarator
+      case symbol_kind::S_declaration: // declaration
+      case symbol_kind::S_declarator_list: // declarator_list
         value.move< typespec_astnode > (YY_MOVE (s.value));
         break;
 
@@ -507,45 +408,55 @@ namespace IPL {
     location = YY_MOVE (s.location);
   }
 
-  // by_type.
-  Parser::by_type::by_type ()
-    : type (empty_symbol)
+  // by_kind.
+  Parser::by_kind::by_kind () YY_NOEXCEPT
+    : kind_ (symbol_kind::S_YYEMPTY)
   {}
 
 #if 201103L <= YY_CPLUSPLUS
-  Parser::by_type::by_type (by_type&& that)
-    : type (that.type)
+  Parser::by_kind::by_kind (by_kind&& that) YY_NOEXCEPT
+    : kind_ (that.kind_)
   {
     that.clear ();
   }
 #endif
 
-  Parser::by_type::by_type (const by_type& that)
-    : type (that.type)
+  Parser::by_kind::by_kind (const by_kind& that) YY_NOEXCEPT
+    : kind_ (that.kind_)
   {}
 
-  Parser::by_type::by_type (token_type t)
-    : type (yytranslate_ (t))
+  Parser::by_kind::by_kind (token_kind_type t) YY_NOEXCEPT
+    : kind_ (yytranslate_ (t))
   {}
+
+
 
   void
-  Parser::by_type::clear ()
+  Parser::by_kind::clear () YY_NOEXCEPT
   {
-    type = empty_symbol;
+    kind_ = symbol_kind::S_YYEMPTY;
   }
 
   void
-  Parser::by_type::move (by_type& that)
+  Parser::by_kind::move (by_kind& that)
   {
-    type = that.type;
+    kind_ = that.kind_;
     that.clear ();
   }
 
-  int
-  Parser::by_type::type_get () const YY_NOEXCEPT
+  Parser::symbol_kind_type
+  Parser::by_kind::kind () const YY_NOEXCEPT
   {
-    return type;
+    return kind_;
   }
+
+
+  Parser::symbol_kind_type
+  Parser::by_kind::type_get () const YY_NOEXCEPT
+  {
+    return this->kind ();
+  }
+
 
 
   // by_state.
@@ -574,13 +485,13 @@ namespace IPL {
     : state (s)
   {}
 
-  Parser::symbol_number_type
-  Parser::by_state::type_get () const YY_NOEXCEPT
+  Parser::symbol_kind_type
+  Parser::by_state::kind () const YY_NOEXCEPT
   {
     if (state == empty_state)
-      return empty_symbol;
+      return symbol_kind::S_YYEMPTY;
     else
-      return yystos_[+state];
+      return YY_CAST (symbol_kind_type, yystos_[+state]);
   }
 
   Parser::stack_symbol_type::stack_symbol_type ()
@@ -589,98 +500,98 @@ namespace IPL {
   Parser::stack_symbol_type::stack_symbol_type (YY_RVREF (stack_symbol_type) that)
     : super_type (YY_MOVE (that.state), YY_MOVE (that.location))
   {
-    switch (that.type_get ())
+    switch (that.kind ())
     {
-      case 47: // struct_specifier
-      case 48: // declaration_list
+      case symbol_kind::S_struct_specifier: // struct_specifier
+      case symbol_kind::S_declaration_list: // declaration_list
         value.YY_MOVE_OR_COPY< abstract_astnode* > (YY_MOVE (that.value));
         break;
 
-      case 59: // assignment_expression
+      case symbol_kind::S_assignment_expression: // assignment_expression
         value.YY_MOVE_OR_COPY< assignE_astnode* > (YY_MOVE (that.value));
         break;
 
-      case 49: // expression
-      case 50: // unary_expression
-      case 51: // postfix_expression
-      case 52: // primary_expression
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_unary_expression: // unary_expression
+      case symbol_kind::S_postfix_expression: // postfix_expression
+      case symbol_kind::S_primary_expression: // primary_expression
         value.YY_MOVE_OR_COPY< exp_astnode* > (YY_MOVE (that.value));
         break;
 
-      case 58: // procedure_call
+      case symbol_kind::S_procedure_call: // procedure_call
         value.YY_MOVE_OR_COPY< funcall_astnode* > (YY_MOVE (that.value));
         break;
 
-      case 76: // fun_declarator
+      case symbol_kind::S_fun_declarator: // fun_declarator
         value.YY_MOVE_OR_COPY< fundeclarator_astnode* > (YY_MOVE (that.value));
         break;
 
-      case 53: // logical_and_expression
-      case 54: // equality_expression
-      case 55: // relational_expression
-      case 56: // additive_expression
-      case 57: // multiplicative_expression
+      case symbol_kind::S_logical_and_expression: // logical_and_expression
+      case symbol_kind::S_equality_expression: // equality_expression
+      case symbol_kind::S_relational_expression: // relational_expression
+      case symbol_kind::S_additive_expression: // additive_expression
+      case symbol_kind::S_multiplicative_expression: // multiplicative_expression
         value.YY_MOVE_OR_COPY< op_binary_astnode* > (YY_MOVE (that.value));
         break;
 
-      case 60: // function_definition
-      case 61: // statement
-      case 62: // selection_statement
-      case 63: // iteration_statement
-      case 64: // assignment_statement
+      case symbol_kind::S_function_definition: // function_definition
+      case symbol_kind::S_statement: // statement
+      case symbol_kind::S_assignment_statement: // assignment_statement
+      case symbol_kind::S_selection_statement: // selection_statement
+      case symbol_kind::S_iteration_statement: // iteration_statement
         value.YY_MOVE_OR_COPY< statement_astnode* > (YY_MOVE (that.value));
         break;
 
-      case 3: // VOID
-      case 4: // INT
-      case 5: // FLOAT
-      case 6: // STRUCT
-      case 7: // IDENTIFIER
-      case 8: // INT_CONSTANT
-      case 9: // FLOAT_CONSTANT
-      case 10: // STRING_LITERAL
-      case 11: // OR_OP
-      case 12: // AND_OP
-      case 13: // EQ_OP
-      case 14: // NE_OP
-      case 15: // LE_OP
-      case 16: // GE_OP
-      case 17: // INC_OP
-      case 18: // PTR_OP
-      case 19: // IF
-      case 20: // ELSE
-      case 21: // WHILE
-      case 22: // FOR
-      case 23: // RETURN
-      case 24: // OTHERS
-      case 68: // unary_operator
+      case symbol_kind::S_VOID: // VOID
+      case symbol_kind::S_INT: // INT
+      case symbol_kind::S_FLOAT: // FLOAT
+      case symbol_kind::S_STRUCT: // STRUCT
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
+      case symbol_kind::S_INT_CONSTANT: // INT_CONSTANT
+      case symbol_kind::S_FLOAT_CONSTANT: // FLOAT_CONSTANT
+      case symbol_kind::S_STRING_LITERAL: // STRING_LITERAL
+      case symbol_kind::S_OR_OP: // OR_OP
+      case symbol_kind::S_AND_OP: // AND_OP
+      case symbol_kind::S_EQ_OP: // EQ_OP
+      case symbol_kind::S_NE_OP: // NE_OP
+      case symbol_kind::S_LE_OP: // LE_OP
+      case symbol_kind::S_GE_OP: // GE_OP
+      case symbol_kind::S_INC_OP: // INC_OP
+      case symbol_kind::S_PTR_OP: // PTR_OP
+      case symbol_kind::S_IF: // IF
+      case symbol_kind::S_ELSE: // ELSE
+      case symbol_kind::S_WHILE: // WHILE
+      case symbol_kind::S_FOR: // FOR
+      case symbol_kind::S_RETURN: // RETURN
+      case symbol_kind::S_OTHERS: // OTHERS
+      case symbol_kind::S_unary_operator: // unary_operator
         value.YY_MOVE_OR_COPY< std::string > (YY_MOVE (that.value));
         break;
 
-      case 45: // translation_unit
-      case 46: // begin_nterm
+      case symbol_kind::S_begin_nterm: // begin_nterm
+      case symbol_kind::S_translation_unit: // translation_unit
         value.YY_MOVE_OR_COPY< std::vector<abstract_astnode*> > (YY_MOVE (that.value));
         break;
 
-      case 67: // expression_list
+      case symbol_kind::S_expression_list: // expression_list
         value.YY_MOVE_OR_COPY< std::vector<exp_astnode*> > (YY_MOVE (that.value));
         break;
 
-      case 65: // compound_statement
-      case 66: // statement_list
+      case symbol_kind::S_compound_statement: // compound_statement
+      case symbol_kind::S_statement_list: // statement_list
         value.YY_MOVE_OR_COPY< std::vector<statement_astnode*> > (YY_MOVE (that.value));
         break;
 
-      case 75: // parameter_list
+      case symbol_kind::S_parameter_list: // parameter_list
         value.YY_MOVE_OR_COPY< std::vector<typespec_astnode> > (YY_MOVE (that.value));
         break;
 
-      case 69: // type_specifier
-      case 70: // declaration
-      case 71: // declarator_list
-      case 72: // declarator
-      case 73: // declarator_arr
-      case 74: // parameter_declaration
+      case symbol_kind::S_type_specifier: // type_specifier
+      case symbol_kind::S_parameter_declaration: // parameter_declaration
+      case symbol_kind::S_declarator_arr: // declarator_arr
+      case symbol_kind::S_declarator: // declarator
+      case symbol_kind::S_declaration: // declaration
+      case symbol_kind::S_declarator_list: // declarator_list
         value.YY_MOVE_OR_COPY< typespec_astnode > (YY_MOVE (that.value));
         break;
 
@@ -697,98 +608,98 @@ namespace IPL {
   Parser::stack_symbol_type::stack_symbol_type (state_type s, YY_MOVE_REF (symbol_type) that)
     : super_type (s, YY_MOVE (that.location))
   {
-    switch (that.type_get ())
+    switch (that.kind ())
     {
-      case 47: // struct_specifier
-      case 48: // declaration_list
+      case symbol_kind::S_struct_specifier: // struct_specifier
+      case symbol_kind::S_declaration_list: // declaration_list
         value.move< abstract_astnode* > (YY_MOVE (that.value));
         break;
 
-      case 59: // assignment_expression
+      case symbol_kind::S_assignment_expression: // assignment_expression
         value.move< assignE_astnode* > (YY_MOVE (that.value));
         break;
 
-      case 49: // expression
-      case 50: // unary_expression
-      case 51: // postfix_expression
-      case 52: // primary_expression
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_unary_expression: // unary_expression
+      case symbol_kind::S_postfix_expression: // postfix_expression
+      case symbol_kind::S_primary_expression: // primary_expression
         value.move< exp_astnode* > (YY_MOVE (that.value));
         break;
 
-      case 58: // procedure_call
+      case symbol_kind::S_procedure_call: // procedure_call
         value.move< funcall_astnode* > (YY_MOVE (that.value));
         break;
 
-      case 76: // fun_declarator
+      case symbol_kind::S_fun_declarator: // fun_declarator
         value.move< fundeclarator_astnode* > (YY_MOVE (that.value));
         break;
 
-      case 53: // logical_and_expression
-      case 54: // equality_expression
-      case 55: // relational_expression
-      case 56: // additive_expression
-      case 57: // multiplicative_expression
+      case symbol_kind::S_logical_and_expression: // logical_and_expression
+      case symbol_kind::S_equality_expression: // equality_expression
+      case symbol_kind::S_relational_expression: // relational_expression
+      case symbol_kind::S_additive_expression: // additive_expression
+      case symbol_kind::S_multiplicative_expression: // multiplicative_expression
         value.move< op_binary_astnode* > (YY_MOVE (that.value));
         break;
 
-      case 60: // function_definition
-      case 61: // statement
-      case 62: // selection_statement
-      case 63: // iteration_statement
-      case 64: // assignment_statement
+      case symbol_kind::S_function_definition: // function_definition
+      case symbol_kind::S_statement: // statement
+      case symbol_kind::S_assignment_statement: // assignment_statement
+      case symbol_kind::S_selection_statement: // selection_statement
+      case symbol_kind::S_iteration_statement: // iteration_statement
         value.move< statement_astnode* > (YY_MOVE (that.value));
         break;
 
-      case 3: // VOID
-      case 4: // INT
-      case 5: // FLOAT
-      case 6: // STRUCT
-      case 7: // IDENTIFIER
-      case 8: // INT_CONSTANT
-      case 9: // FLOAT_CONSTANT
-      case 10: // STRING_LITERAL
-      case 11: // OR_OP
-      case 12: // AND_OP
-      case 13: // EQ_OP
-      case 14: // NE_OP
-      case 15: // LE_OP
-      case 16: // GE_OP
-      case 17: // INC_OP
-      case 18: // PTR_OP
-      case 19: // IF
-      case 20: // ELSE
-      case 21: // WHILE
-      case 22: // FOR
-      case 23: // RETURN
-      case 24: // OTHERS
-      case 68: // unary_operator
+      case symbol_kind::S_VOID: // VOID
+      case symbol_kind::S_INT: // INT
+      case symbol_kind::S_FLOAT: // FLOAT
+      case symbol_kind::S_STRUCT: // STRUCT
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
+      case symbol_kind::S_INT_CONSTANT: // INT_CONSTANT
+      case symbol_kind::S_FLOAT_CONSTANT: // FLOAT_CONSTANT
+      case symbol_kind::S_STRING_LITERAL: // STRING_LITERAL
+      case symbol_kind::S_OR_OP: // OR_OP
+      case symbol_kind::S_AND_OP: // AND_OP
+      case symbol_kind::S_EQ_OP: // EQ_OP
+      case symbol_kind::S_NE_OP: // NE_OP
+      case symbol_kind::S_LE_OP: // LE_OP
+      case symbol_kind::S_GE_OP: // GE_OP
+      case symbol_kind::S_INC_OP: // INC_OP
+      case symbol_kind::S_PTR_OP: // PTR_OP
+      case symbol_kind::S_IF: // IF
+      case symbol_kind::S_ELSE: // ELSE
+      case symbol_kind::S_WHILE: // WHILE
+      case symbol_kind::S_FOR: // FOR
+      case symbol_kind::S_RETURN: // RETURN
+      case symbol_kind::S_OTHERS: // OTHERS
+      case symbol_kind::S_unary_operator: // unary_operator
         value.move< std::string > (YY_MOVE (that.value));
         break;
 
-      case 45: // translation_unit
-      case 46: // begin_nterm
+      case symbol_kind::S_begin_nterm: // begin_nterm
+      case symbol_kind::S_translation_unit: // translation_unit
         value.move< std::vector<abstract_astnode*> > (YY_MOVE (that.value));
         break;
 
-      case 67: // expression_list
+      case symbol_kind::S_expression_list: // expression_list
         value.move< std::vector<exp_astnode*> > (YY_MOVE (that.value));
         break;
 
-      case 65: // compound_statement
-      case 66: // statement_list
+      case symbol_kind::S_compound_statement: // compound_statement
+      case symbol_kind::S_statement_list: // statement_list
         value.move< std::vector<statement_astnode*> > (YY_MOVE (that.value));
         break;
 
-      case 75: // parameter_list
+      case symbol_kind::S_parameter_list: // parameter_list
         value.move< std::vector<typespec_astnode> > (YY_MOVE (that.value));
         break;
 
-      case 69: // type_specifier
-      case 70: // declaration
-      case 71: // declarator_list
-      case 72: // declarator
-      case 73: // declarator_arr
-      case 74: // parameter_declaration
+      case symbol_kind::S_type_specifier: // type_specifier
+      case symbol_kind::S_parameter_declaration: // parameter_declaration
+      case symbol_kind::S_declarator_arr: // declarator_arr
+      case symbol_kind::S_declarator: // declarator
+      case symbol_kind::S_declaration: // declaration
+      case symbol_kind::S_declarator_list: // declarator_list
         value.move< typespec_astnode > (YY_MOVE (that.value));
         break;
 
@@ -797,7 +708,7 @@ namespace IPL {
     }
 
     // that is emptied.
-    that.type = empty_symbol;
+    that.kind_ = symbol_kind::S_YYEMPTY;
   }
 
 #if YY_CPLUSPLUS < 201103L
@@ -805,98 +716,98 @@ namespace IPL {
   Parser::stack_symbol_type::operator= (const stack_symbol_type& that)
   {
     state = that.state;
-    switch (that.type_get ())
+    switch (that.kind ())
     {
-      case 47: // struct_specifier
-      case 48: // declaration_list
+      case symbol_kind::S_struct_specifier: // struct_specifier
+      case symbol_kind::S_declaration_list: // declaration_list
         value.copy< abstract_astnode* > (that.value);
         break;
 
-      case 59: // assignment_expression
+      case symbol_kind::S_assignment_expression: // assignment_expression
         value.copy< assignE_astnode* > (that.value);
         break;
 
-      case 49: // expression
-      case 50: // unary_expression
-      case 51: // postfix_expression
-      case 52: // primary_expression
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_unary_expression: // unary_expression
+      case symbol_kind::S_postfix_expression: // postfix_expression
+      case symbol_kind::S_primary_expression: // primary_expression
         value.copy< exp_astnode* > (that.value);
         break;
 
-      case 58: // procedure_call
+      case symbol_kind::S_procedure_call: // procedure_call
         value.copy< funcall_astnode* > (that.value);
         break;
 
-      case 76: // fun_declarator
+      case symbol_kind::S_fun_declarator: // fun_declarator
         value.copy< fundeclarator_astnode* > (that.value);
         break;
 
-      case 53: // logical_and_expression
-      case 54: // equality_expression
-      case 55: // relational_expression
-      case 56: // additive_expression
-      case 57: // multiplicative_expression
+      case symbol_kind::S_logical_and_expression: // logical_and_expression
+      case symbol_kind::S_equality_expression: // equality_expression
+      case symbol_kind::S_relational_expression: // relational_expression
+      case symbol_kind::S_additive_expression: // additive_expression
+      case symbol_kind::S_multiplicative_expression: // multiplicative_expression
         value.copy< op_binary_astnode* > (that.value);
         break;
 
-      case 60: // function_definition
-      case 61: // statement
-      case 62: // selection_statement
-      case 63: // iteration_statement
-      case 64: // assignment_statement
+      case symbol_kind::S_function_definition: // function_definition
+      case symbol_kind::S_statement: // statement
+      case symbol_kind::S_assignment_statement: // assignment_statement
+      case symbol_kind::S_selection_statement: // selection_statement
+      case symbol_kind::S_iteration_statement: // iteration_statement
         value.copy< statement_astnode* > (that.value);
         break;
 
-      case 3: // VOID
-      case 4: // INT
-      case 5: // FLOAT
-      case 6: // STRUCT
-      case 7: // IDENTIFIER
-      case 8: // INT_CONSTANT
-      case 9: // FLOAT_CONSTANT
-      case 10: // STRING_LITERAL
-      case 11: // OR_OP
-      case 12: // AND_OP
-      case 13: // EQ_OP
-      case 14: // NE_OP
-      case 15: // LE_OP
-      case 16: // GE_OP
-      case 17: // INC_OP
-      case 18: // PTR_OP
-      case 19: // IF
-      case 20: // ELSE
-      case 21: // WHILE
-      case 22: // FOR
-      case 23: // RETURN
-      case 24: // OTHERS
-      case 68: // unary_operator
+      case symbol_kind::S_VOID: // VOID
+      case symbol_kind::S_INT: // INT
+      case symbol_kind::S_FLOAT: // FLOAT
+      case symbol_kind::S_STRUCT: // STRUCT
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
+      case symbol_kind::S_INT_CONSTANT: // INT_CONSTANT
+      case symbol_kind::S_FLOAT_CONSTANT: // FLOAT_CONSTANT
+      case symbol_kind::S_STRING_LITERAL: // STRING_LITERAL
+      case symbol_kind::S_OR_OP: // OR_OP
+      case symbol_kind::S_AND_OP: // AND_OP
+      case symbol_kind::S_EQ_OP: // EQ_OP
+      case symbol_kind::S_NE_OP: // NE_OP
+      case symbol_kind::S_LE_OP: // LE_OP
+      case symbol_kind::S_GE_OP: // GE_OP
+      case symbol_kind::S_INC_OP: // INC_OP
+      case symbol_kind::S_PTR_OP: // PTR_OP
+      case symbol_kind::S_IF: // IF
+      case symbol_kind::S_ELSE: // ELSE
+      case symbol_kind::S_WHILE: // WHILE
+      case symbol_kind::S_FOR: // FOR
+      case symbol_kind::S_RETURN: // RETURN
+      case symbol_kind::S_OTHERS: // OTHERS
+      case symbol_kind::S_unary_operator: // unary_operator
         value.copy< std::string > (that.value);
         break;
 
-      case 45: // translation_unit
-      case 46: // begin_nterm
+      case symbol_kind::S_begin_nterm: // begin_nterm
+      case symbol_kind::S_translation_unit: // translation_unit
         value.copy< std::vector<abstract_astnode*> > (that.value);
         break;
 
-      case 67: // expression_list
+      case symbol_kind::S_expression_list: // expression_list
         value.copy< std::vector<exp_astnode*> > (that.value);
         break;
 
-      case 65: // compound_statement
-      case 66: // statement_list
+      case symbol_kind::S_compound_statement: // compound_statement
+      case symbol_kind::S_statement_list: // statement_list
         value.copy< std::vector<statement_astnode*> > (that.value);
         break;
 
-      case 75: // parameter_list
+      case symbol_kind::S_parameter_list: // parameter_list
         value.copy< std::vector<typespec_astnode> > (that.value);
         break;
 
-      case 69: // type_specifier
-      case 70: // declaration
-      case 71: // declarator_list
-      case 72: // declarator
-      case 73: // declarator_arr
-      case 74: // parameter_declaration
+      case symbol_kind::S_type_specifier: // type_specifier
+      case symbol_kind::S_parameter_declaration: // parameter_declaration
+      case symbol_kind::S_declarator_arr: // declarator_arr
+      case symbol_kind::S_declarator: // declarator
+      case symbol_kind::S_declaration: // declaration
+      case symbol_kind::S_declarator_list: // declarator_list
         value.copy< typespec_astnode > (that.value);
         break;
 
@@ -912,98 +823,98 @@ namespace IPL {
   Parser::stack_symbol_type::operator= (stack_symbol_type& that)
   {
     state = that.state;
-    switch (that.type_get ())
+    switch (that.kind ())
     {
-      case 47: // struct_specifier
-      case 48: // declaration_list
+      case symbol_kind::S_struct_specifier: // struct_specifier
+      case symbol_kind::S_declaration_list: // declaration_list
         value.move< abstract_astnode* > (that.value);
         break;
 
-      case 59: // assignment_expression
+      case symbol_kind::S_assignment_expression: // assignment_expression
         value.move< assignE_astnode* > (that.value);
         break;
 
-      case 49: // expression
-      case 50: // unary_expression
-      case 51: // postfix_expression
-      case 52: // primary_expression
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_unary_expression: // unary_expression
+      case symbol_kind::S_postfix_expression: // postfix_expression
+      case symbol_kind::S_primary_expression: // primary_expression
         value.move< exp_astnode* > (that.value);
         break;
 
-      case 58: // procedure_call
+      case symbol_kind::S_procedure_call: // procedure_call
         value.move< funcall_astnode* > (that.value);
         break;
 
-      case 76: // fun_declarator
+      case symbol_kind::S_fun_declarator: // fun_declarator
         value.move< fundeclarator_astnode* > (that.value);
         break;
 
-      case 53: // logical_and_expression
-      case 54: // equality_expression
-      case 55: // relational_expression
-      case 56: // additive_expression
-      case 57: // multiplicative_expression
+      case symbol_kind::S_logical_and_expression: // logical_and_expression
+      case symbol_kind::S_equality_expression: // equality_expression
+      case symbol_kind::S_relational_expression: // relational_expression
+      case symbol_kind::S_additive_expression: // additive_expression
+      case symbol_kind::S_multiplicative_expression: // multiplicative_expression
         value.move< op_binary_astnode* > (that.value);
         break;
 
-      case 60: // function_definition
-      case 61: // statement
-      case 62: // selection_statement
-      case 63: // iteration_statement
-      case 64: // assignment_statement
+      case symbol_kind::S_function_definition: // function_definition
+      case symbol_kind::S_statement: // statement
+      case symbol_kind::S_assignment_statement: // assignment_statement
+      case symbol_kind::S_selection_statement: // selection_statement
+      case symbol_kind::S_iteration_statement: // iteration_statement
         value.move< statement_astnode* > (that.value);
         break;
 
-      case 3: // VOID
-      case 4: // INT
-      case 5: // FLOAT
-      case 6: // STRUCT
-      case 7: // IDENTIFIER
-      case 8: // INT_CONSTANT
-      case 9: // FLOAT_CONSTANT
-      case 10: // STRING_LITERAL
-      case 11: // OR_OP
-      case 12: // AND_OP
-      case 13: // EQ_OP
-      case 14: // NE_OP
-      case 15: // LE_OP
-      case 16: // GE_OP
-      case 17: // INC_OP
-      case 18: // PTR_OP
-      case 19: // IF
-      case 20: // ELSE
-      case 21: // WHILE
-      case 22: // FOR
-      case 23: // RETURN
-      case 24: // OTHERS
-      case 68: // unary_operator
+      case symbol_kind::S_VOID: // VOID
+      case symbol_kind::S_INT: // INT
+      case symbol_kind::S_FLOAT: // FLOAT
+      case symbol_kind::S_STRUCT: // STRUCT
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
+      case symbol_kind::S_INT_CONSTANT: // INT_CONSTANT
+      case symbol_kind::S_FLOAT_CONSTANT: // FLOAT_CONSTANT
+      case symbol_kind::S_STRING_LITERAL: // STRING_LITERAL
+      case symbol_kind::S_OR_OP: // OR_OP
+      case symbol_kind::S_AND_OP: // AND_OP
+      case symbol_kind::S_EQ_OP: // EQ_OP
+      case symbol_kind::S_NE_OP: // NE_OP
+      case symbol_kind::S_LE_OP: // LE_OP
+      case symbol_kind::S_GE_OP: // GE_OP
+      case symbol_kind::S_INC_OP: // INC_OP
+      case symbol_kind::S_PTR_OP: // PTR_OP
+      case symbol_kind::S_IF: // IF
+      case symbol_kind::S_ELSE: // ELSE
+      case symbol_kind::S_WHILE: // WHILE
+      case symbol_kind::S_FOR: // FOR
+      case symbol_kind::S_RETURN: // RETURN
+      case symbol_kind::S_OTHERS: // OTHERS
+      case symbol_kind::S_unary_operator: // unary_operator
         value.move< std::string > (that.value);
         break;
 
-      case 45: // translation_unit
-      case 46: // begin_nterm
+      case symbol_kind::S_begin_nterm: // begin_nterm
+      case symbol_kind::S_translation_unit: // translation_unit
         value.move< std::vector<abstract_astnode*> > (that.value);
         break;
 
-      case 67: // expression_list
+      case symbol_kind::S_expression_list: // expression_list
         value.move< std::vector<exp_astnode*> > (that.value);
         break;
 
-      case 65: // compound_statement
-      case 66: // statement_list
+      case symbol_kind::S_compound_statement: // compound_statement
+      case symbol_kind::S_statement_list: // statement_list
         value.move< std::vector<statement_astnode*> > (that.value);
         break;
 
-      case 75: // parameter_list
+      case symbol_kind::S_parameter_list: // parameter_list
         value.move< std::vector<typespec_astnode> > (that.value);
         break;
 
-      case 69: // type_specifier
-      case 70: // declaration
-      case 71: // declarator_list
-      case 72: // declarator
-      case 73: // declarator_arr
-      case 74: // parameter_declaration
+      case symbol_kind::S_type_specifier: // type_specifier
+      case symbol_kind::S_parameter_declaration: // parameter_declaration
+      case symbol_kind::S_declarator_arr: // declarator_arr
+      case symbol_kind::S_declarator: // declarator
+      case symbol_kind::S_declaration: // declaration
+      case symbol_kind::S_declarator_list: // declarator_list
         value.move< typespec_astnode > (that.value);
         break;
 
@@ -1029,159 +940,157 @@ namespace IPL {
 #if YYDEBUG
   template <typename Base>
   void
-  Parser::yy_print_ (std::ostream& yyo,
-                                     const basic_symbol<Base>& yysym) const
+  Parser::yy_print_ (std::ostream& yyo, const basic_symbol<Base>& yysym) const
   {
     std::ostream& yyoutput = yyo;
-    YYUSE (yyoutput);
-    symbol_number_type yytype = yysym.type_get ();
-#if defined __GNUC__ && ! defined __clang__ && ! defined __ICC && __GNUC__ * 100 + __GNUC_MINOR__ <= 408
-    // Avoid a (spurious) G++ 4.8 warning about "array subscript is
-    // below array bounds".
+    YY_USE (yyoutput);
     if (yysym.empty ())
-      std::abort ();
-#endif
-    yyo << (yytype < yyntokens_ ? "token" : "nterm")
-        << ' ' << yytname_[yytype] << " ("
-        << yysym.location << ": ";
-    switch (yytype)
+      yyo << "empty symbol";
+    else
+      {
+        symbol_kind_type yykind = yysym.kind ();
+        yyo << (yykind < YYNTOKENS ? "token" : "nterm")
+            << ' ' << yysym.name () << " ("
+            << yysym.location << ": ";
+        switch (yykind)
     {
-      case 3: // VOID
+      case symbol_kind::S_VOID: // VOID
 #line 21 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 1053 "parser.tab.cc"
+#line 961 "parser.tab.cc"
         break;
 
-      case 4: // INT
+      case symbol_kind::S_INT: // INT
 #line 22 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 1059 "parser.tab.cc"
+#line 967 "parser.tab.cc"
         break;
 
-      case 5: // FLOAT
+      case symbol_kind::S_FLOAT: // FLOAT
 #line 23 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 1065 "parser.tab.cc"
+#line 973 "parser.tab.cc"
         break;
 
-      case 6: // STRUCT
+      case symbol_kind::S_STRUCT: // STRUCT
 #line 24 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 1071 "parser.tab.cc"
+#line 979 "parser.tab.cc"
         break;
 
-      case 7: // IDENTIFIER
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
 #line 25 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 1077 "parser.tab.cc"
+#line 985 "parser.tab.cc"
         break;
 
-      case 8: // INT_CONSTANT
+      case symbol_kind::S_INT_CONSTANT: // INT_CONSTANT
 #line 26 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 1083 "parser.tab.cc"
+#line 991 "parser.tab.cc"
         break;
 
-      case 9: // FLOAT_CONSTANT
+      case symbol_kind::S_FLOAT_CONSTANT: // FLOAT_CONSTANT
 #line 27 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 1089 "parser.tab.cc"
+#line 997 "parser.tab.cc"
         break;
 
-      case 10: // STRING_LITERAL
+      case symbol_kind::S_STRING_LITERAL: // STRING_LITERAL
 #line 28 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 1095 "parser.tab.cc"
+#line 1003 "parser.tab.cc"
         break;
 
-      case 11: // OR_OP
+      case symbol_kind::S_OR_OP: // OR_OP
 #line 29 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 1101 "parser.tab.cc"
+#line 1009 "parser.tab.cc"
         break;
 
-      case 12: // AND_OP
+      case symbol_kind::S_AND_OP: // AND_OP
 #line 30 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 1107 "parser.tab.cc"
+#line 1015 "parser.tab.cc"
         break;
 
-      case 13: // EQ_OP
+      case symbol_kind::S_EQ_OP: // EQ_OP
 #line 31 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 1113 "parser.tab.cc"
+#line 1021 "parser.tab.cc"
         break;
 
-      case 14: // NE_OP
+      case symbol_kind::S_NE_OP: // NE_OP
 #line 32 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 1119 "parser.tab.cc"
+#line 1027 "parser.tab.cc"
         break;
 
-      case 15: // LE_OP
+      case symbol_kind::S_LE_OP: // LE_OP
 #line 33 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 1125 "parser.tab.cc"
+#line 1033 "parser.tab.cc"
         break;
 
-      case 16: // GE_OP
+      case symbol_kind::S_GE_OP: // GE_OP
 #line 34 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 1131 "parser.tab.cc"
+#line 1039 "parser.tab.cc"
         break;
 
-      case 17: // INC_OP
+      case symbol_kind::S_INC_OP: // INC_OP
 #line 35 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 1137 "parser.tab.cc"
+#line 1045 "parser.tab.cc"
         break;
 
-      case 18: // PTR_OP
+      case symbol_kind::S_PTR_OP: // PTR_OP
 #line 36 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 1143 "parser.tab.cc"
+#line 1051 "parser.tab.cc"
         break;
 
-      case 19: // IF
+      case symbol_kind::S_IF: // IF
 #line 37 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 1149 "parser.tab.cc"
+#line 1057 "parser.tab.cc"
         break;
 
-      case 20: // ELSE
+      case symbol_kind::S_ELSE: // ELSE
 #line 38 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 1155 "parser.tab.cc"
+#line 1063 "parser.tab.cc"
         break;
 
-      case 21: // WHILE
+      case symbol_kind::S_WHILE: // WHILE
 #line 39 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 1161 "parser.tab.cc"
+#line 1069 "parser.tab.cc"
         break;
 
-      case 22: // FOR
+      case symbol_kind::S_FOR: // FOR
 #line 40 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 1167 "parser.tab.cc"
+#line 1075 "parser.tab.cc"
         break;
 
-      case 23: // RETURN
+      case symbol_kind::S_RETURN: // RETURN
 #line 41 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 1173 "parser.tab.cc"
+#line 1081 "parser.tab.cc"
         break;
 
-      case 24: // OTHERS
+      case symbol_kind::S_OTHERS: // OTHERS
 #line 42 "parser.yy"
                  { std::cerr << yysym.value.template as < std::string > (); }
-#line 1179 "parser.tab.cc"
+#line 1087 "parser.tab.cc"
         break;
 
       default:
         break;
     }
-    yyo << ')';
+        yyo << ')';
+      }
   }
 #endif
 
@@ -1205,7 +1114,7 @@ namespace IPL {
   }
 
   void
-  Parser::yypop_ (int n)
+  Parser::yypop_ (int n) YY_NOEXCEPT
   {
     yystack_.pop (n);
   }
@@ -1240,21 +1149,21 @@ namespace IPL {
   Parser::state_type
   Parser::yy_lr_goto_state_ (state_type yystate, int yysym)
   {
-    int yyr = yypgoto_[yysym - yyntokens_] + yystate;
+    int yyr = yypgoto_[yysym - YYNTOKENS] + yystate;
     if (0 <= yyr && yyr <= yylast_ && yycheck_[yyr] == yystate)
       return yytable_[yyr];
     else
-      return yydefgoto_[yysym - yyntokens_];
+      return yydefgoto_[yysym - YYNTOKENS];
   }
 
   bool
-  Parser::yy_pact_value_is_default_ (int yyvalue)
+  Parser::yy_pact_value_is_default_ (int yyvalue) YY_NOEXCEPT
   {
     return yyvalue == yypact_ninf_;
   }
 
   bool
-  Parser::yy_table_value_is_error_ (int yyvalue)
+  Parser::yy_table_value_is_error_ (int yyvalue) YY_NOEXCEPT
   {
     return yyvalue == yytable_ninf_;
   }
@@ -1304,6 +1213,7 @@ namespace IPL {
   `-----------------------------------------------*/
   yynewstate:
     YYCDEBUG << "Entering state " << int (yystack_[0].state) << '\n';
+    YY_STACK_PRINT ();
 
     // Accept?
     if (yystack_[0].state == yyfinal_)
@@ -1324,12 +1234,12 @@ namespace IPL {
     // Read a lookahead token.
     if (yyla.empty ())
       {
-        YYCDEBUG << "Reading a token: ";
+        YYCDEBUG << "Reading a token\n";
 #if YY_EXCEPTIONS
         try
 #endif // YY_EXCEPTIONS
           {
-            yyla.type = yytranslate_ (yylex (&yyla.value, &yyla.location));
+            yyla.kind_ = yytranslate_ (yylex (&yyla.value, &yyla.location));
           }
 #if YY_EXCEPTIONS
         catch (const syntax_error& yyexc)
@@ -1342,10 +1252,20 @@ namespace IPL {
       }
     YY_SYMBOL_PRINT ("Next token is", yyla);
 
+    if (yyla.kind () == symbol_kind::S_YYerror)
+    {
+      // The scanner already issued an error message, process directly
+      // to error recovery.  But do not keep the error token as
+      // lookahead, it is too special and may lead us to an endless
+      // loop in error recovery. */
+      yyla.kind_ = symbol_kind::S_YYUNDEF;
+      goto yyerrlab1;
+    }
+
     /* If the proper action on seeing token YYLA.TYPE is to reduce or
        to detect an error, take that action.  */
-    yyn += yyla.type_get ();
-    if (yyn < 0 || yylast_ < yyn || yycheck_[yyn] != yyla.type_get ())
+    yyn += yyla.kind ();
+    if (yyn < 0 || yylast_ < yyn || yycheck_[yyn] != yyla.kind ())
       {
         goto yydefault;
       }
@@ -1392,96 +1312,96 @@ namespace IPL {
          when using variants.  */
       switch (yyr1_[yyn])
     {
-      case 47: // struct_specifier
-      case 48: // declaration_list
+      case symbol_kind::S_struct_specifier: // struct_specifier
+      case symbol_kind::S_declaration_list: // declaration_list
         yylhs.value.emplace< abstract_astnode* > ();
         break;
 
-      case 59: // assignment_expression
+      case symbol_kind::S_assignment_expression: // assignment_expression
         yylhs.value.emplace< assignE_astnode* > ();
         break;
 
-      case 49: // expression
-      case 50: // unary_expression
-      case 51: // postfix_expression
-      case 52: // primary_expression
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_unary_expression: // unary_expression
+      case symbol_kind::S_postfix_expression: // postfix_expression
+      case symbol_kind::S_primary_expression: // primary_expression
         yylhs.value.emplace< exp_astnode* > ();
         break;
 
-      case 58: // procedure_call
+      case symbol_kind::S_procedure_call: // procedure_call
         yylhs.value.emplace< funcall_astnode* > ();
         break;
 
-      case 76: // fun_declarator
+      case symbol_kind::S_fun_declarator: // fun_declarator
         yylhs.value.emplace< fundeclarator_astnode* > ();
         break;
 
-      case 53: // logical_and_expression
-      case 54: // equality_expression
-      case 55: // relational_expression
-      case 56: // additive_expression
-      case 57: // multiplicative_expression
+      case symbol_kind::S_logical_and_expression: // logical_and_expression
+      case symbol_kind::S_equality_expression: // equality_expression
+      case symbol_kind::S_relational_expression: // relational_expression
+      case symbol_kind::S_additive_expression: // additive_expression
+      case symbol_kind::S_multiplicative_expression: // multiplicative_expression
         yylhs.value.emplace< op_binary_astnode* > ();
         break;
 
-      case 60: // function_definition
-      case 61: // statement
-      case 62: // selection_statement
-      case 63: // iteration_statement
-      case 64: // assignment_statement
+      case symbol_kind::S_function_definition: // function_definition
+      case symbol_kind::S_statement: // statement
+      case symbol_kind::S_assignment_statement: // assignment_statement
+      case symbol_kind::S_selection_statement: // selection_statement
+      case symbol_kind::S_iteration_statement: // iteration_statement
         yylhs.value.emplace< statement_astnode* > ();
         break;
 
-      case 3: // VOID
-      case 4: // INT
-      case 5: // FLOAT
-      case 6: // STRUCT
-      case 7: // IDENTIFIER
-      case 8: // INT_CONSTANT
-      case 9: // FLOAT_CONSTANT
-      case 10: // STRING_LITERAL
-      case 11: // OR_OP
-      case 12: // AND_OP
-      case 13: // EQ_OP
-      case 14: // NE_OP
-      case 15: // LE_OP
-      case 16: // GE_OP
-      case 17: // INC_OP
-      case 18: // PTR_OP
-      case 19: // IF
-      case 20: // ELSE
-      case 21: // WHILE
-      case 22: // FOR
-      case 23: // RETURN
-      case 24: // OTHERS
-      case 68: // unary_operator
+      case symbol_kind::S_VOID: // VOID
+      case symbol_kind::S_INT: // INT
+      case symbol_kind::S_FLOAT: // FLOAT
+      case symbol_kind::S_STRUCT: // STRUCT
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
+      case symbol_kind::S_INT_CONSTANT: // INT_CONSTANT
+      case symbol_kind::S_FLOAT_CONSTANT: // FLOAT_CONSTANT
+      case symbol_kind::S_STRING_LITERAL: // STRING_LITERAL
+      case symbol_kind::S_OR_OP: // OR_OP
+      case symbol_kind::S_AND_OP: // AND_OP
+      case symbol_kind::S_EQ_OP: // EQ_OP
+      case symbol_kind::S_NE_OP: // NE_OP
+      case symbol_kind::S_LE_OP: // LE_OP
+      case symbol_kind::S_GE_OP: // GE_OP
+      case symbol_kind::S_INC_OP: // INC_OP
+      case symbol_kind::S_PTR_OP: // PTR_OP
+      case symbol_kind::S_IF: // IF
+      case symbol_kind::S_ELSE: // ELSE
+      case symbol_kind::S_WHILE: // WHILE
+      case symbol_kind::S_FOR: // FOR
+      case symbol_kind::S_RETURN: // RETURN
+      case symbol_kind::S_OTHERS: // OTHERS
+      case symbol_kind::S_unary_operator: // unary_operator
         yylhs.value.emplace< std::string > ();
         break;
 
-      case 45: // translation_unit
-      case 46: // begin_nterm
+      case symbol_kind::S_begin_nterm: // begin_nterm
+      case symbol_kind::S_translation_unit: // translation_unit
         yylhs.value.emplace< std::vector<abstract_astnode*> > ();
         break;
 
-      case 67: // expression_list
+      case symbol_kind::S_expression_list: // expression_list
         yylhs.value.emplace< std::vector<exp_astnode*> > ();
         break;
 
-      case 65: // compound_statement
-      case 66: // statement_list
+      case symbol_kind::S_compound_statement: // compound_statement
+      case symbol_kind::S_statement_list: // statement_list
         yylhs.value.emplace< std::vector<statement_astnode*> > ();
         break;
 
-      case 75: // parameter_list
+      case symbol_kind::S_parameter_list: // parameter_list
         yylhs.value.emplace< std::vector<typespec_astnode> > ();
         break;
 
-      case 69: // type_specifier
-      case 70: // declaration
-      case 71: // declarator_list
-      case 72: // declarator
-      case 73: // declarator_arr
-      case 74: // parameter_declaration
+      case symbol_kind::S_type_specifier: // type_specifier
+      case symbol_kind::S_parameter_declaration: // parameter_declaration
+      case symbol_kind::S_declarator_arr: // declarator_arr
+      case symbol_kind::S_declarator: // declarator
+      case symbol_kind::S_declaration: // declaration
+      case symbol_kind::S_declarator_list: // declarator_list
         yylhs.value.emplace< typespec_astnode > ();
         break;
 
@@ -1505,7 +1425,7 @@ namespace IPL {
         {
           switch (yyn)
             {
-  case 2:
+  case 2: // $@1: %empty
 #line 114 "parser.yy"
              {
     structc = typespec_astnode::structc;
@@ -1521,10 +1441,10 @@ namespace IPL {
     ststack.push(Symbols::gst);
 
 }
-#line 1525 "parser.tab.cc"
+#line 1445 "parser.tab.cc"
     break;
 
-  case 3:
+  case 3: // begin_nterm: $@1 translation_unit
 #line 127 "parser.yy"
                    {
     if(!Symbols::symTabConstructed){
@@ -1536,10 +1456,10 @@ namespace IPL {
         // std::cout<<"here again"<<std::endl;
     }
 }
-#line 1540 "parser.tab.cc"
+#line 1460 "parser.tab.cc"
     break;
 
-  case 4:
+  case 4: // translation_unit: struct_specifier
 #line 138 "parser.yy"
                                   {
     if(!Symbols::symTabConstructed){
@@ -1550,35 +1470,35 @@ namespace IPL {
         }
     }
 }
-#line 1554 "parser.tab.cc"
+#line 1474 "parser.tab.cc"
     break;
 
-  case 5:
+  case 5: // translation_unit: function_definition
 #line 147 "parser.yy"
                      {
     yylhs.value.as < std::vector<abstract_astnode*> > () = std::vector<abstract_astnode*>();
     yylhs.value.as < std::vector<abstract_astnode*> > ().push_back(yystack_[0].value.as < statement_astnode* > ());
 }
-#line 1563 "parser.tab.cc"
+#line 1483 "parser.tab.cc"
     break;
 
-  case 6:
+  case 6: // translation_unit: translation_unit struct_specifier
 #line 151 "parser.yy"
                                    {
 }
-#line 1570 "parser.tab.cc"
+#line 1490 "parser.tab.cc"
     break;
 
-  case 7:
+  case 7: // translation_unit: translation_unit function_definition
 #line 153 "parser.yy"
                                       {
     yylhs.value.as < std::vector<abstract_astnode*> > () = yystack_[1].value.as < std::vector<abstract_astnode*> > ();
     yylhs.value.as < std::vector<abstract_astnode*> > ().push_back(yystack_[0].value.as < statement_astnode* > ());
 }
-#line 1579 "parser.tab.cc"
+#line 1499 "parser.tab.cc"
     break;
 
-  case 8:
+  case 8: // $@2: %empty
 #line 159 "parser.yy"
                                     {
     string structName = "struct " + yystack_[0].value.as < std::string > ();
@@ -1589,20 +1509,20 @@ namespace IPL {
     }
     ststack.push(Symbols::slsts[structName]);
 }
-#line 1593 "parser.tab.cc"
+#line 1513 "parser.tab.cc"
     break;
 
-  case 9:
+  case 9: // struct_specifier: STRUCT IDENTIFIER $@2 '{' declaration_list '}' ';'
 #line 167 "parser.yy"
                              {
     // if(!Symbols::symTabConstructed){
         ststack.pop();
     // }
 }
-#line 1603 "parser.tab.cc"
+#line 1523 "parser.tab.cc"
     break;
 
-  case 10:
+  case 10: // function_definition: type_specifier fun_declarator compound_statement
 #line 173 "parser.yy"
                                                                      {
     if(Symbols::symTabConstructed){
@@ -1611,10 +1531,10 @@ namespace IPL {
     yylhs.value.as < statement_astnode* > () = nullptr;
     ststack.pop();
 }
-#line 1615 "parser.tab.cc"
+#line 1535 "parser.tab.cc"
     break;
 
-  case 11:
+  case 11: // type_specifier: VOID
 #line 181 "parser.yy"
                     {
     typespec_astnode ts;
@@ -1628,10 +1548,10 @@ namespace IPL {
     }
 
 }
-#line 1632 "parser.tab.cc"
+#line 1552 "parser.tab.cc"
     break;
 
-  case 12:
+  case 12: // type_specifier: INT
 #line 193 "parser.yy"
      {
     // retType = SymTab::ST_type::INT;
@@ -1642,10 +1562,10 @@ namespace IPL {
     }
 
 }
-#line 1646 "parser.tab.cc"
+#line 1566 "parser.tab.cc"
     break;
 
-  case 13:
+  case 13: // type_specifier: FLOAT
 #line 202 "parser.yy"
        {
     // retType = SymTab::ST_type::FLOAT;
@@ -1655,10 +1575,10 @@ namespace IPL {
         toptype = ts;
     }
 }
-#line 1659 "parser.tab.cc"
+#line 1579 "parser.tab.cc"
     break;
 
-  case 14:
+  case 14: // type_specifier: STRUCT IDENTIFIER
 #line 210 "parser.yy"
                    {
     // retType = SymTab::ST_type::STRUCT_TYPE;
@@ -1672,10 +1592,10 @@ namespace IPL {
         toptype = ts;
     }
 }
-#line 1676 "parser.tab.cc"
+#line 1596 "parser.tab.cc"
     break;
 
-  case 15:
+  case 15: // $@3: %empty
 #line 224 "parser.yy"
                               {
     std::string name = yystack_[1].value.as < std::string > ();
@@ -1686,10 +1606,10 @@ namespace IPL {
     }
     ststack.push(Symbols::flsts[name]);
 }
-#line 1690 "parser.tab.cc"
+#line 1610 "parser.tab.cc"
     break;
 
-  case 16:
+  case 16: // fun_declarator: IDENTIFIER '(' $@3 parameter_list ')'
 #line 232 "parser.yy"
                     {
     yylhs.value.as < fundeclarator_astnode* > () = NULL;
@@ -1714,10 +1634,10 @@ namespace IPL {
         yylhs.value.as < fundeclarator_astnode* > () = new fundeclarator_astnode(name, vect);
     }
 }
-#line 1718 "parser.tab.cc"
+#line 1638 "parser.tab.cc"
     break;
 
-  case 17:
+  case 17: // fun_declarator: IDENTIFIER '(' ')'
 #line 255 "parser.yy"
                     {
     std::string name = yystack_[2].value.as < std::string > ();
@@ -1730,10 +1650,10 @@ namespace IPL {
     }
     ststack.push(Symbols::flsts[name]);
 }
-#line 1734 "parser.tab.cc"
+#line 1654 "parser.tab.cc"
     break;
 
-  case 18:
+  case 18: // parameter_list: parameter_declaration
 #line 268 "parser.yy"
                                      {
     if(Symbols::symTabConstructed){
@@ -1741,10 +1661,10 @@ namespace IPL {
         yylhs.value.as < std::vector<typespec_astnode> > ().push_back(yystack_[0].value.as < typespec_astnode > ());
     }
 }
-#line 1745 "parser.tab.cc"
+#line 1665 "parser.tab.cc"
     break;
 
-  case 19:
+  case 19: // parameter_list: parameter_declaration ',' parameter_list
 #line 274 "parser.yy"
                                            {
     if(Symbols::symTabConstructed){
@@ -1752,10 +1672,10 @@ namespace IPL {
         yylhs.value.as < std::vector<typespec_astnode> > ().push_back(yystack_[2].value.as < typespec_astnode > ());
     }
 }
-#line 1756 "parser.tab.cc"
+#line 1676 "parser.tab.cc"
     break;
 
-  case 20:
+  case 20: // parameter_declaration: type_specifier declarator
 #line 282 "parser.yy"
                                                 {
     yylhs.value.as < typespec_astnode > () = yystack_[1].value.as < typespec_astnode > ();
@@ -1764,10 +1684,10 @@ namespace IPL {
         ststack.top()->rows[topvarname].offset = ststack.top()->getParamOffset(ststack.top()->rows[topvarname].size);
     }
 }
-#line 1768 "parser.tab.cc"
+#line 1688 "parser.tab.cc"
     break;
 
-  case 21:
+  case 21: // declarator_arr: IDENTIFIER
 #line 291 "parser.yy"
                           {
     yylhs.value.as < typespec_astnode > () = toptype;
@@ -1776,10 +1696,10 @@ namespace IPL {
         topvarname = yystack_[0].value.as < std::string > ();
     }
 }
-#line 1780 "parser.tab.cc"
+#line 1700 "parser.tab.cc"
     break;
 
-  case 22:
+  case 22: // declarator_arr: declarator_arr '[' INT_CONSTANT ']'
 #line 298 "parser.yy"
                                      {
     yylhs.value.as < typespec_astnode > () = yystack_[3].value.as < typespec_astnode > ();
@@ -1790,18 +1710,18 @@ namespace IPL {
         yylhs.value.as < typespec_astnode > ().arrsizes.push_back(std::stoi(yystack_[1].value.as < std::string > ()));
     }
 }
-#line 1794 "parser.tab.cc"
+#line 1714 "parser.tab.cc"
     break;
 
-  case 23:
+  case 23: // declarator: declarator_arr
 #line 308 "parser.yy"
                           {
     yylhs.value.as < typespec_astnode > () = yystack_[0].value.as < typespec_astnode > ();
 }
-#line 1802 "parser.tab.cc"
+#line 1722 "parser.tab.cc"
     break;
 
-  case 24:
+  case 24: // declarator: '*' declarator
 #line 311 "parser.yy"
                  {
     yylhs.value.as < typespec_astnode > () = yystack_[0].value.as < typespec_astnode > ();
@@ -1810,44 +1730,44 @@ namespace IPL {
     yylhs.value.as < typespec_astnode > ().numptrstars+=1;
     yylhs.value.as < typespec_astnode > ().typeName = yylhs.value.as < typespec_astnode > ().genTypeName();
 }
-#line 1814 "parser.tab.cc"
+#line 1734 "parser.tab.cc"
     break;
 
-  case 25:
+  case 25: // compound_statement: '{' '}'
 #line 320 "parser.yy"
                            {
     yylhs.value.as < std::vector<statement_astnode*> > () = std::vector<statement_astnode*>();
 }
-#line 1822 "parser.tab.cc"
+#line 1742 "parser.tab.cc"
     break;
 
-  case 26:
+  case 26: // compound_statement: '{' statement_list '}'
 #line 323 "parser.yy"
                         {
     yylhs.value.as < std::vector<statement_astnode*> > () = yystack_[1].value.as < std::vector<statement_astnode*> > ();
 }
-#line 1830 "parser.tab.cc"
+#line 1750 "parser.tab.cc"
     break;
 
-  case 27:
+  case 27: // compound_statement: '{' declaration_list '}'
 #line 326 "parser.yy"
                            {
     //TODO
     yylhs.value.as < std::vector<statement_astnode*> > () = std::vector<statement_astnode*>();
 
 }
-#line 1840 "parser.tab.cc"
+#line 1760 "parser.tab.cc"
     break;
 
-  case 28:
+  case 28: // compound_statement: '{' declaration_list statement_list '}'
 #line 331 "parser.yy"
                                          {
     yylhs.value.as < std::vector<statement_astnode*> > () = yystack_[1].value.as < std::vector<statement_astnode*> > ();
 }
-#line 1848 "parser.tab.cc"
+#line 1768 "parser.tab.cc"
     break;
 
-  case 29:
+  case 29: // statement_list: statement
 #line 336 "parser.yy"
                           {
     std::vector<statement_astnode*> temp;
@@ -1857,81 +1777,81 @@ namespace IPL {
     }
     yylhs.value.as < std::vector<statement_astnode*> > () = temp;
 }
-#line 1861 "parser.tab.cc"
+#line 1781 "parser.tab.cc"
     break;
 
-  case 30:
+  case 30: // statement_list: statement_list statement
 #line 344 "parser.yy"
                           {
     yystack_[1].value.as < std::vector<statement_astnode*> > ().push_back(yystack_[0].value.as < statement_astnode* > ());
     yylhs.value.as < std::vector<statement_astnode*> > () = yystack_[1].value.as < std::vector<statement_astnode*> > ();
 }
-#line 1870 "parser.tab.cc"
+#line 1790 "parser.tab.cc"
     break;
 
-  case 31:
+  case 31: // statement: ';'
 #line 350 "parser.yy"
               {
     if(Symbols::symTabConstructed){   
         yylhs.value.as < statement_astnode* > () = new empty_astnode();
     }
 }
-#line 1880 "parser.tab.cc"
+#line 1800 "parser.tab.cc"
     break;
 
-  case 32:
+  case 32: // statement: '{' statement_list '}'
 #line 355 "parser.yy"
                         {
     if(Symbols::symTabConstructed){   
         yylhs.value.as < statement_astnode* > () = new seq_astnode(yystack_[1].value.as < std::vector<statement_astnode*> > ());
     }
 }
-#line 1890 "parser.tab.cc"
+#line 1810 "parser.tab.cc"
     break;
 
-  case 33:
+  case 33: // statement: selection_statement
 #line 360 "parser.yy"
                      {
     yylhs.value.as < statement_astnode* > () = yystack_[0].value.as < statement_astnode* > ();
 }
-#line 1898 "parser.tab.cc"
+#line 1818 "parser.tab.cc"
     break;
 
-  case 34:
+  case 34: // statement: iteration_statement
 #line 363 "parser.yy"
                      {
     yylhs.value.as < statement_astnode* > () = yystack_[0].value.as < statement_astnode* > ();
 }
-#line 1906 "parser.tab.cc"
+#line 1826 "parser.tab.cc"
     break;
 
-  case 35:
+  case 35: // statement: assignment_statement
 #line 366 "parser.yy"
                       {
     yylhs.value.as < statement_astnode* > () = yystack_[0].value.as < statement_astnode* > ();
 }
-#line 1914 "parser.tab.cc"
+#line 1834 "parser.tab.cc"
     break;
 
-  case 36:
+  case 36: // statement: procedure_call
 #line 369 "parser.yy"
                 {
     yylhs.value.as < statement_astnode* > () = yystack_[0].value.as < funcall_astnode* > ();
 }
-#line 1922 "parser.tab.cc"
+#line 1842 "parser.tab.cc"
     break;
 
-  case 37:
+  case 37: // statement: RETURN expression ';'
 #line 372 "parser.yy"
                        {
     if(Symbols::symTabConstructed){
         yylhs.value.as < statement_astnode* > () = new return_astnode(yystack_[1].value.as < exp_astnode* > ());
     }
 }
-#line 1932 "parser.tab.cc"
+#line 1852 "parser.tab.cc"
     break;
 
-  case 38:
+  case 38: // assignment_expression: unary_expression '=' expression
 #line 379 "parser.yy"
                                                       {
     if(Symbols::symTabConstructed){
@@ -1962,20 +1882,20 @@ namespace IPL {
         }
     }
 }
-#line 1966 "parser.tab.cc"
+#line 1886 "parser.tab.cc"
     break;
 
-  case 39:
+  case 39: // assignment_statement: assignment_expression ';'
 #line 410 "parser.yy"
                                                {
     if(Symbols::symTabConstructed){
         yylhs.value.as < statement_astnode* > () = new assignS_astnode(yystack_[1].value.as < assignE_astnode* > ()->exp1, yystack_[1].value.as < assignE_astnode* > ()->exp2);
     }
 }
-#line 1976 "parser.tab.cc"
+#line 1896 "parser.tab.cc"
     break;
 
-  case 40:
+  case 40: // procedure_call: IDENTIFIER '(' ')' ';'
 #line 417 "parser.yy"
                                       {
     if (Symbols::symTabConstructed) {
@@ -1997,11 +1917,19 @@ namespace IPL {
         yylhs.value.as < funcall_astnode* > ()->typeNode = Symbols::getSymEntry(Symbols::gst, yystack_[3].value.as < std::string > ())->type;
     }
 }
+<<<<<<< Updated upstream
 #line 2001 "parser.tab.cc"
     break;
 
   case 41:
 #line 437 "parser.yy"
+=======
+#line 1920 "parser.tab.cc"
+    break;
+
+  case 41: // procedure_call: IDENTIFIER '(' expression_list ')' ';'
+#line 436 "parser.yy"
+>>>>>>> Stashed changes
                                         {
     if (Symbols::symTabConstructed) {
         std::string function_name = yystack_[4].value.as < std::string > ();
@@ -2032,87 +1960,159 @@ namespace IPL {
         yylhs.value.as < funcall_astnode* > ()->typeNode = Symbols::getSymEntry(Symbols::gst, yystack_[4].value.as < std::string > ())->type;
     }
 }
+<<<<<<< Updated upstream
 #line 2036 "parser.tab.cc"
     break;
 
   case 42:
 #line 469 "parser.yy"
+=======
+#line 1954 "parser.tab.cc"
+    break;
+
+  case 42: // expression: logical_and_expression
+#line 467 "parser.yy"
+>>>>>>> Stashed changes
                                   {
     yylhs.value.as < exp_astnode* > () = yystack_[0].value.as < op_binary_astnode* > ();
     // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
+<<<<<<< Updated upstream
 #line 2045 "parser.tab.cc"
     break;
 
   case 43:
 #line 473 "parser.yy"
+=======
+#line 1963 "parser.tab.cc"
+    break;
+
+  case 43: // expression: expression OR_OP logical_and_expression
+#line 471 "parser.yy"
+>>>>>>> Stashed changes
                                          {
     if(Symbols::symTabConstructed){
         yylhs.value.as < exp_astnode* > () = new op_binary_astnode("OR_OP",yystack_[2].value.as < exp_astnode* > (),yystack_[0].value.as < op_binary_astnode* > ());
     }
 }
+<<<<<<< Updated upstream
 #line 2055 "parser.tab.cc"
     break;
 
   case 44:
 #line 480 "parser.yy"
+=======
+#line 1973 "parser.tab.cc"
+    break;
+
+  case 44: // logical_and_expression: equality_expression
+#line 478 "parser.yy"
+>>>>>>> Stashed changes
                                            {
     yylhs.value.as < op_binary_astnode* > () = yystack_[0].value.as < op_binary_astnode* > ();
     // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
+<<<<<<< Updated upstream
 #line 2064 "parser.tab.cc"
     break;
 
   case 45:
 #line 484 "parser.yy"
+=======
+#line 1982 "parser.tab.cc"
+    break;
+
+  case 45: // logical_and_expression: logical_and_expression AND_OP equality_expression
+#line 482 "parser.yy"
+>>>>>>> Stashed changes
                                                    {
     if(Symbols::symTabConstructed){   
         yylhs.value.as < op_binary_astnode* > () = new op_binary_astnode("AND_OP", yystack_[2].value.as < op_binary_astnode* > (), yystack_[0].value.as < op_binary_astnode* > ());
     }
 }
+<<<<<<< Updated upstream
 #line 2074 "parser.tab.cc"
     break;
 
   case 46:
 #line 491 "parser.yy"
+=======
+#line 1992 "parser.tab.cc"
+    break;
+
+  case 46: // equality_expression: relational_expression
+#line 489 "parser.yy"
+>>>>>>> Stashed changes
                                           {
     yylhs.value.as < op_binary_astnode* > () = yystack_[0].value.as < op_binary_astnode* > ();
     // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
+<<<<<<< Updated upstream
 #line 2083 "parser.tab.cc"
     break;
 
   case 47:
 #line 495 "parser.yy"
+=======
+#line 2001 "parser.tab.cc"
+    break;
+
+  case 47: // equality_expression: equality_expression EQ_OP relational_expression
+#line 493 "parser.yy"
+>>>>>>> Stashed changes
                                                   {
     if(Symbols::symTabConstructed){   
         yylhs.value.as < op_binary_astnode* > () = new op_binary_astnode("EQ?", yystack_[2].value.as < op_binary_astnode* > (), yystack_[0].value.as < op_binary_astnode* > ());
     }
 }
+<<<<<<< Updated upstream
 #line 2093 "parser.tab.cc"
     break;
 
   case 48:
 #line 500 "parser.yy"
+=======
+#line 2011 "parser.tab.cc"
+    break;
+
+  case 48: // equality_expression: equality_expression NE_OP relational_expression
+#line 498 "parser.yy"
+>>>>>>> Stashed changes
                                                  {
     if(Symbols::symTabConstructed){   
         yylhs.value.as < op_binary_astnode* > () = new op_binary_astnode("NE?", yystack_[2].value.as < op_binary_astnode* > (), yystack_[0].value.as < op_binary_astnode* > ());
     }
 }
+<<<<<<< Updated upstream
 #line 2103 "parser.tab.cc"
     break;
 
   case 49:
 #line 507 "parser.yy"
+=======
+#line 2021 "parser.tab.cc"
+    break;
+
+  case 49: // relational_expression: additive_expression
+#line 505 "parser.yy"
+>>>>>>> Stashed changes
                                           {
     yylhs.value.as < op_binary_astnode* > () = yystack_[0].value.as < op_binary_astnode* > ();
     // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
+<<<<<<< Updated upstream
 #line 2112 "parser.tab.cc"
     break;
 
   case 50:
 #line 511 "parser.yy"
+=======
+#line 2030 "parser.tab.cc"
+    break;
+
+  case 50: // relational_expression: relational_expression '<' additive_expression
+#line 509 "parser.yy"
+>>>>>>> Stashed changes
                                                {
     if(Symbols::symTabConstructed){
         yylhs.value.as < op_binary_astnode* > () = new op_binary_astnode("LT_OP?", yystack_[2].value.as < op_binary_astnode* > (), yystack_[0].value.as < op_binary_astnode* > ());
@@ -2125,11 +2125,19 @@ namespace IPL {
         }
     }
 }
+<<<<<<< Updated upstream
 #line 2129 "parser.tab.cc"
     break;
 
   case 51:
 #line 523 "parser.yy"
+=======
+#line 2047 "parser.tab.cc"
+    break;
+
+  case 51: // relational_expression: relational_expression '>' additive_expression
+#line 521 "parser.yy"
+>>>>>>> Stashed changes
                                                {
     if(Symbols::symTabConstructed){
         yylhs.value.as < op_binary_astnode* > () = new op_binary_astnode("GT_OP?", yystack_[2].value.as < op_binary_astnode* > (), yystack_[0].value.as < op_binary_astnode* > ());
@@ -2142,11 +2150,19 @@ namespace IPL {
         }
     }
 }
+<<<<<<< Updated upstream
 #line 2146 "parser.tab.cc"
     break;
 
   case 52:
 #line 535 "parser.yy"
+=======
+#line 2064 "parser.tab.cc"
+    break;
+
+  case 52: // relational_expression: relational_expression LE_OP additive_expression
+#line 533 "parser.yy"
+>>>>>>> Stashed changes
                                                  {
     if(Symbols::symTabConstructed){
         yylhs.value.as < op_binary_astnode* > () = new op_binary_astnode("LE_OP?", yystack_[2].value.as < op_binary_astnode* > (), yystack_[0].value.as < op_binary_astnode* > ());
@@ -2159,11 +2175,19 @@ namespace IPL {
         }
     }
 }
+<<<<<<< Updated upstream
 #line 2163 "parser.tab.cc"
     break;
 
   case 53:
 #line 547 "parser.yy"
+=======
+#line 2081 "parser.tab.cc"
+    break;
+
+  case 53: // relational_expression: relational_expression GE_OP additive_expression
+#line 545 "parser.yy"
+>>>>>>> Stashed changes
                                                  {
     if(Symbols::symTabConstructed){
         yylhs.value.as < op_binary_astnode* > () = new op_binary_astnode("GE_OP?", yystack_[2].value.as < op_binary_astnode* > (), yystack_[0].value.as < op_binary_astnode* > ());
@@ -2176,20 +2200,36 @@ namespace IPL {
         }
     }
 }
+<<<<<<< Updated upstream
 #line 2180 "parser.tab.cc"
     break;
 
   case 54:
 #line 561 "parser.yy"
+=======
+#line 2098 "parser.tab.cc"
+    break;
+
+  case 54: // additive_expression: multiplicative_expression
+#line 559 "parser.yy"
+>>>>>>> Stashed changes
                                               {
     yylhs.value.as < op_binary_astnode* > () = yystack_[0].value.as < op_binary_astnode* > ();
     // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
+<<<<<<< Updated upstream
 #line 2189 "parser.tab.cc"
     break;
 
   case 55:
 #line 565 "parser.yy"
+=======
+#line 2107 "parser.tab.cc"
+    break;
+
+  case 55: // additive_expression: additive_expression '+' multiplicative_expression
+#line 563 "parser.yy"
+>>>>>>> Stashed changes
                                                    {
     if(Symbols::symTabConstructed){
         yylhs.value.as < op_binary_astnode* > () = new op_binary_astnode("PLUS?", yystack_[2].value.as < op_binary_astnode* > (), yystack_[0].value.as < op_binary_astnode* > ());
@@ -2202,11 +2242,19 @@ namespace IPL {
         }
     }
 }
+<<<<<<< Updated upstream
 #line 2206 "parser.tab.cc"
     break;
 
   case 56:
 #line 577 "parser.yy"
+=======
+#line 2124 "parser.tab.cc"
+    break;
+
+  case 56: // additive_expression: additive_expression '-' multiplicative_expression
+#line 575 "parser.yy"
+>>>>>>> Stashed changes
                                                    {
     if(Symbols::symTabConstructed){
         yylhs.value.as < op_binary_astnode* > () = new op_binary_astnode("MINUS?", yystack_[2].value.as < op_binary_astnode* > (), yystack_[0].value.as < op_binary_astnode* > ());
@@ -2219,36 +2267,61 @@ namespace IPL {
         }
     }
 }
+<<<<<<< Updated upstream
 #line 2223 "parser.tab.cc"
     break;
 
   case 57:
 #line 591 "parser.yy"
+=======
+#line 2141 "parser.tab.cc"
+    break;
+
+  case 57: // unary_expression: postfix_expression
+#line 589 "parser.yy"
+>>>>>>> Stashed changes
                                     {
     yylhs.value.as < exp_astnode* > () = yystack_[0].value.as < exp_astnode* > ();
     // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
+<<<<<<< Updated upstream
 #line 2232 "parser.tab.cc"
     break;
 
   case 58:
 #line 595 "parser.yy"
+=======
+#line 2150 "parser.tab.cc"
+    break;
+
+  case 58: // unary_expression: unary_operator unary_expression
+#line 593 "parser.yy"
+>>>>>>> Stashed changes
                                  {
     if(Symbols::symTabConstructed){
         //validity checks.
-        if(yystack_[1].value.as < std::string > ()=="ADDRESS"&&(!yystack_[0].value.as < exp_astnode* > ()->typeNode.islval)){
-            error(yylhs.location,"Tried to get address of rval: "+yystack_[0].value.as < exp_astnode* > ()->typeNode.typeName);
-        }
         yylhs.value.as < exp_astnode* > () = new op_unary_astnode(yystack_[1].value.as < std::string > (), yystack_[0].value.as < exp_astnode* > ());
-        if(yylhs.value.as < exp_astnode* > ()->typeNode.typeName==yystack_[0].value.as < exp_astnode* > ()->typeNode.typeName){
-            error(yylhs.location,"Tried to dereference " + yystack_[0].value.as < exp_astnode* > ()->typeNode.typeName);
+        if(yystack_[1].value.as < std::string > ()=="ADDRESS"||yystack_[1].value.as < std::string > ()=="DEREF"){
+            if(yystack_[1].value.as < std::string > ()=="ADDRESS"&&(!yystack_[0].value.as < exp_astnode* > ()->typeNode.islval)){
+                error(yylhs.location,"Tried to get address of rval: "+yystack_[0].value.as < exp_astnode* > ()->typeNode.typeName);
+            }
+            if(yylhs.value.as < exp_astnode* > ()->typeNode.typeName==yystack_[0].value.as < exp_astnode* > ()->typeNode.typeName){
+                error(yylhs.location,"Tried to dereference " + yystack_[0].value.as < exp_astnode* > ()->typeNode.typeName);
+            }
         }
     }
 }
+<<<<<<< Updated upstream
 #line 2249 "parser.tab.cc"
     break;
 
   case 59:
+=======
+#line 2169 "parser.tab.cc"
+    break;
+
+  case 59: // multiplicative_expression: unary_expression
+>>>>>>> Stashed changes
 #line 609 "parser.yy"
                                            {
     if(Symbols::symTabConstructed){   
@@ -2256,10 +2329,17 @@ namespace IPL {
     }
 
 }
+<<<<<<< Updated upstream
 #line 2260 "parser.tab.cc"
     break;
 
   case 60:
+=======
+#line 2180 "parser.tab.cc"
+    break;
+
+  case 60: // multiplicative_expression: multiplicative_expression '*' unary_expression
+>>>>>>> Stashed changes
 #line 615 "parser.yy"
                                                 {
     //operator and expression match check here.
@@ -2274,10 +2354,17 @@ namespace IPL {
         }
     }
 }
+<<<<<<< Updated upstream
 #line 2278 "parser.tab.cc"
     break;
 
   case 61:
+=======
+#line 2198 "parser.tab.cc"
+    break;
+
+  case 61: // multiplicative_expression: multiplicative_expression '/' unary_expression
+>>>>>>> Stashed changes
 #line 628 "parser.yy"
                                                 {
     if(Symbols::symTabConstructed){
@@ -2291,29 +2378,36 @@ namespace IPL {
         }
     }
 }
+<<<<<<< Updated upstream
 #line 2295 "parser.tab.cc"
     break;
 
   case 62:
+=======
+#line 2215 "parser.tab.cc"
+    break;
+
+  case 62: // postfix_expression: primary_expression
+>>>>>>> Stashed changes
 #line 642 "parser.yy"
                                       {
     yylhs.value.as < exp_astnode* > () = yystack_[0].value.as < exp_astnode* > ();
 }
-#line 2303 "parser.tab.cc"
+#line 2225 "parser.tab.cc"
     break;
 
-  case 63:
-#line 645 "parser.yy"
+  case 63: // postfix_expression: postfix_expression '[' expression ']'
+#line 647 "parser.yy"
                                        {
     if(Symbols::symTabConstructed){   
         yylhs.value.as < exp_astnode* > () = new arrayref_astnode(yystack_[3].value.as < exp_astnode* > (), yystack_[1].value.as < exp_astnode* > ());
     }
 }
-#line 2313 "parser.tab.cc"
+#line 2235 "parser.tab.cc"
     break;
 
-  case 64:
-#line 650 "parser.yy"
+  case 64: // postfix_expression: IDENTIFIER '(' ')'
+#line 652 "parser.yy"
                     {
     if (Symbols::symTabConstructed) {
         std::string function_name = yystack_[2].value.as < std::string > ();
@@ -2334,11 +2428,19 @@ namespace IPL {
         yylhs.value.as < exp_astnode* > ()->typeNode = Symbols::getSymEntry(Symbols::gst, yystack_[2].value.as < std::string > ())->type;
     }
 }
+<<<<<<< Updated upstream
 #line 2338 "parser.tab.cc"
     break;
 
   case 65:
 #line 670 "parser.yy"
+=======
+#line 2243 "parser.tab.cc"
+    break;
+
+  case 65: // postfix_expression: IDENTIFIER '(' expression_list ')'
+#line 655 "parser.yy"
+>>>>>>> Stashed changes
                                     {
     if (Symbols::symTabConstructed) {
         std::string function_name = yystack_[3].value.as < std::string > ();
@@ -2369,11 +2471,19 @@ namespace IPL {
         yylhs.value.as < exp_astnode* > ()->typeNode = Symbols::getSymEntry(Symbols::gst, yystack_[3].value.as < std::string > ())->type;
     }
 }
+<<<<<<< Updated upstream
 #line 2373 "parser.tab.cc"
     break;
 
   case 66:
 #line 700 "parser.yy"
+=======
+#line 2252 "parser.tab.cc"
+    break;
+
+  case 66: // postfix_expression: postfix_expression '.' IDENTIFIER
+#line 659 "parser.yy"
+>>>>>>> Stashed changes
                                    {
     if(Symbols::symTabConstructed){
         yylhs.value.as < exp_astnode* > () = new member_astnode(yystack_[2].value.as < exp_astnode* > (), new identifier_astnode(yystack_[0].value.as < std::string > ()));
@@ -2390,11 +2500,19 @@ namespace IPL {
         }
     }
 }
+<<<<<<< Updated upstream
 #line 2394 "parser.tab.cc"
     break;
 
   case 67:
 #line 716 "parser.yy"
+=======
+#line 2275 "parser.tab.cc"
+    break;
+
+  case 67: // postfix_expression: postfix_expression PTR_OP IDENTIFIER
+#line 677 "parser.yy"
+>>>>>>> Stashed changes
                                       {
     if(Symbols::symTabConstructed){
         yylhs.value.as < exp_astnode* > () = new member_astnode(new arrow_astnode(yystack_[2].value.as < exp_astnode* > (), new identifier_astnode(yystack_[0].value.as < std::string > ())), new identifier_astnode(yystack_[0].value.as < std::string > ()));
@@ -2412,6 +2530,7 @@ namespace IPL {
         }
     }
 }
+<<<<<<< Updated upstream
 #line 2416 "parser.tab.cc"
     break;
 
@@ -2425,6 +2544,26 @@ namespace IPL {
 
   case 69:
 #line 738 "parser.yy"
+=======
+#line 2297 "parser.tab.cc"
+    break;
+
+  case 68: // postfix_expression: postfix_expression INC_OP
+#line 694 "parser.yy"
+                           {
+    if(Symbols::symTabConstructed){
+        //type checks for $1
+        
+        yylhs.value.as < exp_astnode* > () = new op_unary_astnode("PP",yystack_[1].value.as < exp_astnode* > ());
+        yylhs.value.as < exp_astnode* > ()->typeNode = yystack_[1].value.as < exp_astnode* > ()->typeNode;
+    }
+}
+#line 2310 "parser.tab.cc"
+    break;
+
+  case 69: // primary_expression: IDENTIFIER
+#line 704 "parser.yy"
+>>>>>>> Stashed changes
                               {
     if(Symbols::symTabConstructed){
         yylhs.value.as < exp_astnode* > () = new identifier_astnode(yystack_[0].value.as < std::string > ());
@@ -2441,11 +2580,19 @@ namespace IPL {
     }
     std::cerr<<"bloom"<<std::endl;
 }
+<<<<<<< Updated upstream
 #line 2445 "parser.tab.cc"
     break;
 
   case 70:
 #line 754 "parser.yy"
+=======
+#line 2331 "parser.tab.cc"
+    break;
+
+  case 70: // primary_expression: INT_CONSTANT
+#line 720 "parser.yy"
+>>>>>>> Stashed changes
               {
     if(Symbols::symTabConstructed){   
         yylhs.value.as < exp_astnode* > () = new intconst_astnode(yystack_[0].value.as < std::string > ());
@@ -2453,11 +2600,19 @@ namespace IPL {
         yylhs.value.as < exp_astnode* > ()->typeNode.islval = false;
     }
 }
+<<<<<<< Updated upstream
 #line 2457 "parser.tab.cc"
     break;
 
   case 71:
 #line 761 "parser.yy"
+=======
+#line 2343 "parser.tab.cc"
+    break;
+
+  case 71: // primary_expression: FLOAT_CONSTANT
+#line 727 "parser.yy"
+>>>>>>> Stashed changes
                 {
     if(Symbols::symTabConstructed){   
         yylhs.value.as < exp_astnode* > () = new floatconst_astnode(yystack_[0].value.as < std::string > ());
@@ -2465,11 +2620,19 @@ namespace IPL {
         yylhs.value.as < exp_astnode* > ()->typeNode.islval = false;
     }
 }
+<<<<<<< Updated upstream
 #line 2469 "parser.tab.cc"
     break;
 
   case 72:
 #line 768 "parser.yy"
+=======
+#line 2355 "parser.tab.cc"
+    break;
+
+  case 72: // primary_expression: STRING_LITERAL
+#line 734 "parser.yy"
+>>>>>>> Stashed changes
                 {
     if(Symbols::symTabConstructed){   
         yylhs.value.as < exp_astnode* > () = new stringconst_astnode(yystack_[0].value.as < std::string > ());
@@ -2478,6 +2641,7 @@ namespace IPL {
         yylhs.value.as < exp_astnode* > ()->print();
     }
 }
+<<<<<<< Updated upstream
 #line 2482 "parser.tab.cc"
     break;
 
@@ -2491,20 +2655,44 @@ namespace IPL {
 
   case 74:
 #line 781 "parser.yy"
+=======
+#line 2368 "parser.tab.cc"
+    break;
+
+  case 73: // primary_expression: '(' expression ')'
+#line 742 "parser.yy"
+                    {
+    yylhs.value.as < exp_astnode* > () = yystack_[1].value.as < exp_astnode* > ();
+}
+#line 2376 "parser.tab.cc"
+    break;
+
+  case 74: // expression_list: expression
+#line 747 "parser.yy"
+>>>>>>> Stashed changes
                            {
     yylhs.value.as < std::vector<exp_astnode*> > () = std::vector<exp_astnode*>();
     yylhs.value.as < std::vector<exp_astnode*> > ().push_back(yystack_[0].value.as < exp_astnode* > ());
     // std::cerr << __LINE__ << (*($$.rbegin()))->typeNode.typeName<<std::endl;
 }
+<<<<<<< Updated upstream
 #line 2500 "parser.tab.cc"
     break;
 
   case 75:
 #line 786 "parser.yy"
+=======
+#line 2386 "parser.tab.cc"
+    break;
+
+  case 75: // expression_list: expression_list ',' expression
+#line 752 "parser.yy"
+>>>>>>> Stashed changes
                                 {
     yystack_[2].value.as < std::vector<exp_astnode*> > ().push_back(yystack_[0].value.as < exp_astnode* > ());
     yylhs.value.as < std::vector<exp_astnode*> > () = yystack_[2].value.as < std::vector<exp_astnode*> > ();
 }
+<<<<<<< Updated upstream
 #line 2509 "parser.tab.cc"
     break;
 
@@ -2542,31 +2730,87 @@ namespace IPL {
 
   case 80:
 #line 806 "parser.yy"
+=======
+#line 2395 "parser.tab.cc"
+    break;
+
+  case 76: // unary_operator: '-'
+#line 758 "parser.yy"
+                   {
+    yylhs.value.as < std::string > () = std::string("UMINUS?");
+}
+#line 2403 "parser.tab.cc"
+    break;
+
+  case 77: // unary_operator: '!'
+#line 761 "parser.yy"
+     {
+    yylhs.value.as < std::string > () = std::string("NOT");
+}
+#line 2411 "parser.tab.cc"
+    break;
+
+  case 78: // unary_operator: '&'
+#line 764 "parser.yy"
+     {
+    yylhs.value.as < std::string > () = std::string("ADDRESS");
+}
+#line 2419 "parser.tab.cc"
+    break;
+
+  case 79: // unary_operator: '*'
+#line 767 "parser.yy"
+     {
+    yylhs.value.as < std::string > () = std::string("DEREF");
+}
+#line 2427 "parser.tab.cc"
+    break;
+
+  case 80: // selection_statement: IF '(' expression ')' statement ELSE statement
+#line 772 "parser.yy"
+>>>>>>> Stashed changes
                                                                    {
     if(Symbols::symTabConstructed){   
         yylhs.value.as < statement_astnode* > () = new if_astnode(yystack_[4].value.as < exp_astnode* > (), yystack_[2].value.as < statement_astnode* > (), yystack_[0].value.as < statement_astnode* > ());
     }
 }
+<<<<<<< Updated upstream
 #line 2551 "parser.tab.cc"
     break;
 
   case 81:
 #line 813 "parser.yy"
+=======
+#line 2437 "parser.tab.cc"
+    break;
+
+  case 81: // iteration_statement: WHILE '(' expression ')' statement
+#line 779 "parser.yy"
+>>>>>>> Stashed changes
                                                        {
     if(Symbols::symTabConstructed){   
         yylhs.value.as < statement_astnode* > () = new while_astnode(yystack_[2].value.as < exp_astnode* > (), yystack_[0].value.as < statement_astnode* > ());
     }
 }
+<<<<<<< Updated upstream
 #line 2561 "parser.tab.cc"
     break;
 
   case 82:
 #line 818 "parser.yy"
+=======
+#line 2447 "parser.tab.cc"
+    break;
+
+  case 82: // iteration_statement: FOR '(' assignment_expression ';' expression ';' assignment_expression ')' statement
+#line 784 "parser.yy"
+>>>>>>> Stashed changes
                                                                                       {
     if(Symbols::symTabConstructed){   
         yylhs.value.as < statement_astnode* > () = new for_astnode(yystack_[6].value.as < assignE_astnode* > (), yystack_[4].value.as < exp_astnode* > (), yystack_[2].value.as < assignE_astnode* > (), yystack_[0].value.as < statement_astnode* > ());
     }
 }
+<<<<<<< Updated upstream
 #line 2571 "parser.tab.cc"
     break;
 
@@ -2593,6 +2837,34 @@ namespace IPL {
 
   case 86:
 #line 835 "parser.yy"
+=======
+#line 2457 "parser.tab.cc"
+    break;
+
+  case 83: // declaration_list: declaration
+#line 791 "parser.yy"
+                             {
+}
+#line 2464 "parser.tab.cc"
+    break;
+
+  case 84: // declaration_list: declaration_list declaration
+#line 793 "parser.yy"
+                              {
+}
+#line 2471 "parser.tab.cc"
+    break;
+
+  case 85: // declaration: type_specifier declarator_list ';'
+#line 797 "parser.yy"
+                                               {
+}
+#line 2478 "parser.tab.cc"
+    break;
+
+  case 86: // declarator_list: declarator
+#line 801 "parser.yy"
+>>>>>>> Stashed changes
                            {
     yylhs.value.as < typespec_astnode > () = yystack_[0].value.as < typespec_astnode > ();
     // std::cerr<<$1.typeName<<" has "<<$1.numptrstars<<" stars"<<std::endl;
@@ -2605,11 +2877,19 @@ namespace IPL {
         st->rows[topvarname] = SymEntry(yystack_[0].value.as < typespec_astnode > (),SymTab::ST_HL_type::VAR,SymTab::ST_LPG::LOCAL,size,offset);
     }
 }
+<<<<<<< Updated upstream
 #line 2609 "parser.tab.cc"
     break;
 
   case 87:
 #line 847 "parser.yy"
+=======
+#line 2495 "parser.tab.cc"
+    break;
+
+  case 87: // declarator_list: declarator_list ',' declarator
+#line 813 "parser.yy"
+>>>>>>> Stashed changes
                                 {
     yylhs.value.as < typespec_astnode > () = yystack_[0].value.as < typespec_astnode > ();
     string type = yystack_[0].value.as < typespec_astnode > ().typeName;
@@ -2619,11 +2899,19 @@ namespace IPL {
         ststack.top()->rows[topvarname] = SymEntry(yystack_[0].value.as < typespec_astnode > (),SymTab::ST_HL_type::VAR,SymTab::ST_LPG::LOCAL,size,offset);
     }
 }
+<<<<<<< Updated upstream
 #line 2623 "parser.tab.cc"
     break;
 
 
 #line 2627 "parser.tab.cc"
+=======
+#line 2509 "parser.tab.cc"
+    break;
+
+
+#line 2513 "parser.tab.cc"
+>>>>>>> Stashed changes
 
             default:
               break;
@@ -2640,7 +2928,6 @@ namespace IPL {
       YY_SYMBOL_PRINT ("-> $$ =", yylhs);
       yypop_ (yylen);
       yylen = 0;
-      YY_STACK_PRINT ();
 
       // Shift the result of the reduction.
       yypush_ (YY_NULLPTR, YY_MOVE (yylhs));
@@ -2656,7 +2943,8 @@ namespace IPL {
     if (!yyerrstatus_)
       {
         ++yynerrs_;
-        error (yyla.location, yysyntax_error_ (yystack_[0].state, yyla));
+        std::string msg = YY_("syntax error");
+        error (yyla.location, YY_MOVE (msg));
       }
 
 
@@ -2667,7 +2955,7 @@ namespace IPL {
            error, discard it.  */
 
         // Return failure if at end of input.
-        if (yyla.type_get () == yyeof_)
+        if (yyla.kind () == symbol_kind::S_YYEOF)
           YYABORT;
         else if (!yyla.empty ())
           {
@@ -2693,6 +2981,7 @@ namespace IPL {
        this YYERROR.  */
     yypop_ (yylen);
     yylen = 0;
+    YY_STACK_PRINT ();
     goto yyerrlab1;
 
 
@@ -2701,31 +2990,33 @@ namespace IPL {
   `-------------------------------------------------------------*/
   yyerrlab1:
     yyerrstatus_ = 3;   // Each real token shifted decrements this.
+    // Pop stack until we find a state that shifts the error token.
+    for (;;)
+      {
+        yyn = yypact_[+yystack_[0].state];
+        if (!yy_pact_value_is_default_ (yyn))
+          {
+            yyn += symbol_kind::S_YYerror;
+            if (0 <= yyn && yyn <= yylast_
+                && yycheck_[yyn] == symbol_kind::S_YYerror)
+              {
+                yyn = yytable_[yyn];
+                if (0 < yyn)
+                  break;
+              }
+          }
+
+        // Pop the current state because it cannot handle the error token.
+        if (yystack_.size () == 1)
+          YYABORT;
+
+        yyerror_range[1].location = yystack_[0].location;
+        yy_destroy_ ("Error: popping", yystack_[0]);
+        yypop_ ();
+        YY_STACK_PRINT ();
+      }
     {
       stack_symbol_type error_token;
-      for (;;)
-        {
-          yyn = yypact_[+yystack_[0].state];
-          if (!yy_pact_value_is_default_ (yyn))
-            {
-              yyn += yy_error_token_;
-              if (0 <= yyn && yyn <= yylast_ && yycheck_[yyn] == yy_error_token_)
-                {
-                  yyn = yytable_[yyn];
-                  if (0 < yyn)
-                    break;
-                }
-            }
-
-          // Pop the current state because it cannot handle the error token.
-          if (yystack_.size () == 1)
-            YYABORT;
-
-          yyerror_range[1].location = yystack_[0].location;
-          yy_destroy_ ("Error: popping", yystack_[0]);
-          yypop_ ();
-          YY_STACK_PRINT ();
-        }
 
       yyerror_range[2].location = yyla.location;
       YYLLOC_DEFAULT (error_token.location, yyerror_range, 2);
@@ -2763,6 +3054,7 @@ namespace IPL {
     /* Do not reclaim the symbols of the rule whose action triggered
        this YYABORT or YYACCEPT.  */
     yypop_ (yylen);
+    YY_STACK_PRINT ();
     while (1 < yystack_.size ())
       {
         yy_destroy_ ("Cleanup: popping", yystack_[0]);
@@ -2796,12 +3088,20 @@ namespace IPL {
     error (yyexc.location, yyexc.what ());
   }
 
-  // Generate an error message.
-  std::string
-  Parser::yysyntax_error_ (state_type, const symbol_type&) const
+#if YYDEBUG || 0
+  const char *
+  Parser::symbol_name (symbol_kind_type yysymbol)
   {
-    return YY_("syntax error");
+    return yytname_[yysymbol];
   }
+#endif // #if YYDEBUG || 0
+
+
+
+
+
+
+
 
 
   const signed char Parser::yypact_ninf_ = -62;
@@ -2811,23 +3111,23 @@ namespace IPL {
   const short
   Parser::yypact_[] =
   {
-     -62,    20,    75,   -62,   -62,   -62,   -62,     0,    75,   -62,
-     -62,    35,    46,   -62,   -62,    29,    43,    64,    33,   115,
-     -62,   123,   -62,   123,    86,    52,   -62,   -62,   -62,    73,
-      81,    87,   299,   -62,   -62,   299,   294,   -62,   -62,   -62,
-     -62,   154,   106,    17,   -62,   -62,   103,   -62,   -62,   -62,
-     -62,   189,   299,     1,   -62,     9,     1,   118,   120,   -62,
-      31,   299,   299,   299,   124,     7,   -62,   143,    58,    50,
-      49,    -4,    -2,   224,   -62,   259,   -62,   299,   -62,   158,
-     299,   159,   -62,   -62,   -62,   -62,   -62,     1,   -22,   -62,
-     132,   127,   -62,   123,   -62,   128,   160,    60,     5,    36,
-     129,    78,   299,   -62,   299,   299,   299,   299,   299,   299,
-     299,   299,   299,   299,   299,   -62,   -62,   -62,   160,   -62,
-      34,   -62,   -62,     1,   -62,   164,   -62,   -62,   -62,   133,
-     299,   294,   294,   299,   -62,    69,   143,    58,    50,    50,
-      49,    49,    49,    49,    -4,    -4,   -62,   -62,   -62,   -62,
-     142,   -62,   160,   162,   -62,    10,   -62,   -62,   294,   299,
-     -62,   148,   294,   -62
+     -62,    18,    81,   -62,   -62,   -62,   -62,    14,    81,   -62,
+     -62,    17,    22,   -62,   -62,    13,    24,    34,    40,   123,
+     -62,   105,   -62,   105,    48,    67,   -62,   -62,   -62,    73,
+      86,    88,   310,   -62,   -62,   310,   267,   -62,   -62,   -62,
+     -62,    12,    42,   -62,    78,   -62,   -62,    91,    -2,   -62,
+     310,   -62,   -62,   162,   -62,     8,    12,    92,    90,   -62,
+     272,   310,   310,   310,    94,    -4,   113,    60,    62,    56,
+     -62,    61,     9,   197,   -62,    12,   103,   -62,    21,   -62,
+     -62,   -62,   310,   -62,   134,   310,   140,   -62,   -62,   232,
+     -62,   107,   -62,   -62,   105,   110,   141,    68,    15,    16,
+     114,   304,   310,   -62,   310,   310,   310,   310,   310,   310,
+     310,   310,   310,   310,   310,   -62,   -62,   -62,   146,    12,
+     -62,   141,   -62,    -6,   -62,   -62,   -62,   -62,   -62,   117,
+     310,   267,   267,   310,   -62,    74,   113,    60,    62,    62,
+      56,    56,    56,    56,    61,    61,   -62,   -62,   126,   -62,
+     -62,   -62,   141,   139,   -62,    -3,   -62,   -62,   267,   310,
+     -62,   132,   267,   -62
   };
 
   const signed char
@@ -2837,151 +3137,153 @@ namespace IPL {
        5,     0,     8,     6,     7,     0,     0,     0,    15,     0,
       10,     0,    17,     0,     0,    69,    70,    71,    72,     0,
        0,     0,     0,    76,    79,     0,     0,    25,    77,    78,
-      31,     0,     0,    57,    62,    36,     0,    29,    33,    34,
-      35,     0,     0,     0,    83,     0,     0,    18,     0,    14,
-       0,     0,     0,     0,    69,     0,    59,    42,    44,    46,
-      49,    54,     0,     0,    27,     0,    84,     0,    68,     0,
-       0,     0,    39,    26,    30,    58,    21,     0,     0,    86,
-      23,     0,    20,     0,    16,    64,    74,     0,     0,     0,
+      31,     0,     0,    29,     0,    35,    36,     0,    57,    62,
+       0,    33,    34,     0,    83,     0,     0,     0,    18,    14,
+       0,     0,     0,     0,    69,     0,    42,    44,    46,    49,
+      59,    54,     0,     0,    21,     0,    23,    86,     0,    26,
+      30,    39,     0,    68,     0,     0,     0,    58,    27,     0,
+      84,     0,    20,    16,     0,    64,    74,     0,     0,     0,
        0,     0,     0,    37,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,    73,    32,    28,    38,    67,
-       0,    66,    24,     0,    85,     0,     9,    19,    40,    65,
+       0,     0,     0,     0,     0,    73,    32,    24,     0,     0,
+      85,    38,    67,     0,    66,    28,     9,    19,    40,    65,
        0,     0,     0,     0,    64,     0,    43,    45,    47,    48,
-      52,    53,    50,    51,    55,    56,    60,    61,    63,    87,
-       0,    41,    75,     0,    81,     0,    65,    22,     0,     0,
+      52,    53,    50,    51,    55,    56,    60,    61,     0,    87,
+      63,    41,    75,     0,    81,     0,    65,    22,     0,     0,
       80,     0,     0,    82
   };
 
   const short
   Parser::yypgoto_[] =
   {
-     -62,   -62,   -62,   175,   165,   -31,   -19,   -62,   -62,    83,
-      85,    41,    23,    -5,   -62,   -61,   182,   -48,   -62,   -62,
-     -62,   -62,    14,    92,   -62,     3,    22,   -62,   -50,   -62,
-     -62,   101,   -62,   -62,   -62,   -62
+     -62,   -62,   -62,   -62,   165,   -62,   166,     2,   -62,   -62,
+      82,   -62,   -62,   -53,   -62,    -8,   -41,   -61,   -62,   -62,
+     -26,    75,    71,   -13,    27,   -19,     3,   -62,   -62,    77,
+     -62,   -62,   -62,   158,     5,   -62
   };
 
   const signed char
   Parser::yydefgoto_[] =
   {
-      -1,     8,     1,     9,    41,    96,    66,    43,    44,    67,
-      68,    69,    70,    71,    45,    46,    10,    47,    48,    49,
-      50,    20,    51,    97,    52,    53,    54,    88,    89,    90,
-      57,    58,    16,     2,    17,    23
+       0,     1,     2,     8,     9,    17,    10,    41,    16,    23,
+      57,    58,    76,    77,    20,    42,    43,    44,    45,    46,
+      96,    66,    67,    68,    69,    70,    71,    48,    49,    97,
+      50,    51,    52,    53,    54,    78
   };
 
   const short
   Parser::yytable_[] =
   {
-      42,    65,   100,    84,    72,    11,    92,    12,    86,   102,
-     123,    11,     4,     5,     6,    24,   102,    42,   102,   124,
-       3,   102,    42,   113,   114,    84,    56,    84,    87,   115,
-      98,    99,    42,    85,    78,    79,   131,   122,    64,    26,
-      27,    28,    15,    91,    42,   102,   118,   102,   103,   120,
-      73,   159,    80,   -14,    42,    75,    42,    33,    34,    18,
-      81,    35,    95,    76,    22,   107,   108,   132,    38,    39,
-     148,   105,   106,   149,   111,   112,    19,    76,     4,     5,
-       6,     7,    60,   153,   154,    64,    26,    27,    28,   109,
-     110,   129,   130,    59,   146,   147,    56,    21,   161,   152,
-     156,   130,   155,    61,    33,    34,   144,   145,    35,   134,
-     160,    62,    42,    42,   163,    38,    39,    63,     4,     5,
-       6,    24,    25,    26,    27,    28,     4,     5,     6,    24,
-     140,   141,   142,   143,    29,    77,    30,    31,    32,    42,
-      42,    33,    34,    42,    82,    35,   138,   139,    36,    37,
-      93,    94,    38,    39,   101,   104,    40,     4,     5,     6,
-      24,    25,    26,    27,    28,   119,   121,   125,   126,   128,
-     133,   102,   150,    29,   151,    30,    31,    32,   157,   162,
-      33,    34,   158,    13,    35,   136,    55,    36,    74,   137,
-      14,    38,    39,   135,   127,    40,    25,    26,    27,    28,
-       0,     0,     0,     0,     0,     0,     0,     0,    29,     0,
-      30,    31,    32,     0,     0,    33,    34,     0,     0,    35,
-       0,     0,    36,    83,     0,     0,    38,    39,     0,     0,
-      40,    25,    26,    27,    28,     0,     0,     0,     0,     0,
-       0,     0,     0,    29,     0,    30,    31,    32,     0,     0,
-      33,    34,     0,     0,    35,     0,     0,    36,   116,     0,
-       0,    38,    39,     0,     0,    40,    25,    26,    27,    28,
-       0,     0,     0,     0,     0,     0,     0,     0,    29,     0,
-      30,    31,    32,     0,     0,    33,    34,     0,     0,    35,
-       0,     0,    36,   117,     0,     0,    38,    39,     0,     0,
-      40,    25,    26,    27,    28,     0,    64,    26,    27,    28,
-       0,     0,     0,    29,     0,    30,    31,    32,     0,     0,
-      33,    34,     0,     0,    35,    33,    34,    36,     0,    35,
-       0,    38,    39,     0,     0,    40,    38,    39
+      47,    80,   100,    92,    11,   102,    65,   102,   102,    72,
+      11,     4,     5,     6,    24,    83,    84,    47,     3,    74,
+     102,    12,   117,    47,    15,    56,   102,   102,    73,   -14,
+     150,    87,    80,    85,    47,    98,    99,   103,   159,    75,
+     115,    86,    91,    18,    47,    89,   131,   132,    80,    25,
+      26,    27,    28,   119,    47,    59,   121,    19,    90,   123,
+      90,    29,   120,    30,    31,    32,   149,    21,    33,    34,
+      47,    22,    35,   105,   106,    36,    79,   107,   108,    38,
+      39,   111,   112,    40,     4,     5,     6,     7,   113,   114,
+     153,   154,   138,   139,   146,   147,    56,    60,   161,   129,
+     130,   109,   110,    61,   152,   156,   130,   155,     4,     5,
+       6,    24,    47,    47,   144,   145,    62,   160,    63,    81,
+      82,   163,    94,    93,   101,   104,     4,     5,     6,    24,
+      25,    26,    27,    28,   140,   141,   142,   143,   118,    47,
+      47,   122,    29,    47,    30,    31,    32,   124,   126,    33,
+      34,   128,   102,    35,   148,   133,    36,    37,   151,   158,
+      38,    39,   157,   162,    40,     4,     5,     6,    24,    25,
+      26,    27,    28,    13,    14,   137,   127,   136,   135,    55,
+       0,    29,     0,    30,    31,    32,     0,     0,    33,    34,
+       0,     0,    35,     0,     0,    36,    88,     0,     0,    38,
+      39,     0,     0,    40,    25,    26,    27,    28,     0,     0,
+       0,     0,     0,     0,     0,     0,    29,     0,    30,    31,
+      32,     0,     0,    33,    34,     0,     0,    35,     0,     0,
+      36,   116,     0,     0,    38,    39,     0,     0,    40,    25,
+      26,    27,    28,     0,     0,     0,     0,     0,     0,     0,
+       0,    29,     0,    30,    31,    32,     0,     0,    33,    34,
+       0,     0,    35,     0,     0,    36,   125,     0,     0,    38,
+      39,     0,     0,    40,    25,    26,    27,    28,     0,    64,
+      26,    27,    28,     0,     0,     0,    29,     0,    30,    31,
+      32,     0,     0,    33,    34,     0,     0,    35,    33,    34,
+      36,     0,    35,    95,    38,    39,     0,     0,    40,    38,
+      39,    64,    26,    27,    28,     0,     0,    64,    26,    27,
+      28,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+      33,    34,     0,     0,    35,   134,    33,    34,     0,     0,
+      35,    38,    39,     0,     0,     0,     0,    38,    39
   };
 
   const short
   Parser::yycheck_[] =
   {
-      19,    32,    63,    51,    35,     2,    56,     7,     7,    11,
-      32,     8,     3,     4,     5,     6,    11,    36,    11,    41,
-       0,    11,    41,    27,    28,    73,    23,    75,    27,    31,
-      61,    62,    51,    52,    17,    18,    31,    87,     7,     8,
-       9,    10,     7,    34,    63,    11,    77,    11,    41,    80,
-      36,    41,    35,     7,    73,    41,    75,    26,    27,    30,
-      43,    30,    31,    41,    31,    15,    16,    31,    37,    38,
-      36,    13,    14,   123,    25,    26,    33,    55,     3,     4,
-       5,     6,    30,   131,   132,     7,     8,     9,    10,    39,
-      40,    31,    32,     7,   113,   114,    93,    33,   159,   130,
-      31,    32,   133,    30,    26,    27,   111,   112,    30,    31,
-     158,    30,   131,   132,   162,    37,    38,    30,     3,     4,
-       5,     6,     7,     8,     9,    10,     3,     4,     5,     6,
-     107,   108,   109,   110,    19,    29,    21,    22,    23,   158,
-     159,    26,    27,   162,    41,    30,   105,   106,    33,    34,
-      32,    31,    37,    38,    30,    12,    41,     3,     4,     5,
-       6,     7,     8,     9,    10,     7,     7,    35,    41,    41,
-      41,    11,     8,    19,    41,    21,    22,    23,    36,    31,
-      26,    27,    20,     8,    30,   102,    21,    33,    34,   104,
-       8,    37,    38,   101,    93,    41,     7,     8,     9,    10,
-      -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    19,    -1,
-      21,    22,    23,    -1,    -1,    26,    27,    -1,    -1,    30,
-      -1,    -1,    33,    34,    -1,    -1,    37,    38,    -1,    -1,
-      41,     7,     8,     9,    10,    -1,    -1,    -1,    -1,    -1,
-      -1,    -1,    -1,    19,    -1,    21,    22,    23,    -1,    -1,
-      26,    27,    -1,    -1,    30,    -1,    -1,    33,    34,    -1,
-      -1,    37,    38,    -1,    -1,    41,     7,     8,     9,    10,
-      -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    19,    -1,
-      21,    22,    23,    -1,    -1,    26,    27,    -1,    -1,    30,
-      -1,    -1,    33,    34,    -1,    -1,    37,    38,    -1,    -1,
-      41,     7,     8,     9,    10,    -1,     7,     8,     9,    10,
-      -1,    -1,    -1,    19,    -1,    21,    22,    23,    -1,    -1,
-      26,    27,    -1,    -1,    30,    26,    27,    33,    -1,    30,
-      -1,    37,    38,    -1,    -1,    41,    37,    38
+      19,    42,    63,    56,     2,    11,    32,    11,    11,    35,
+       8,     3,     4,     5,     6,    17,    18,    36,     0,     7,
+      11,     7,    75,    42,     7,    23,    11,    11,    36,     7,
+      36,    50,    73,    35,    53,    61,    62,    41,    41,    27,
+      31,    43,    34,    30,    63,    53,    31,    31,    89,     7,
+       8,     9,    10,    32,    73,     7,    82,    33,    53,    85,
+      55,    19,    41,    21,    22,    23,   119,    33,    26,    27,
+      89,    31,    30,    13,    14,    33,    34,    15,    16,    37,
+      38,    25,    26,    41,     3,     4,     5,     6,    27,    28,
+     131,   132,   105,   106,   113,   114,    94,    30,   159,    31,
+      32,    39,    40,    30,   130,    31,    32,   133,     3,     4,
+       5,     6,   131,   132,   111,   112,    30,   158,    30,    41,
+      29,   162,    32,    31,    30,    12,     3,     4,     5,     6,
+       7,     8,     9,    10,   107,   108,   109,   110,    35,   158,
+     159,     7,    19,   162,    21,    22,    23,     7,    41,    26,
+      27,    41,    11,    30,     8,    41,    33,    34,    41,    20,
+      37,    38,    36,    31,    41,     3,     4,     5,     6,     7,
+       8,     9,    10,     8,     8,   104,    94,   102,   101,    21,
+      -1,    19,    -1,    21,    22,    23,    -1,    -1,    26,    27,
+      -1,    -1,    30,    -1,    -1,    33,    34,    -1,    -1,    37,
+      38,    -1,    -1,    41,     7,     8,     9,    10,    -1,    -1,
+      -1,    -1,    -1,    -1,    -1,    -1,    19,    -1,    21,    22,
+      23,    -1,    -1,    26,    27,    -1,    -1,    30,    -1,    -1,
+      33,    34,    -1,    -1,    37,    38,    -1,    -1,    41,     7,
+       8,     9,    10,    -1,    -1,    -1,    -1,    -1,    -1,    -1,
+      -1,    19,    -1,    21,    22,    23,    -1,    -1,    26,    27,
+      -1,    -1,    30,    -1,    -1,    33,    34,    -1,    -1,    37,
+      38,    -1,    -1,    41,     7,     8,     9,    10,    -1,     7,
+       8,     9,    10,    -1,    -1,    -1,    19,    -1,    21,    22,
+      23,    -1,    -1,    26,    27,    -1,    -1,    30,    26,    27,
+      33,    -1,    30,    31,    37,    38,    -1,    -1,    41,    37,
+      38,     7,     8,     9,    10,    -1,    -1,     7,     8,     9,
+      10,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,
+      26,    27,    -1,    -1,    30,    31,    26,    27,    -1,    -1,
+      30,    37,    38,    -1,    -1,    -1,    -1,    37,    38
   };
 
   const signed char
   Parser::yystos_[] =
   {
-       0,    46,    77,     0,     3,     4,     5,     6,    45,    47,
-      60,    69,     7,    47,    60,     7,    76,    78,    30,    33,
-      65,    33,    31,    79,     6,     7,     8,     9,    10,    19,
+       0,    45,    46,     0,     3,     4,     5,     6,    47,    48,
+      50,    51,     7,    48,    50,     7,    52,    49,    30,    33,
+      58,    33,    31,    53,     6,     7,     8,     9,    10,    19,
       21,    22,    23,    26,    27,    30,    33,    34,    37,    38,
-      41,    48,    50,    51,    52,    58,    59,    61,    62,    63,
-      64,    66,    68,    69,    70,    48,    69,    74,    75,     7,
-      30,    30,    30,    30,     7,    49,    50,    53,    54,    55,
-      56,    57,    49,    66,    34,    66,    70,    29,    17,    18,
-      35,    43,    41,    34,    61,    50,     7,    27,    71,    72,
-      73,    34,    72,    32,    31,    31,    49,    67,    49,    49,
-      59,    30,    11,    41,    12,    13,    14,    15,    16,    39,
-      40,    25,    26,    27,    28,    31,    34,    34,    49,     7,
-      49,     7,    72,    32,    41,    35,    41,    75,    41,    31,
-      32,    31,    31,    41,    31,    67,    53,    54,    55,    55,
-      56,    56,    56,    56,    57,    57,    50,    50,    36,    72,
-       8,    41,    49,    61,    61,    49,    31,    36,    20,    41,
-      61,    59,    31,    61
+      41,    51,    59,    60,    61,    62,    63,    69,    71,    72,
+      74,    75,    76,    77,    78,    77,    51,    54,    55,     7,
+      30,    30,    30,    30,     7,    64,    65,    66,    67,    68,
+      69,    70,    64,    59,     7,    27,    56,    57,    79,    34,
+      60,    41,    29,    17,    18,    35,    43,    69,    34,    59,
+      78,    34,    57,    31,    32,    31,    64,    73,    64,    64,
+      61,    30,    11,    41,    12,    13,    14,    15,    16,    39,
+      40,    25,    26,    27,    28,    31,    34,    57,    35,    32,
+      41,    64,     7,    64,     7,    34,    41,    54,    41,    31,
+      32,    31,    31,    41,    31,    73,    65,    66,    67,    67,
+      68,    68,    68,    68,    70,    70,    69,    69,     8,    57,
+      36,    41,    64,    60,    60,    64,    31,    36,    20,    41,
+      60,    61,    31,    60
   };
 
   const signed char
   Parser::yyr1_[] =
   {
-       0,    44,    77,    46,    45,    45,    45,    45,    78,    47,
-      60,    69,    69,    69,    69,    79,    76,    76,    75,    75,
-      74,    73,    73,    72,    72,    65,    65,    65,    65,    66,
-      66,    61,    61,    61,    61,    61,    61,    61,    59,    64,
-      58,    58,    49,    49,    53,    53,    54,    54,    54,    55,
-      55,    55,    55,    55,    56,    56,    56,    50,    50,    57,
-      57,    57,    51,    51,    51,    51,    51,    51,    51,    52,
-      52,    52,    52,    52,    67,    67,    68,    68,    68,    68,
-      62,    63,    63,    48,    48,    70,    71,    71
+       0,    44,    46,    45,    47,    47,    47,    47,    49,    48,
+      50,    51,    51,    51,    51,    53,    52,    52,    54,    54,
+      55,    56,    56,    57,    57,    58,    58,    58,    58,    59,
+      59,    60,    60,    60,    60,    60,    60,    60,    61,    62,
+      63,    63,    64,    64,    65,    65,    66,    66,    66,    67,
+      67,    67,    67,    67,    68,    68,    68,    69,    69,    70,
+      70,    70,    71,    71,    71,    71,    71,    71,    71,    72,
+      72,    72,    72,    72,    73,    73,    74,    74,    74,    74,
+      75,    76,    76,    77,    77,    78,    79,    79
   };
 
   const signed char
@@ -3001,30 +3303,32 @@ namespace IPL {
 
 #if YYDEBUG
   // YYTNAME[SYMBOL-NUM] -- String name of the symbol SYMBOL-NUM.
-  // First, the terminals, then, starting at \a yyntokens_, nonterminals.
+  // First, the terminals, then, starting at \a YYNTOKENS, nonterminals.
   const char*
   const Parser::yytname_[] =
   {
-  "$end", "error", "$undefined", "VOID", "INT", "FLOAT", "STRUCT",
-  "IDENTIFIER", "INT_CONSTANT", "FLOAT_CONSTANT", "STRING_LITERAL",
-  "OR_OP", "AND_OP", "EQ_OP", "NE_OP", "LE_OP", "GE_OP", "INC_OP",
-  "PTR_OP", "IF", "ELSE", "WHILE", "FOR", "RETURN", "OTHERS", "'+'", "'-'",
-  "'*'", "'/'", "'='", "'('", "')'", "','", "'{'", "'}'", "'['", "']'",
-  "'!'", "'&'", "'<'", "'>'", "';'", "'\\n'", "'.'", "$accept",
-  "translation_unit", "begin_nterm", "struct_specifier",
-  "declaration_list", "expression", "unary_expression",
-  "postfix_expression", "primary_expression", "logical_and_expression",
-  "equality_expression", "relational_expression", "additive_expression",
-  "multiplicative_expression", "procedure_call", "assignment_expression",
-  "function_definition", "statement", "selection_statement",
-  "iteration_statement", "assignment_statement", "compound_statement",
-  "statement_list", "expression_list", "unary_operator", "type_specifier",
-  "declaration", "declarator_list", "declarator", "declarator_arr",
-  "parameter_declaration", "parameter_list", "fun_declarator", "$@1",
-  "$@2", "$@3", YY_NULLPTR
+  "\"end of file\"", "error", "\"invalid token\"", "VOID", "INT", "FLOAT",
+  "STRUCT", "IDENTIFIER", "INT_CONSTANT", "FLOAT_CONSTANT",
+  "STRING_LITERAL", "OR_OP", "AND_OP", "EQ_OP", "NE_OP", "LE_OP", "GE_OP",
+  "INC_OP", "PTR_OP", "IF", "ELSE", "WHILE", "FOR", "RETURN", "OTHERS",
+  "'+'", "'-'", "'*'", "'/'", "'='", "'('", "')'", "','", "'{'", "'}'",
+  "'['", "']'", "'!'", "'&'", "'<'", "'>'", "';'", "'\\n'", "'.'",
+  "$accept", "begin_nterm", "$@1", "translation_unit", "struct_specifier",
+  "$@2", "function_definition", "type_specifier", "fun_declarator", "$@3",
+  "parameter_list", "parameter_declaration", "declarator_arr",
+  "declarator", "compound_statement", "statement_list", "statement",
+  "assignment_expression", "assignment_statement", "procedure_call",
+  "expression", "logical_and_expression", "equality_expression",
+  "relational_expression", "additive_expression", "unary_expression",
+  "multiplicative_expression", "postfix_expression", "primary_expression",
+  "expression_list", "unary_operator", "selection_statement",
+  "iteration_statement", "declaration_list", "declaration",
+  "declarator_list", YY_NULLPTR
   };
+#endif
 
 
+#if YYDEBUG
   const short
   Parser::yyrline_[] =
   {
@@ -3032,16 +3336,23 @@ namespace IPL {
      173,   181,   193,   202,   210,   224,   224,   255,   268,   274,
      282,   291,   298,   308,   311,   320,   323,   326,   331,   336,
      344,   350,   355,   360,   363,   366,   369,   372,   379,   410,
+<<<<<<< Updated upstream
      417,   437,   469,   473,   480,   484,   491,   495,   500,   507,
      511,   523,   535,   547,   561,   565,   577,   591,   595,   609,
      615,   628,   642,   645,   650,   670,   700,   716,   733,   738,
      754,   761,   768,   776,   781,   786,   792,   795,   798,   801,
      806,   813,   818,   825,   827,   831,   835,   847
+=======
+     417,   436,   467,   471,   478,   482,   489,   493,   498,   505,
+     509,   521,   533,   545,   559,   563,   575,   589,   593,   609,
+     615,   628,   642,   647,   652,   655,   659,   677,   694,   704,
+     720,   727,   734,   742,   747,   752,   758,   761,   764,   767,
+     772,   779,   784,   791,   793,   797,   801,   813
+>>>>>>> Stashed changes
   };
 
-  // Print the state stack on the debug stream.
   void
-  Parser::yystack_print_ ()
+  Parser::yy_stack_print_ () const
   {
     *yycdebug_ << "Stack now";
     for (stack_type::const_iterator
@@ -3052,9 +3363,8 @@ namespace IPL {
     *yycdebug_ << '\n';
   }
 
-  // Report on the debug stream that the rule \a yyrule is going to be reduced.
   void
-  Parser::yy_reduce_print_ (int yyrule)
+  Parser::yy_reduce_print_ (int yyrule) const
   {
     int yylno = yyrline_[yyrule];
     int yynrhs = yyr2_[yyrule];
@@ -3068,13 +3378,13 @@ namespace IPL {
   }
 #endif // YYDEBUG
 
-  Parser::token_number_type
-  Parser::yytranslate_ (int t)
+  Parser::symbol_kind_type
+  Parser::yytranslate_ (int t) YY_NOEXCEPT
   {
     // YYTRANSLATE[TOKEN-NUM] -- Symbol number corresponding to
     // TOKEN-NUM as returned by yylex.
     static
-    const token_number_type
+    const signed char
     translate_table[] =
     {
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -3106,21 +3416,28 @@ namespace IPL {
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24
     };
-    const int user_token_number_max_ = 279;
+    // Last valid token kind.
+    const int code_max = 279;
 
     if (t <= 0)
-      return yyeof_;
-    else if (t <= user_token_number_max_)
-      return translate_table[t];
+      return symbol_kind::S_YYEOF;
+    else if (t <= code_max)
+      return static_cast <symbol_kind_type> (translate_table[t]);
     else
-      return yy_undef_token_;
+      return symbol_kind::S_YYUNDEF;
   }
 
 #line 5 "parser.yy"
 } // IPL
+<<<<<<< Updated upstream
 #line 3122 "parser.tab.cc"
 
 #line 858 "parser.yy"
+=======
+#line 3023 "parser.tab.cc"
+
+#line 824 "parser.yy"
+>>>>>>> Stashed changes
 
 //grammar definition.
 void 

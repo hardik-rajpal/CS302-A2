@@ -1,1 +1,220 @@
+<<<<<<< Updated upstream
 Error at line 8: syntax error
+=======
+{
+    "globalST": [
+        [
+            "bar",
+            "fun",
+            "global",
+            0,
+            0,
+            "void"
+        ],
+        [
+            "foo",
+            "fun",
+            "global",
+            0,
+            0,
+            "void"
+        ],
+        [
+            "main",
+            "fun",
+            "global",
+            0,
+            0,
+            "int"
+        ],
+        [
+            "struct pair",
+            "struct",
+            "global",
+            8,
+            "-",
+            "-"
+        ]
+    ],
+    "structs": [
+        {
+            "name": "struct pair",
+            "localST": [
+                [
+                    "a",
+                    "var",
+                    "local",
+                    4,
+                    0,
+                    "int"
+                ],
+                [
+                    "b",
+                    "var",
+                    "local",
+                    4,
+                    4,
+                    "int"
+                ]
+            ]
+        }
+    ],
+    "functions": [
+        {
+            "name": "bar",
+            "localST": [],
+            "ast": {
+                "seq": []
+            }
+        },
+        {
+            "name": "foo",
+            "localST": [
+                [
+                    "p",
+                    "var",
+                    "param",
+                    8,
+                    16,
+                    "struct pair"
+                ],
+                [
+                    "q",
+                    "var",
+                    "param",
+                    4,
+                    12,
+                    "int"
+                ]
+            ],
+            "ast": {
+                "seq": [
+                    {
+                        "assignS": {
+                            "left": {
+                                "member": {
+                                    "struct": {
+                                        "identifier": "p"
+                                    },
+                                    "field": {
+                                        "identifier": "a"
+                                    }
+                                }
+                            },
+                            "right": {
+                                "identifier": "q"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "main",
+            "localST": [
+                [
+                    "l",
+                    "var",
+                    "local",
+                    4,
+                    -12,
+                    "int"
+                ],
+                [
+                    "p",
+                    "var",
+                    "local",
+                    8,
+                    -8,
+                    "struct pair"
+                ]
+            ],
+            "ast": {
+                "seq": [
+                    {
+                        "assignS": {
+                            "left": {
+                                "member": {
+                                    "struct": {
+                                        "identifier": "p"
+                                    },
+                                    "field": {
+                                        "identifier": "a"
+                                    }
+                                }
+                            },
+                            "right": {
+                                "intconst": 4
+                            }
+                        }
+                    },
+                    {
+                        "assignS": {
+                            "left": {
+                                "member": {
+                                    "struct": {
+                                        "identifier": "p"
+                                    },
+                                    "field": {
+                                        "identifier": "b"
+                                    }
+                                }
+                            },
+                            "right": {
+                                "intconst": 10
+                            }
+                        }
+                    },
+                    {
+                        "proccall": {
+                            "fname": {
+                                "identifier": "foo"
+                            },
+                            "params": [
+                                {
+                                    "identifier": "p"
+                                },
+                                {
+                                    "member": {
+                                        "struct": {
+                                            "identifier": "p"
+                                        },
+                                        "field": {
+                                            "identifier": "a"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "assignS": {
+                            "left": {
+                                "identifier": "l"
+                            },
+                            "right": {
+                                "op_unary": {
+                                    "op": "UMINUS",
+                                    "child": {
+                                        "op_unary": {
+                                            "op": "UMINUS",
+                                            "child": {
+                                                "identifier": "l"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "return": {
+                            "intconst": 0
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
+>>>>>>> Stashed changes

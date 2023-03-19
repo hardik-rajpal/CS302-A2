@@ -10,7 +10,9 @@ int main() {
     int x;
     int y;
     struct pair p;
-    x = 10;
-    p = foo(x) + 1;
+    int l;
+    p.a = 4;
+    p.b = 10;
+    l = --l;
     return 0;
 }
