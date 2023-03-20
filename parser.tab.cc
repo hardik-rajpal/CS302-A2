@@ -1991,7 +1991,7 @@ namespace IPL {
                 }
                 i++;
             }
-
+            std::reverse(exp_list.begin(),exp_list.end());
             yylhs.value.as < funcall_astnode* > () = new funcall_astnode(new identifier_astnode(yystack_[4].value.as < std::string > ()), exp_list, true);
             yylhs.value.as < funcall_astnode* > ()->typeNode = Symbols::getSymEntry(Symbols::gst, yystack_[4].value.as < std::string > ())->type;
         }
@@ -2363,7 +2363,7 @@ namespace IPL {
                 }
                 i++;
             }
-
+            std::reverse(exp_list.begin(),exp_list.end());
             yylhs.value.as < exp_astnode* > () = new funcall_astnode(new identifier_astnode(yystack_[3].value.as < std::string > ()), exp_list, false);
             yylhs.value.as < exp_astnode* > ()->typeNode = Symbols::getSymEntry(Symbols::gst, yystack_[3].value.as < std::string > ())->type;
         }

@@ -503,7 +503,7 @@ procedure_call: IDENTIFIER '(' ')' ';'{
                 }
                 i++;
             }
-
+            std::reverse(exp_list.begin(),exp_list.end());
             $$ = new funcall_astnode(new identifier_astnode($1), exp_list, true);
             $$->typeNode = Symbols::getSymEntry(Symbols::gst, $1)->type;
         }
@@ -771,7 +771,7 @@ postfix_expression: primary_expression{
                 }
                 i++;
             }
-
+            std::reverse(exp_list.begin(),exp_list.end());
             $$ = new funcall_astnode(new identifier_astnode($1), exp_list, false);
             $$->typeNode = Symbols::getSymEntry(Symbols::gst, $1)->type;
         }

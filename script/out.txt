@@ -1,0 +1,215 @@
+153c153
+<                           "op": "LT_OP_INT",
+---
+>                           "op": "LT_OP_FLOAT",
+71c71
+<                                           "op": "GE_OP_INT",
+---
+>                                           "op": "GE_OP_FLOAT",
+73c73,78
+<                                             "intconst": 5
+---
+>                                             "op_unary": {
+>                                               "child": {
+>                                                 "intconst": 5
+>                                               },
+>                                               "op": "TO_FLOAT"
+>                                             }
+85c90
+<                                               "op": "LT_OP_INT",
+---
+>                                               "op": "LT_OP_FLOAT",
+87c92,97
+<                                                 "intconst": 5
+---
+>                                                 "op_unary": {
+>                                                   "child": {
+>                                                     "intconst": 5
+>                                                   },
+>                                                   "op": "TO_FLOAT"
+>                                                 }
+123c133
+<                               "op": "NE_OP_INT",
+---
+>                               "op": "NE_OP_FLOAT",
+125c135,140
+<                                 "intconst": 7
+---
+>                                 "op_unary": {
+>                                   "child": {
+>                                     "intconst": 7
+>                                   },
+>                                   "op": "TO_FLOAT"
+>                                 }
+256c256
+<                     "op": "EQ_OP_INT",
+---
+>                     "op": "EQ_OP_FLOAT",
+0a1,140
+> {
+>   "functions": [
+>     {
+>       "ast": {
+>         "seq": [
+>           {
+>             "for": {
+>               "body": "empty",
+>               "guard": {
+>                 "op_binary": {
+>                   "left": {
+>                     "identifier": "x"
+>                   },
+>                   "op": "LT_OP_INT",
+>                   "right": {
+>                     "intconst": 10
+>                   }
+>                 }
+>               },
+>               "init": {
+>                 "assignE": {
+>                   "left": {
+>                     "identifier": "x"
+>                   },
+>                   "right": {
+>                     "intconst": 0
+>                   }
+>                 }
+>               },
+>               "step": {
+>                 "assignE": {
+>                   "left": {
+>                     "identifier": "x"
+>                   },
+>                   "right": {
+>                     "op_binary": {
+>                       "left": {
+>                         "identifier": "x"
+>                       },
+>                       "op": "PLUS_INT",
+>                       "right": {
+>                         "intconst": 1
+>                       }
+>                     }
+>                   }
+>                 }
+>               }
+>             }
+>           },
+>           {
+>             "if": {
+>               "cond": {
+>                 "op_binary": {
+>                   "left": {
+>                     "identifier": "y"
+>                   },
+>                   "op": "GT_OP_INT",
+>                   "right": {
+>                     "intconst": 1
+>                   }
+>                 }
+>               },
+>               "else": "empty",
+>               "then": {
+>                 "seq": [
+>                   {
+>                     "assignS": {
+>                       "left": {
+>                         "identifier": "x"
+>                       },
+>                       "right": {
+>                         "op_binary": {
+>                           "left": {
+>                             "identifier": "x"
+>                           },
+>                           "op": "MINUS_INT",
+>                           "right": {
+>                             "intconst": 1
+>                           }
+>                         }
+>                       }
+>                     }
+>                   },
+>                   {
+>                     "assignS": {
+>                       "left": {
+>                         "identifier": "y"
+>                       },
+>                       "right": {
+>                         "op_binary": {
+>                           "left": {
+>                             "identifier": "y"
+>                           },
+>                           "op": "PLUS_INT",
+>                           "right": {
+>                             "intconst": 1
+>                           }
+>                         }
+>                       }
+>                     }
+>                   }
+>                 ]
+>               }
+>             }
+>           }
+>         ]
+>       },
+>       "localST": [
+>         [
+>           "x",
+>           "var",
+>           "local",
+>           4,
+>           -4,
+>           "int"
+>         ],
+>         [
+>           "y",
+>           "var",
+>           "local",
+>           4,
+>           -8,
+>           "int"
+>         ]
+>       ],
+>       "name": "main"
+>     }
+>   ],
+>   "globalST": [
+>     [
+>       "main",
+>       "fun",
+>       "global",
+>       0,
+>       0,
+>       "int"
+>     ]
+>   ],
+>   "structs": []
+> }
+240,242c240,250
+<                     "op_binary": {
+<                       "left": {
+<                         "identifier": "n"
+---
+>                     "op_unary": {
+>                       "child": {
+>                         "op_binary": {
+>                           "left": {
+>                             "identifier": "n"
+>                           },
+>                           "op": "DIV_INT",
+>                           "right": {
+>                             "intconst": 2
+>                           }
+>                         }
+244,247c252
+<                       "op": "DIV_INT",
+<                       "right": {
+<                         "intconst": 2
+<                       }
+---
+>                       "op": "TO_FLOAT"
+250c255
+<                   "op": "EQ_OP_INT",
+---
+>                   "op": "EQ_OP_FLOAT",
