@@ -93,14 +93,7 @@ void for_astnode::print() {
 }
 
 op_binary_astnode::op_binary_astnode(std::string op, exp_astnode* exp1, exp_astnode* exp2): op(op), exp1(exp1), exp2(exp2) {
-    std::set<std::string> boolops={
-        "OR_OP",
-        "AND_OP",
-    };
-    std::set<std::string> boolgens={
-        "LE_OP?","GE_OP?","GT_OP?","LT_OP?","NE_OP?","EQ_OP?"
-    };
-   //TODO: parser does compatibility checks for operands.
+    //TODO: parser does compatibility checks for operands.
     bool isfloat = exp1->typeNode.typeName=="float"||exp2->typeNode.typeName=="float";
     bool arrptrs = (exp1->typeNode.numptrstars+exp1->typeNode.arrsizes.size()==exp2->typeNode.numptrstars+exp2->typeNode.arrsizes.size())&&(exp1->typeNode.numptrstars+exp1->typeNode.arrsizes.size()>0);
     bool ptrsdelta = (exp1->typeNode.numptrstars+exp1->typeNode.arrsizes.size()>0&&exp2->typeNode.typeName=="int")||(exp2->typeNode.numptrstars+exp2->typeNode.arrsizes.size()>0&&exp1->typeNode.typeName=="int");
@@ -157,6 +150,13 @@ void op_binary_astnode::print() {
         "left", this->exp1,
         "right", this->exp2
     );
+}
+bool op_binary_astnode::operandsCompatible(std::string op,exp_astnode* exp1, exp_astnode* exp2){
+    if(op=="EQ_OP?"||op=="NE_OP?"){
+        return exp1->typeNode.compatibleWith(exp2->typeNode);
+    }
+    
+    return true;
 }
 
 op_unary_astnode::op_unary_astnode(std::string op, exp_astnode* exp): op(op), exp(exp) {

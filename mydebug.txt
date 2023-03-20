@@ -1,56 +1,5 @@
 bloom
 bloom
-bloom
-bloom
-bloom
-bloom
-bloom
-bloom
-bloom
-bloom
-bloom
-bloom
-bloom
-bloom
-bloom
-bloom
-bloom
-bloom
-bloom
-bloom
-bloom
-bloom
-bloom
-bloom
-bloom
 Parsing round 1 done
-bloom
-bloom
-bloom
-struct person* = struct person*
-bloom
-int = int
-bloom
-bloom
-bloom
-bloom
-int = int
-bloom
-bloom
-bloom
-bloom
-bloom
-bloom
-bloom
-int = int
-bloom
-bloom
-bloom
-bloom
-int = int
-bloom
-bloom
-bloom
-bloom
 bloom
 bloom

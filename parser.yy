@@ -542,12 +542,20 @@ equality_expression: relational_expression{
     // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
 | equality_expression EQ_OP relational_expression {
-    if(Symbols::symTabConstructed){   
-        $$ = new op_binary_astnode("EQ_OP?", $1, $3);
+    if(Symbols::symTabConstructed){
+        std::string op = "EQ_OP?";
+        if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
+            error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
+        }
+        $$ = new op_binary_astnode(op, $1, $3);
     }
 }
 | equality_expression NE_OP relational_expression{
-    if(Symbols::symTabConstructed){   
+    if(Symbols::symTabConstructed){ 
+        std::string op = "NE_OP?";
+        if(!op_binary_astnode::operandsComptible(op,$1,$3)){
+            error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
+        }
         $$ = new op_binary_astnode("NE_OP?", $1, $3);
     }
 }

@@ -19,7 +19,6 @@ int main() {
 
     while (originalNum != 0) {
       /* remainder contains the last digit*/
-      /*bug here due to funcall implementation pending.*/
       remainder = mod(originalNum,10);
        result = result + remainder * remainder * remainder;
         

@@ -116,12 +116,21 @@ private:
 };
 
 class op_binary_astnode: public exp_astnode {
+private:
+    exp_astnode* exp1, *exp2;
+    std::set<std::string> boolops={
+        "OR_OP",
+        "AND_OP",
+    };
+    std::set<std::string> boolgens={
+        "LE_OP?","GE_OP?","GT_OP?","LT_OP?","NE_OP?","EQ_OP?"
+    };
+
 public:
     op_binary_astnode(std::string, exp_astnode*, exp_astnode*);
     void print();
+    static bool operandsCompatible(std::string,exp_astnode*, exp_astnode*);
     std::string op;
-private:
-    exp_astnode* exp1, *exp2;
 };
 
 class op_unary_astnode: public exp_astnode {

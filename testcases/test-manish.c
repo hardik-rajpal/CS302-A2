@@ -23,7 +23,7 @@ int h(int x[20][10][10]) {}
 int main1()
 {
     void *e[10];
-    /*h(e)*/; /*No, it gives an error. Uncomment and check again. Check again. Error at line 26: Expected "int(*)[10][10]" but argument is of type "void**" */
+    h(e); /* Error at line 26: Expected "int(*)[10][10]" but argument is of type "void**" */
 }
 
 int f1()
@@ -42,7 +42,7 @@ int f2(float i)
 int x;
     void *e;
     int *y;
-    /*x = e < y;*/  /* gives error: Invalid operands types for binary < , "void*" and "int*" */
+    x = e < y;  /* gives error: Invalid operands types for binary < , "void*" and "int*" */
     y = e;  /*Passes*/
     e = y;  /*Passes*/
 }
@@ -72,5 +72,5 @@ int main2()
   c = x && d; /* Passes*/  
   c = x > y;/* Passes*/
   c = x - y;/* Passes*/
-  /*c = x - d;*/ /*Error at line 75: Invalid operand types for binary - , "int*" and "int[2][2]"*/
+  c = x - d; /*Error at line 75: Invalid operand types for binary - , "int*" and "int[2][2]"*/
 }

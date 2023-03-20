@@ -6,7 +6,7 @@ int main()
     y = x + 1;
     y = y++;
     y = 0;
-    /*y = &x;*/
+    y = &x;
 }
 int f()
 {
