@@ -119,7 +119,7 @@ return {
 ">"                                                     return '>';
 ";"                                                     return ';';
 "."                                                     return '.';
-\"([a-zA-Z0-9,:;%<>\'/\?{}\[\]|!@#$%^&*()=+-_ ]|\\n|\\t|\\\\|\\\")*\" {
+\"((\\\"|\\\\|\\n|\\t)|[^\\\"])*\" {
   yylval->emplace< std::string >( YYText() );
   return token_type::STRING_LITERAL;
 }

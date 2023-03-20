@@ -1,4 +1,4 @@
-CXX   ?= g++-8
+CXX   = g++
 EXE = ipl_parser
 CXXDEBUG = -g
 CXXSTD = -std=c++11

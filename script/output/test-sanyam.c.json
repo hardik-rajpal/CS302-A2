@@ -1,0 +1,1 @@
+Error at line 5: Incompatible operands for EQ_OP?: "int", "int*"

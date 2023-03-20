@@ -112,19 +112,19 @@ string topvarname;
 %nterm <fundeclarator_astnode*> fun_declarator
 %%
 begin_nterm: {
-    structc = typespec_astnode::structc;
-    intc = typespec_astnode::intc;
-    floatc = typespec_astnode::floatc;
-    stringc = typespec_astnode::stringc;
-    voidc = typespec_astnode::voidc;
     if(!Symbols::symTabConstructed){
         Symbols::gst = new SymTab();
-        Symbols::initGST();
+        Symbols::initGST();//initializes typespec vals, boolgen vals
     }
     else{
         // std::cout<<"Here again";
     }
     ststack.push(Symbols::gst);
+    structc = typespec_astnode::structc;
+    intc = typespec_astnode::intc;
+    floatc = typespec_astnode::floatc;
+    stringc = typespec_astnode::stringc;
+    voidc = typespec_astnode::voidc;
 
 } translation_unit {
     if(!Symbols::symTabConstructed){
@@ -251,7 +251,6 @@ fun_declarator: IDENTIFIER '('{
         }
     }
     else{
-        //TODO: fix this.
         std::string name = $1;
         std::vector<typespec_astnode> vect = std::vector<typespec_astnode>();
         $$ = new fundeclarator_astnode(name, vect);
@@ -335,7 +334,7 @@ compound_statement: '{' '}'{
     $$ = $2;
 }
 | '{' declaration_list '}' {
-    //TODO
+    //TODO important
     $$ = std::vector<statement_astnode*>();
 
 }
@@ -553,10 +552,10 @@ equality_expression: relational_expression{
 | equality_expression NE_OP relational_expression{
     if(Symbols::symTabConstructed){ 
         std::string op = "NE_OP?";
-        if(!op_binary_astnode::operandsComptible(op,$1,$3)){
+        if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
             error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
         }
-        $$ = new op_binary_astnode("NE_OP?", $1, $3);
+        $$ = new op_binary_astnode(op, $1, $3);
     }
 }
 ;
@@ -567,22 +566,38 @@ relational_expression: additive_expression{
 }
 | relational_expression '<' additive_expression{
     if(Symbols::symTabConstructed){
-        $$ = new op_binary_astnode("LT_OP?", $1, $3);
+        std::string op = "LT_OP?";
+        if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
+            error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
+        }
+        $$ = new op_binary_astnode(op, $1, $3);
     }
 }
 | relational_expression '>' additive_expression{
     if(Symbols::symTabConstructed){
-        $$ = new op_binary_astnode("GT_OP?", $1, $3);
+        std::string op = "GT_OP?";
+        if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
+            error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
+        }
+        $$ = new op_binary_astnode(op, $1, $3);
     }
 }
 | relational_expression LE_OP additive_expression{
     if(Symbols::symTabConstructed){
-        $$ = new op_binary_astnode("LE_OP?", $1, $3);
+        std::string op = "LE_OP?";
+        if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
+            error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
+        }
+        $$ = new op_binary_astnode(op, $1, $3);
     }
 }
 | relational_expression GE_OP additive_expression{
     if(Symbols::symTabConstructed){
-        $$ = new op_binary_astnode("GE_OP?", $1, $3);
+        std::string op = "GE_OP?";
+        if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
+            error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
+        }
+        $$ = new op_binary_astnode(op, $1, $3);
     }
 }
 ;
@@ -593,12 +608,20 @@ additive_expression: multiplicative_expression{
 }
 | additive_expression '+' multiplicative_expression{
     if(Symbols::symTabConstructed){
-        $$ = new op_binary_astnode("PLUS?", $1, $3);
+        std::string op = "PLUS?";
+        if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
+            error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
+        }
+        $$ = new op_binary_astnode(op, $1, $3);
     }
 }
 | additive_expression '-' multiplicative_expression{
     if(Symbols::symTabConstructed){
-        $$ = new op_binary_astnode("MINUS?", $1, $3);
+        std::string op = "MINUS?";
+        if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
+            error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
+        }
+        $$ = new op_binary_astnode(op, $1, $3);
     }
 }
 ;
@@ -610,6 +633,10 @@ unary_expression: postfix_expression{
 | unary_operator unary_expression{
     if(Symbols::symTabConstructed){
         //validity checks.
+        std::string op = $1;
+        if(!op_unary_astnode::compatibleOperand($1,$2)){
+            error(@$,"Incompatible operand for "+op+": \""+$2->typeNode.typeName+"\"");
+        }
         $$ = new op_unary_astnode($1, $2);
         if($1=="ADDRESS"||$1=="DEREF"){
             if($1=="ADDRESS"&&(!$2->typeNode.islval)){
@@ -632,12 +659,20 @@ multiplicative_expression: unary_expression{
 | multiplicative_expression '*' unary_expression{
     //operator and expression match check here.
     if(Symbols::symTabConstructed){
-        $$ = new op_binary_astnode("MULT?", $1, $3);
+        std::string op = "MULT?";
+        if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
+            error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
+        }
+        $$ = new op_binary_astnode(op, $1, $3);
     }
 }
 | multiplicative_expression '/' unary_expression{
     if(Symbols::symTabConstructed){
-        $$ = new op_binary_astnode("DIV?", $1, $3);
+        std::string op = "DIV?";
+        if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
+            error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
+        }
+        $$ = new op_binary_astnode(op, $1, $3);
     }
 }
 ;
@@ -741,7 +776,6 @@ postfix_expression: primary_expression{
         typespec_astnode dereftype = $1->typeNode;
         dereftype.deref();
         std::string structName  = dereftype.typeName;
-        //TODO restrict global table search here.
         $1->typeNode.compatibleWith(dereftype);
         SymEntry* memberEntry = Symbols::getSymEntry(Symbols::slsts[structName],$3,true);
         if(memberEntry){

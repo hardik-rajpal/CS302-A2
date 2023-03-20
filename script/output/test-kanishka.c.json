@@ -1,6 +1,20 @@
 {
 "globalST": [
 [
+"f","fun",
+"global",
+0,
+0,
+"void"
+],
+[
+"g","fun",
+"global",
+0,
+0,
+"int"
+],
+[
 "main","fun",
 "global",
 0,
@@ -33,6 +47,212 @@
 
 ],
 "functions":[
+{
+"name":"f",
+"localST":[
+[
+"a","var",
+"local",
+80,
+-80,
+"int[20]"
+],
+[
+"b","var",
+"local",
+80,
+-160,
+"int[20]"
+],
+[
+"p","var",
+"param",
+4,
+12,
+"float"
+],
+[
+"x","var",
+"local",
+4,
+-164,
+"int"
+]
+],
+"ast":{
+"seq": [
+{ "assignS": {
+"left": 
+{
+"identifier": "x"
+}
+,
+"right": 
+{ "op_binary": {
+"op": "LT_OP_INT"
+,
+"left": 
+{
+"identifier": "a"
+}
+,
+"right": 
+{
+"identifier": "b"
+}
+}
+}
+}
+}
+,
+{ "assignS": {
+"left": 
+{
+"identifier": "x"
+}
+,
+"right": 
+{ "op_binary": {
+"op": "EQ_OP_INT"
+,
+"left": 
+{
+"identifier": "a"
+}
+,
+"right": 
+{
+"identifier": "b"
+}
+}
+}
+}
+}
+,
+{ "assignS": {
+"left": 
+{
+"identifier": "x"
+}
+,
+"right": 
+{ "op_binary": {
+"op": "NE_OP_INT"
+,
+"left": 
+{
+"identifier": "a"
+}
+,
+"right": 
+{
+"identifier": "b"
+}
+}
+}
+}
+}
+
+
+]
+}
+}
+,
+{
+"name":"g",
+"localST":[
+[
+"a","var",
+"local",
+4,
+-8,
+"int**"
+],
+[
+"b","var",
+"local",
+8,
+-16,
+"int*[2]"
+],
+[
+"x","var",
+"local",
+4,
+-4,
+"int"
+]
+],
+"ast":{
+"seq": [
+{ "if": {
+"cond": 
+{ "op_binary": {
+"op": "EQ_OP_INT"
+,
+"left": 
+{
+"identifier": "a"
+}
+,
+"right": 
+{
+"identifier": "b"
+}
+}
+}
+,
+"then": 
+{
+"seq": [
+{ "assignS": {
+"left": 
+{
+"identifier": "x"
+}
+,
+"right": 
+{
+"intconst": 1}
+}
+}
+
+
+]
+}
+,
+"else": 
+{
+"seq": [
+{ "assignS": {
+"left": 
+{
+"identifier": "x"
+}
+,
+"right": 
+{
+"intconst": 2}
+}
+}
+
+
+]
+}
+}
+}
+,
+{
+"return": 
+{
+"intconst": 0}
+}
+
+
+]
+}
+}
+,
 {
 "name":"main",
 "localST":[
@@ -72,6 +292,28 @@
 }
 }
 }
+}
+}
+,
+{ "proccall": {
+"fname": 
+{
+"identifier": "f"
+}
+,
+"params": [
+{ "op_unary": {
+"op": "TO_FLOAT"
+,
+"child": 
+{
+"identifier": "k"
+}
+}
+}
+
+
+]
 }
 }
 

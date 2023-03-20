@@ -4,6 +4,7 @@
 #include "ast.hh"
 #include "util.hh"
 typespec_astnode typespec_astnode::voidc,typespec_astnode::intc,typespec_astnode::floatc,typespec_astnode::stringc,typespec_astnode::structc;
+std::set<std::string> op_binary_astnode::boolops,op_binary_astnode::boolgens;
 identifier_astnode::identifier_astnode(std::string id) : id(id) { }
 
 void identifier_astnode::print() {
@@ -93,7 +94,6 @@ void for_astnode::print() {
 }
 
 op_binary_astnode::op_binary_astnode(std::string op, exp_astnode* exp1, exp_astnode* exp2): op(op), exp1(exp1), exp2(exp2) {
-    //TODO: parser does compatibility checks for operands.
     bool isfloat = exp1->typeNode.typeName=="float"||exp2->typeNode.typeName=="float";
     bool arrptrs = (exp1->typeNode.numptrstars+exp1->typeNode.arrsizes.size()==exp2->typeNode.numptrstars+exp2->typeNode.arrsizes.size())&&(exp1->typeNode.numptrstars+exp1->typeNode.arrsizes.size()>0);
     bool ptrsdelta = (exp1->typeNode.numptrstars+exp1->typeNode.arrsizes.size()>0&&exp2->typeNode.typeName=="int")||(exp2->typeNode.numptrstars+exp2->typeNode.arrsizes.size()>0&&exp1->typeNode.typeName=="int");
@@ -151,16 +151,55 @@ void op_binary_astnode::print() {
         "right", this->exp2
     );
 }
+bool typespec_astnode::comparableTypes(typespec_astnode t2){
+    if(compatibleWith(t2)){
+        return true;
+    }
+    int nrs = numptrstars+arrsizes.size();
+    int t2nrs = t2.numptrstars+t2.arrsizes.size();
+    if((baseTypeName==t2.baseTypeName)&&(t2nrs==nrs)){
+        return true;
+    }
+    return false;
+}
 bool op_binary_astnode::operandsCompatible(std::string op,exp_astnode* exp1, exp_astnode* exp2){
-    if(op=="EQ_OP?"||op=="NE_OP?"){
-        return exp1->typeNode.compatibleWith(exp2->typeNode);
+    if(op_binary_astnode::boolgens.count(op)){
+        return exp1->typeNode.comparableTypes(exp2->typeNode);
+    }
+    else if(op_binary_astnode::boolops.count(op)){
+        return true;
+    }
+    else{
+        //numeric ops TODO
+        if(exp1->typeNode.isNumeric()&&exp2->typeNode.isNumeric()){
+            return true;
+        }
+        if(op=="PLUS?"||op=="MINUS?"){
+            //ptr arithmetic
+            int nrs1 = exp1->typeNode.numptrstars+exp1->typeNode.arrsizes.size();
+            int nrs2 = exp2->typeNode.numptrstars+exp2->typeNode.arrsizes.size();
+            if(exp1->typeNode.isNumeric()&&(nrs2>0)){
+                return true;
+            }
+            if(exp2->typeNode.isNumeric()&&(nrs1>0)){
+                return true;
+            }
+            if(op=="MINUS?"){
+                if(nrs1==nrs2){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     
     return true;
 }
-
+bool op_unary_astnode::compatibleOperand(std::string op, exp_astnode* exp){
+    //TODO write some basic checks.
+    return true;
+}
 op_unary_astnode::op_unary_astnode(std::string op, exp_astnode* exp): op(op), exp(exp) {
-    //TODO validity checks
     if(op=="TO_FLOAT"){
         //parser generated==>error free.
         typeNode = typespec_astnode::floatc;
@@ -272,26 +311,6 @@ fundeclarator_astnode::fundeclarator_astnode(std::string name,std::vector<typesp
 
 }
 typespec_astnode::typespec_astnode(){
-    typespec_astnode::voidc.baseTypeName = "void";
-    typespec_astnode::voidc.baseTypeWidth = 0;
-    typespec_astnode::voidc.typeName = typespec_astnode::voidc.baseTypeName;
-    typespec_astnode::voidc.typeWidth = typespec_astnode::voidc.baseTypeWidth;
-    typespec_astnode::structc.baseTypeWidth = 0;
-    typespec_astnode::structc.baseTypeName = "struct";
-    typespec_astnode::structc.typeName = typespec_astnode::structc.baseTypeName;
-    typespec_astnode::structc.typeWidth = typespec_astnode::structc.baseTypeWidth;
-    typespec_astnode::intc.baseTypeWidth = 4;
-    typespec_astnode::intc.baseTypeName = "int";
-    typespec_astnode::intc.typeName = typespec_astnode::intc.baseTypeName;
-    typespec_astnode::intc.typeWidth = typespec_astnode::intc.baseTypeWidth;
-    typespec_astnode::floatc.baseTypeWidth = 4;
-    typespec_astnode::floatc.baseTypeName = "float";
-    typespec_astnode::floatc.typeName = typespec_astnode::floatc.baseTypeName;
-    typespec_astnode::floatc.typeWidth = typespec_astnode::floatc.baseTypeWidth;
-    typespec_astnode::stringc.baseTypeWidth = 0;
-    typespec_astnode::stringc.baseTypeName = "string";
-    typespec_astnode::stringc.typeName = typespec_astnode::stringc.baseTypeName;
-    typespec_astnode::stringc.typeWidth = typespec_astnode::stringc.baseTypeWidth;
 }
 int typespec_astnode::genTypeWidth(){
     int btw = baseTypeWidth;

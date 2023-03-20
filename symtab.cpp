@@ -82,7 +82,6 @@ void SymTab::printJson()
             cout << "\n";
         }
         cout << "]\n";
-        // TODO:add comma above, printAST here.
         cout << "}" << endl;
         if ((++iterlst) != (Symbols::slsts).end())
         {
@@ -107,9 +106,7 @@ void SymTab::printJson()
         }
         cout << "],\n";
         cout << "\"ast\":";
-        // cout << flush;
         iterlst->second->ptr->print();
-        // TODO:printAST here.
         cout << "}" << endl;
         if ((++iterlst) != (Symbols::flsts).end())
         {
@@ -211,6 +208,30 @@ int SymTab::getParamOffset(size_t posSize)
     return newOffset;
 }
 void Symbols::initGST(){
-    // gst->rows["printf"] = SymEntry(typespec_astnode::voidc,SymTab::ST_HL_type::FUN,SymTab::ST_LPG::GLOBAL,0,0);
-    // gst->rows["scanf"] = SymEntry(typespec_astnode::voidc,SymTab::ST_HL_type::FUN,SymTab::ST_LPG::GLOBAL,0,0);
+    op_binary_astnode::boolops={
+        "OR_OP","AND_OP",
+    };
+    op_binary_astnode::boolgens={
+        "LE_OP?","GE_OP?","GT_OP?","LT_OP?","NE_OP?","EQ_OP?"
+    };
+    typespec_astnode::voidc.baseTypeName = "void";
+    typespec_astnode::voidc.baseTypeWidth = 0;
+    typespec_astnode::voidc.typeName = typespec_astnode::voidc.baseTypeName;
+    typespec_astnode::voidc.typeWidth = typespec_astnode::voidc.baseTypeWidth;
+    typespec_astnode::structc.baseTypeWidth = 0;
+    typespec_astnode::structc.baseTypeName = "struct";
+    typespec_astnode::structc.typeName = typespec_astnode::structc.baseTypeName;
+    typespec_astnode::structc.typeWidth = typespec_astnode::structc.baseTypeWidth;
+    typespec_astnode::intc.baseTypeWidth = 4;
+    typespec_astnode::intc.baseTypeName = "int";
+    typespec_astnode::intc.typeName = typespec_astnode::intc.baseTypeName;
+    typespec_astnode::intc.typeWidth = typespec_astnode::intc.baseTypeWidth;
+    typespec_astnode::floatc.baseTypeWidth = 4;
+    typespec_astnode::floatc.baseTypeName = "float";
+    typespec_astnode::floatc.typeName = typespec_astnode::floatc.baseTypeName;
+    typespec_astnode::floatc.typeWidth = typespec_astnode::floatc.baseTypeWidth;
+    typespec_astnode::stringc.baseTypeWidth = 0;
+    typespec_astnode::stringc.baseTypeName = "string";
+    typespec_astnode::stringc.typeName = typespec_astnode::stringc.baseTypeName;
+    typespec_astnode::stringc.typeWidth = typespec_astnode::stringc.baseTypeWidth;
 }

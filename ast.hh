@@ -41,6 +41,7 @@ public:
     void deref();
     void addressOf();
     bool compatibleWith(typespec_astnode t2, bool isparam=false);
+    bool comparableTypes(typespec_astnode t2);
     bool isNumeric();
     int genTypeWidth();
     
@@ -118,14 +119,10 @@ private:
 class op_binary_astnode: public exp_astnode {
 private:
     exp_astnode* exp1, *exp2;
-    std::set<std::string> boolops={
-        "OR_OP",
-        "AND_OP",
-    };
-    std::set<std::string> boolgens={
-        "LE_OP?","GE_OP?","GT_OP?","LT_OP?","NE_OP?","EQ_OP?"
-    };
 
+public:
+    static std::set<std::string> boolops;
+    static std::set<std::string> boolgens;
 public:
     op_binary_astnode(std::string, exp_astnode*, exp_astnode*);
     void print();
@@ -137,6 +134,7 @@ class op_unary_astnode: public exp_astnode {
 public:
     op_unary_astnode(std::string, exp_astnode*);
     void print();
+    static bool compatibleOperand(std::string , exp_astnode*);
 private:
     std::string op;
     exp_astnode* exp;
