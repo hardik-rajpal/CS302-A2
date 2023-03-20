@@ -334,7 +334,6 @@ compound_statement: '{' '}'{
     $$ = $2;
 }
 | '{' declaration_list '}' {
-    //TODO important
     $$ = std::vector<statement_astnode*>();
 
 }

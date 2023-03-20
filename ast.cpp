@@ -197,6 +197,13 @@ bool op_binary_astnode::operandsCompatible(std::string op,exp_astnode* exp1, exp
 }
 bool op_unary_astnode::compatibleOperand(std::string op, exp_astnode* exp){
     //TODO write some basic checks.
+    int nrs = exp->typeNode.numptrstars+exp->typeNode.arrsizes.size();
+    if(nrs==0&&exp->typeNode.baseTypeName.substr(0,6)=="struct"){
+        if(op=="ADDRESS"){
+            return true;
+        }
+        return false;
+    }
     return true;
 }
 op_unary_astnode::op_unary_astnode(std::string op, exp_astnode* exp): op(op), exp(exp) {
