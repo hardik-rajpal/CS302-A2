@@ -1,79 +1,7 @@
 {
   "globalST": [
     [
-      "f",
-      "fun",
-      "global",
-      0,
-      0,
-      "int"
-    ],
-    [
-      "f1",
-      "fun",
-      "global",
-      0,
-      0,
-      "int"
-    ],
-    [
-      "f2",
-      "fun",
-      "global",
-      0,
-      0,
-      "int"
-    ],
-    [
-      "f3",
-      "fun",
-      "global",
-      0,
-      0,
-      "int"
-    ],
-    [
-      "g",
-      "fun",
-      "global",
-      0,
-      0,
-      "int"
-    ],
-    [
-      "h",
-      "fun",
-      "global",
-      0,
-      0,
-      "int"
-    ],
-    [
-      "h1",
-      "fun",
-      "global",
-      0,
-      0,
-      "void"
-    ],
-    [
       "main",
-      "fun",
-      "global",
-      0,
-      0,
-      "int"
-    ],
-    [
-      "main1",
-      "fun",
-      "global",
-      0,
-      0,
-      "int"
-    ],
-    [
-      "main2",
       "fun",
       "global",
       0,
@@ -84,325 +12,47 @@
   "structs": [],
   "functions": [
     {
-      "name": "f",
-      "localST": [
-        [
-          "x",
-          "var",
-          "param",
-          80,
-          12,
-          "int[20]"
-        ]
-      ],
-      "ast": {
-        "seq": []
-      }
-    },
-    {
-      "name": "f1",
+      "name": "main",
       "localST": [
         [
           "a",
           "var",
           "local",
-          40,
-          -40,
-          "int[10]"
+          4,
+          -4,
+          "float"
         ],
         [
           "b",
-          "var",
-          "local",
-          80,
-          -132,
-          "int*[20]"
-        ],
-        [
-          "x",
-          "var",
-          "local",
-          4,
-          -44,
-          "int"
-        ],
-        [
-          "y",
-          "var",
-          "local",
-          4,
-          -48,
-          "int*"
-        ],
-        [
-          "z",
-          "var",
-          "local",
-          4,
-          -52,
-          "int**"
-        ]
-      ],
-      "ast": {
-        "seq": [
-          {
-            "assignS": {
-              "left": {
-                "identifier": "x"
-              },
-              "right": {
-                "op_binary": {
-                  "op": "MINUS_INT",
-                  "left": {
-                    "identifier": "y"
-                  },
-                  "right": {
-                    "identifier": "a"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "assignS": {
-              "left": {
-                "identifier": "x"
-              },
-              "right": {
-                "op_binary": {
-                  "op": "MINUS_INT",
-                  "left": {
-                    "identifier": "z"
-                  },
-                  "right": {
-                    "identifier": "b"
-                  }
-                }
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "f2",
-      "localST": [
-        [
-          "e",
           "var",
           "local",
           4,
           -8,
-          "void*"
-        ],
-        [
-          "i",
-          "var",
-          "param",
-          4,
-          12,
           "float"
         ],
         [
-          "x",
-          "var",
-          "local",
-          4,
-          -4,
-          "int"
-        ],
-        [
-          "y",
+          "c",
           "var",
           "local",
           4,
           -12,
-          "int*"
-        ]
-      ],
-      "ast": {
-        "seq": [
-          {
-            "assignS": {
-              "left": {
-                "identifier": "y"
-              },
-              "right": {
-                "identifier": "e"
-              }
-            }
-          },
-          {
-            "assignS": {
-              "left": {
-                "identifier": "e"
-              },
-              "right": {
-                "identifier": "y"
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "f3",
-      "localST": [
-        [
-          "a",
-          "var",
-          "local",
-          40,
-          -1644,
-          "int[10]"
-        ],
-        [
-          "b",
-          "var",
-          "local",
-          800,
-          -804,
-          "int[20][10]"
-        ],
-        [
-          "c",
-          "var",
-          "local",
-          800,
-          -1604,
-          "int[20][10]"
-        ],
-        [
-          "x",
-          "var",
-          "local",
-          4,
-          -4,
-          "int"
-        ]
-      ],
-      "ast": {
-        "seq": [
-          {
-            "assignS": {
-              "left": {
-                "identifier": "x"
-              },
-              "right": {
-                "funcall": {
-                  "fname": {
-                    "identifier": "f2"
-                  },
-                  "params": [
-                    {
-                      "op_unary": {
-                        "op": "TO_FLOAT",
-                        "child": {
-                          "identifier": "x"
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          {
-            "assignS": {
-              "left": {
-                "identifier": "x"
-              },
-              "right": {
-                "op_binary": {
-                  "op": "GT_OP_INT",
-                  "left": {
-                    "identifier": "b"
-                  },
-                  "right": {
-                    "identifier": "c"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "assignS": {
-              "left": {
-                "identifier": "x"
-              },
-              "right": {
-                "op_binary": {
-                  "op": "AND_OP",
-                  "left": {
-                    "identifier": "b"
-                  },
-                  "right": {
-                    "identifier": "c"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "assignS": {
-              "left": {
-                "identifier": "x"
-              },
-              "right": {
-                "op_binary": {
-                  "op": "LT_OP_INT",
-                  "left": {
-                    "op_unary": {
-                      "op": "ADDRESS",
-                      "child": {
-                        "identifier": "a"
-                      }
-                    }
-                  },
-                  "right": {
-                    "identifier": "b"
-                  }
-                }
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "g",
-      "localST": [
-        [
-          "c",
-          "var",
-          "local",
-          400,
-          -804,
-          "int[10][10]"
+          "float"
         ],
         [
           "d",
           "var",
           "local",
           4,
-          -808,
+          -16,
           "float"
-        ],
-        [
-          "y",
-          "var",
-          "local",
-          4,
-          -4,
-          "int*"
         ],
         [
           "z",
           "var",
           "local",
-          400,
-          -404,
-          "int[10][10]"
+          4,
+          -20,
+          "float"
         ]
       ],
       "ast": {
@@ -410,302 +60,196 @@
           {
             "assignS": {
               "left": {
-                "identifier": "d"
+                "identifier": "a"
+              },
+              "right": {
+                "floatconst": 1
+              }
+            }
+          },
+          {
+            "assignS": {
+              "left": {
+                "identifier": "b"
               },
               "right": {
                 "op_unary": {
                   "op": "TO_FLOAT",
                   "child": {
-                    "op_unary": {
-                      "op": "NOT",
-                      "child": {
-                        "identifier": "z"
-                      }
-                    }
+                    "intconst": 4
                   }
                 }
               }
             }
           },
           {
-            "assignS": {
-              "left": {
-                "op_unary": {
-                  "op": "DEREF",
-                  "child": {
-                    "identifier": "y"
-                  }
-                }
-              },
-              "right": {
+            "if": {
+              "cond": {
                 "op_binary": {
-                  "op": "MINUS_INT",
+                  "op": "AND_OP",
                   "left": {
-                    "identifier": "z"
+                    "identifier": "a"
                   },
                   "right": {
-                    "identifier": "c"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "assignS": {
-              "left": {
-                "op_unary": {
-                  "op": "DEREF",
-                  "child": {
-                    "identifier": "y"
-                  }
-                }
-              },
-              "right": {
-                "op_binary": {
-                  "op": "MINUS_INT",
-                  "left": {
-                    "identifier": "z"
-                  },
-                  "right": {
-                    "op_unary": {
-                      "op": "ADDRESS",
-                      "child": {
-                        "arrayref": {
-                          "array": {
-                            "identifier": "c"
+                    "op_binary": {
+                      "op": "AND_OP",
+                      "left": {
+                        "op_binary": {
+                          "op": "OR_OP",
+                          "left": {
+                            "op_binary": {
+                              "op": "PLUS_FLOAT",
+                              "left": {
+                                "identifier": "z"
+                              },
+                              "right": {
+                                "op_unary": {
+                                  "op": "TO_FLOAT",
+                                  "child": {
+                                    "op_binary": {
+                                      "op": "AND_OP",
+                                      "left": {
+                                        "op_binary": {
+                                          "op": "GE_OP_FLOAT",
+                                          "left": {
+                                            "op_binary": {
+                                              "op": "PLUS_FLOAT",
+                                              "left": {
+                                                "identifier": "a"
+                                              },
+                                              "right": {
+                                                "op_unary": {
+                                                  "op": "TO_FLOAT",
+                                                  "child": {
+                                                    "intconst": 3
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          },
+                                          "right": {
+                                            "op_unary": {
+                                              "op": "TO_FLOAT",
+                                              "child": {
+                                                "intconst": 5
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "right": {
+                                        "op_unary": {
+                                          "op": "NOT",
+                                          "child": {
+                                            "op_binary": {
+                                              "op": "LT_OP_FLOAT",
+                                              "left": {
+                                                "identifier": "b"
+                                              },
+                                              "right": {
+                                                "op_unary": {
+                                                  "op": "TO_FLOAT",
+                                                  "child": {
+                                                    "intconst": 5
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
                           },
-                          "index": {
-                            "intconst": 0
+                          "right": {
+                            "op_binary": {
+                              "op": "NE_OP_FLOAT",
+                              "left": {
+                                "op_binary": {
+                                  "op": "PLUS_FLOAT",
+                                  "left": {
+                                    "op_binary": {
+                                      "op": "MULT_FLOAT",
+                                      "left": {
+                                        "identifier": "a"
+                                      },
+                                      "right": {
+                                        "identifier": "b"
+                                      }
+                                    }
+                                  },
+                                  "right": {
+                                    "identifier": "b"
+                                  }
+                                }
+                              },
+                              "right": {
+                                "op_unary": {
+                                  "op": "TO_FLOAT",
+                                  "child": {
+                                    "intconst": 7
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "right": {
+                        "op_unary": {
+                          "op": "PP",
+                          "child": {
+                            "identifier": "d"
                           }
                         }
                       }
                     }
                   }
                 }
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "h",
-      "localST": [
-        [
-          "x",
-          "var",
-          "param",
-          8000,
-          12,
-          "int[20][10][10]"
-        ]
-      ],
-      "ast": {
-        "seq": []
-      }
-    },
-    {
-      "name": "h1",
-      "localST": [
-        [
-          "x",
-          "var",
-          "param",
-          4,
-          12,
-          "void*"
-        ]
-      ],
-      "ast": {
-        "seq": []
-      }
-    },
-    {
-      "name": "main",
-      "localST": [
-        [
-          "x",
-          "var",
-          "local",
-          40,
-          -40,
-          "int[10]"
-        ],
-        [
-          "y",
-          "var",
-          "local",
-          4,
-          -44,
-          "int*"
-        ]
-      ],
-      "ast": {
-        "seq": [
-          {
-            "proccall": {
-              "fname": {
-                "identifier": "f"
               },
-              "params": [
-                {
-                  "identifier": "y"
-                }
-              ]
-            }
-          },
-          {
-            "proccall": {
-              "fname": {
-                "identifier": "f"
-              },
-              "params": [
-                {
-                  "identifier": "x"
-                }
-              ]
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "main1",
-      "localST": [
-        [
-          "e",
-          "var",
-          "local",
-          40,
-          -40,
-          "void*[10]"
-        ]
-      ],
-      "ast": {
-        "seq": [
-          "empty"
-        ]
-      }
-    },
-    {
-      "name": "main2",
-      "localST": [
-        [
-          "c",
-          "var",
-          "local",
-          4,
-          -28,
-          "int"
-        ],
-        [
-          "d",
-          "var",
-          "local",
-          16,
-          -24,
-          "int[2][2]"
-        ],
-        [
-          "x",
-          "var",
-          "local",
-          4,
-          -4,
-          "int*"
-        ],
-        [
-          "y",
-          "var",
-          "local",
-          4,
-          -8,
-          "int*"
-        ]
-      ],
-      "ast": {
-        "seq": [
-          {
-            "proccall": {
-              "fname": {
-                "identifier": "h1"
-              },
-              "params": [
-                {
-                  "identifier": "d"
-                }
-              ]
-            }
-          },
-          {
-            "assignS": {
-              "left": {
-                "identifier": "c"
-              },
-              "right": {
-                "op_binary": {
-                  "op": "AND_OP",
-                  "left": {
-                    "identifier": "x"
-                  },
-                  "right": {
-                    "identifier": "y"
+              "then": {
+                "seq": [
+                  {
+                    "proccall": {
+                      "fname": {
+                        "identifier": "printf"
+                      },
+                      "params": [
+                        {
+                          "stringconst": "%f\n"
+                        },
+                        {
+                          "identifier": "d"
+                        }
+                      ]
+                    }
                   }
-                }
-              }
-            }
-          },
-          {
-            "assignS": {
-              "left": {
-                "identifier": "c"
+                ]
               },
-              "right": {
-                "op_binary": {
-                  "op": "AND_OP",
-                  "left": {
-                    "identifier": "x"
-                  },
-                  "right": {
-                    "identifier": "d"
+              "else": {
+                "seq": [
+                  {
+                    "proccall": {
+                      "fname": {
+                        "identifier": "printf"
+                      },
+                      "params": [
+                        {
+                          "stringconst": "%f%f\n "
+                        },
+                        {
+                          "identifier": "z"
+                        },
+                        {
+                          "identifier": "d"
+                        }
+                      ]
+                    }
                   }
-                }
-              }
-            }
-          },
-          {
-            "assignS": {
-              "left": {
-                "identifier": "c"
-              },
-              "right": {
-                "op_binary": {
-                  "op": "GT_OP_INT",
-                  "left": {
-                    "identifier": "x"
-                  },
-                  "right": {
-                    "identifier": "y"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "assignS": {
-              "left": {
-                "identifier": "c"
-              },
-              "right": {
-                "op_binary": {
-                  "op": "MINUS_INT",
-                  "left": {
-                    "identifier": "x"
-                  },
-                  "right": {
-                    "identifier": "y"
-                  }
-                }
+                ]
               }
             }
           }

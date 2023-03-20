@@ -544,25 +544,11 @@ equality_expression: relational_expression{
 | equality_expression EQ_OP relational_expression {
     if(Symbols::symTabConstructed){   
         $$ = new op_binary_astnode("EQ_OP?", $1, $3);
-        $$->op = $$->op.substr(0,$$->op.size()-1);
-        if($$->typeNode.baseTypeName=="float"){
-            $$->op += "_FLOAT";
-        }
-        else{
-            $$->op += "_INT";
-        }
     }
 }
 | equality_expression NE_OP relational_expression{
     if(Symbols::symTabConstructed){   
         $$ = new op_binary_astnode("NE_OP?", $1, $3);
-        $$->op = $$->op.substr(0,$$->op.size()-1);
-        if($$->typeNode.baseTypeName=="float"){
-            $$->op += "_FLOAT";
-        }
-        else{
-            $$->op += "_INT";
-        }
     }
 }
 ;
@@ -574,49 +560,21 @@ relational_expression: additive_expression{
 | relational_expression '<' additive_expression{
     if(Symbols::symTabConstructed){
         $$ = new op_binary_astnode("LT_OP?", $1, $3);
-        $$->op = $$->op.substr(0,$$->op.size()-1);
-        if($$->typeNode.baseTypeName=="float"){
-            $$->op += "_FLOAT";
-        }
-        else{
-            $$->op += "_INT";
-        }
     }
 }
 | relational_expression '>' additive_expression{
     if(Symbols::symTabConstructed){
         $$ = new op_binary_astnode("GT_OP?", $1, $3);
-        $$->op = $$->op.substr(0,$$->op.size()-1);
-        if($$->typeNode.baseTypeName=="float"){
-            $$->op += "_FLOAT";
-        }
-        else{
-            $$->op += "_INT";
-        }
     }
 }
 | relational_expression LE_OP additive_expression{
     if(Symbols::symTabConstructed){
         $$ = new op_binary_astnode("LE_OP?", $1, $3);
-        $$->op = $$->op.substr(0,$$->op.size()-1);
-        if($$->typeNode.baseTypeName=="float"){
-            $$->op += "_FLOAT";
-        }
-        else{
-            $$->op += "_INT";
-        }
     }
 }
 | relational_expression GE_OP additive_expression{
     if(Symbols::symTabConstructed){
         $$ = new op_binary_astnode("GE_OP?", $1, $3);
-        $$->op = $$->op.substr(0,$$->op.size()-1);
-        if($$->typeNode.baseTypeName=="float"){
-            $$->op += "_FLOAT";
-        }
-        else{
-            $$->op += "_INT";
-        }
     }
 }
 ;
@@ -628,25 +586,11 @@ additive_expression: multiplicative_expression{
 | additive_expression '+' multiplicative_expression{
     if(Symbols::symTabConstructed){
         $$ = new op_binary_astnode("PLUS?", $1, $3);
-        $$->op = $$->op.substr(0,$$->op.size()-1);
-        if($$->typeNode.baseTypeName=="float"){
-            $$->op += "_FLOAT";
-        }
-        else{
-            $$->op += "_INT";
-        }
     }
 }
 | additive_expression '-' multiplicative_expression{
     if(Symbols::symTabConstructed){
         $$ = new op_binary_astnode("MINUS?", $1, $3);
-        $$->op = $$->op.substr(0,$$->op.size()-1);
-        if($$->typeNode.baseTypeName=="float"){
-            $$->op += "_FLOAT";
-        }
-        else{
-            $$->op += "_INT";
-        }
     }
 }
 ;
@@ -681,25 +625,11 @@ multiplicative_expression: unary_expression{
     //operator and expression match check here.
     if(Symbols::symTabConstructed){
         $$ = new op_binary_astnode("MULT?", $1, $3);
-        $$->op = $$->op.substr(0,$$->op.size()-1);
-        if($$->typeNode.baseTypeName=="float"){
-            $$->op += "_FLOAT";
-        }
-        else{
-            $$->op += "_INT";
-        }
     }
 }
 | multiplicative_expression '/' unary_expression{
     if(Symbols::symTabConstructed){
         $$ = new op_binary_astnode("DIV?", $1, $3);
-        $$->op = $$->op.substr(0,$$->op.size()-1);
-        if($$->typeNode.baseTypeName=="float"){
-            $$->op += "_FLOAT";
-        }
-        else{
-            $$->op += "_INT";
-        }
     }
 }
 ;

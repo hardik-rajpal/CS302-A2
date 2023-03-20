@@ -100,28 +100,59 @@ op_binary_astnode::op_binary_astnode(std::string op, exp_astnode* exp1, exp_astn
     std::set<std::string> boolgens={
         "LE_OP?","GE_OP?","GT_OP?","LT_OP?","NE_OP?","EQ_OP?"
     };
+    /*
+    if(boolops||boolgens){
+        typeNode = intc;
+    }
+    else{
+        bool isfloat = (t1=="float")||(t2==float)
+        if(isfloat){
+            type=float
+        }
+        elsE{
+            type = int;
+        }
+
+    }
+    if(!boolops){
+        //disambiguation of ? logic
+    }
+    */
+   //TODO: parser does compatibility checks for operands.
+    bool isfloat = exp1->typeNode.typeName=="float"||exp2->typeNode.typeName=="float";
+    bool arrptrs = (exp1->typeNode.numptrstars+exp1->typeNode.arrsizes.size()==exp2->typeNode.numptrstars+exp2->typeNode.arrsizes.size())&&(exp1->typeNode.numptrstars+exp1->typeNode.arrsizes.size()>0);
     if(boolops.count(op)||boolgens.count(op)){
         typeNode = typespec_astnode::intc;
     }
-    else if(exp1->typeNode.typeName=="float"||exp2->typeNode.typeName=="float"){
-        typeNode = typespec_astnode::floatc;
-        if(exp1->typeNode.typeName=="int"){
-            std::cerr<<"gonna update exp1"<<endl;
-            this->exp1 = new op_unary_astnode("TO_FLOAT",exp1);
-            std::cerr<<exp1->typeNode.typeName<<std::endl;
-        }
-        if(exp2->typeNode.typeName=="int"){
-            this->exp2 = new op_unary_astnode("TO_FLOAT",exp2);
-        }
-    }
     else{
-        if(op=="MINUS?"){
-            if((exp1->typeNode.numptrstars+exp1->typeNode.arrsizes.size()==exp2->typeNode.numptrstars+exp2->typeNode.arrsizes.size())&&(exp1->typeNode.numptrstars+exp1->typeNode.arrsizes.size()>0)){
+        if(op=="MINUS?"&&arrptrs){
+                typeNode = typespec_astnode::intc;
+        }
+        else{
+            if(isfloat){
+                typeNode = typespec_astnode::floatc;
+            }
+            else{
                 typeNode = typespec_astnode::intc;
             }
         }
+    }
+    //op dismabiguation and exp casting.
+    if(op[op.length()-1]=='?'){
+        this->op = op.substr(0,op.size()-1);
+        if(isfloat){
+            this->op += "_FLOAT";
+            if(exp1->typeNode.typeName=="int"){
+                std::cerr<<"gonna update exp1"<<endl;
+                this->exp1 = new op_unary_astnode("TO_FLOAT",exp1);
+                std::cerr<<exp1->typeNode.typeName<<std::endl;
+            }
+            if(exp2->typeNode.typeName=="int"){
+                this->exp2 = new op_unary_astnode("TO_FLOAT",exp2);
+            }
+        }
         else{
-            typeNode = exp1->typeNode;
+            this->op += "_INT";
         }
     }
 }
