@@ -7,210 +7,182 @@
       0,
       0,
       "int"
+    ],
+    [
+      "struct person",
+      "struct",
+      "global",
+      12,
+      "-",
+      "-"
     ]
   ],
-  "structs": [],
+  "structs": [
+    {
+      "name": "struct person",
+      "localST": [
+        [
+          "age",
+          "var",
+          "local",
+          4,
+          8,
+          "int"
+        ],
+        [
+          "id",
+          "var",
+          "local",
+          4,
+          0,
+          "int"
+        ],
+        [
+          "weight",
+          "var",
+          "local",
+          4,
+          4,
+          "float"
+        ]
+      ]
+    }
+  ],
   "functions": [
     {
       "name": "main",
       "localST": [
         [
-          "a",
-          "var",
-          "local",
-          4,
-          -4,
-          "float"
-        ],
-        [
-          "b",
+          "i",
           "var",
           "local",
           4,
           -8,
-          "float"
+          "int"
         ],
         [
-          "c",
+          "n",
+          "var",
+          "local",
+          4,
+          -4,
+          "int"
+        ],
+        [
+          "persons",
+          "var",
+          "local",
+          360,
+          -372,
+          "struct person[30]"
+        ],
+        [
+          "ptr",
           "var",
           "local",
           4,
           -12,
-          "float"
-        ],
-        [
-          "d",
-          "var",
-          "local",
-          4,
-          -16,
-          "float"
-        ],
-        [
-          "z",
-          "var",
-          "local",
-          4,
-          -20,
-          "float"
+          "struct person*"
         ]
       ],
       "ast": {
         "seq": [
           {
-            "assignS": {
-              "left": {
-                "identifier": "a"
+            "proccall": {
+              "fname": {
+                "identifier": "printf"
               },
-              "right": {
-                "floatconst": 1
-              }
+              "params": [
+                {
+                  "stringconst": "Enter the number of persons (<= 30): "
+                }
+              ]
+            }
+          },
+          {
+            "proccall": {
+              "fname": {
+                "identifier": "scanf"
+              },
+              "params": [
+                {
+                  "stringconst": "%d"
+                },
+                {
+                  "op_unary": {
+                    "op": "ADDRESS",
+                    "child": {
+                      "identifier": "n"
+                    }
+                  }
+                }
+              ]
             }
           },
           {
             "assignS": {
               "left": {
-                "identifier": "b"
+                "identifier": "ptr"
               },
               "right": {
                 "op_unary": {
-                  "op": "TO_FLOAT",
+                  "op": "ADDRESS",
                   "child": {
-                    "intconst": 4
+                    "arrayref": {
+                      "array": {
+                        "identifier": "persons"
+                      },
+                      "index": {
+                        "intconst": 0
+                      }
+                    }
                   }
                 }
               }
             }
           },
           {
-            "if": {
-              "cond": {
-                "op_binary": {
-                  "op": "AND_OP",
+            "for": {
+              "init": {
+                "assignE": {
                   "left": {
-                    "identifier": "a"
+                    "identifier": "i"
+                  },
+                  "right": {
+                    "intconst": 0
+                  }
+                }
+              },
+              "guard": {
+                "op_binary": {
+                  "op": "LT_OP_INT",
+                  "left": {
+                    "identifier": "i"
+                  },
+                  "right": {
+                    "identifier": "n"
+                  }
+                }
+              },
+              "step": {
+                "assignE": {
+                  "left": {
+                    "identifier": "i"
                   },
                   "right": {
                     "op_binary": {
-                      "op": "AND_OP",
+                      "op": "PLUS_INT",
                       "left": {
-                        "op_binary": {
-                          "op": "OR_OP",
-                          "left": {
-                            "op_binary": {
-                              "op": "PLUS_FLOAT",
-                              "left": {
-                                "identifier": "z"
-                              },
-                              "right": {
-                                "op_unary": {
-                                  "op": "TO_FLOAT",
-                                  "child": {
-                                    "op_binary": {
-                                      "op": "AND_OP",
-                                      "left": {
-                                        "op_binary": {
-                                          "op": "GE_OP_FLOAT",
-                                          "left": {
-                                            "op_binary": {
-                                              "op": "PLUS_FLOAT",
-                                              "left": {
-                                                "identifier": "a"
-                                              },
-                                              "right": {
-                                                "op_unary": {
-                                                  "op": "TO_FLOAT",
-                                                  "child": {
-                                                    "intconst": 3
-                                                  }
-                                                }
-                                              }
-                                            }
-                                          },
-                                          "right": {
-                                            "op_unary": {
-                                              "op": "TO_FLOAT",
-                                              "child": {
-                                                "intconst": 5
-                                              }
-                                            }
-                                          }
-                                        }
-                                      },
-                                      "right": {
-                                        "op_unary": {
-                                          "op": "NOT",
-                                          "child": {
-                                            "op_binary": {
-                                              "op": "LT_OP_FLOAT",
-                                              "left": {
-                                                "identifier": "b"
-                                              },
-                                              "right": {
-                                                "op_unary": {
-                                                  "op": "TO_FLOAT",
-                                                  "child": {
-                                                    "intconst": 5
-                                                  }
-                                                }
-                                              }
-                                            }
-                                          }
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          },
-                          "right": {
-                            "op_binary": {
-                              "op": "NE_OP_FLOAT",
-                              "left": {
-                                "op_binary": {
-                                  "op": "PLUS_FLOAT",
-                                  "left": {
-                                    "op_binary": {
-                                      "op": "MULT_FLOAT",
-                                      "left": {
-                                        "identifier": "a"
-                                      },
-                                      "right": {
-                                        "identifier": "b"
-                                      }
-                                    }
-                                  },
-                                  "right": {
-                                    "identifier": "b"
-                                  }
-                                }
-                              },
-                              "right": {
-                                "op_unary": {
-                                  "op": "TO_FLOAT",
-                                  "child": {
-                                    "intconst": 7
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
+                        "identifier": "i"
                       },
                       "right": {
-                        "op_unary": {
-                          "op": "PP",
-                          "child": {
-                            "identifier": "d"
-                          }
-                        }
+                        "intconst": 1
                       }
                     }
                   }
                 }
               },
-              "then": {
+              "body": {
                 "seq": [
                   {
                     "proccall": {
@@ -219,38 +191,220 @@
                       },
                       "params": [
                         {
-                          "stringconst": "%f\n"
-                        },
-                        {
-                          "identifier": "d"
+                          "stringconst": "Enter person's Id, weight and age respectively: "
                         }
                       ]
                     }
-                  }
-                ]
-              },
-              "else": {
-                "seq": [
+                  },
                   {
                     "proccall": {
                       "fname": {
-                        "identifier": "printf"
+                        "identifier": "scanf"
                       },
                       "params": [
                         {
-                          "stringconst": "%f%f\n "
+                          "stringconst": "%d %f %d"
                         },
                         {
-                          "identifier": "z"
+                          "op_unary": {
+                            "op": "ADDRESS",
+                            "child": {
+                              "arrow": {
+                                "pointer": {
+                                  "op_binary": {
+                                    "op": "PLUS_INT",
+                                    "left": {
+                                      "identifier": "ptr"
+                                    },
+                                    "right": {
+                                      "identifier": "i"
+                                    }
+                                  }
+                                },
+                                "field": {
+                                  "identifier": "id"
+                                }
+                              }
+                            }
+                          }
                         },
                         {
-                          "identifier": "d"
+                          "op_unary": {
+                            "op": "ADDRESS",
+                            "child": {
+                              "arrow": {
+                                "pointer": {
+                                  "op_binary": {
+                                    "op": "PLUS_INT",
+                                    "left": {
+                                      "identifier": "ptr"
+                                    },
+                                    "right": {
+                                      "identifier": "i"
+                                    }
+                                  }
+                                },
+                                "field": {
+                                  "identifier": "weight"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "op_unary": {
+                            "op": "ADDRESS",
+                            "child": {
+                              "arrow": {
+                                "pointer": {
+                                  "op_binary": {
+                                    "op": "PLUS_INT",
+                                    "left": {
+                                      "identifier": "ptr"
+                                    },
+                                    "right": {
+                                      "identifier": "i"
+                                    }
+                                  }
+                                },
+                                "field": {
+                                  "identifier": "age"
+                                }
+                              }
+                            }
+                          }
                         }
                       ]
                     }
                   }
                 ]
               }
+            }
+          },
+          {
+            "proccall": {
+              "fname": {
+                "identifier": "printf"
+              },
+              "params": [
+                {
+                  "stringconst": "Displaying Information:\n"
+                }
+              ]
+            }
+          },
+          {
+            "for": {
+              "init": {
+                "assignE": {
+                  "left": {
+                    "identifier": "i"
+                  },
+                  "right": {
+                    "intconst": 0
+                  }
+                }
+              },
+              "guard": {
+                "op_binary": {
+                  "op": "LT_OP_INT",
+                  "left": {
+                    "identifier": "i"
+                  },
+                  "right": {
+                    "identifier": "n"
+                  }
+                }
+              },
+              "step": {
+                "assignE": {
+                  "left": {
+                    "identifier": "i"
+                  },
+                  "right": {
+                    "op_binary": {
+                      "op": "PLUS_INT",
+                      "left": {
+                        "identifier": "i"
+                      },
+                      "right": {
+                        "intconst": 1
+                      }
+                    }
+                  }
+                }
+              },
+              "body": {
+                "proccall": {
+                  "fname": {
+                    "identifier": "printf"
+                  },
+                  "params": [
+                    {
+                      "stringconst": "Id: %d\tWeight: %f\tAge: %d\n"
+                    },
+                    {
+                      "arrow": {
+                        "pointer": {
+                          "op_binary": {
+                            "op": "PLUS_INT",
+                            "left": {
+                              "identifier": "ptr"
+                            },
+                            "right": {
+                              "identifier": "i"
+                            }
+                          }
+                        },
+                        "field": {
+                          "identifier": "id"
+                        }
+                      }
+                    },
+                    {
+                      "arrow": {
+                        "pointer": {
+                          "op_binary": {
+                            "op": "PLUS_INT",
+                            "left": {
+                              "identifier": "ptr"
+                            },
+                            "right": {
+                              "identifier": "i"
+                            }
+                          }
+                        },
+                        "field": {
+                          "identifier": "weight"
+                        }
+                      }
+                    },
+                    {
+                      "arrow": {
+                        "pointer": {
+                          "op_binary": {
+                            "op": "PLUS_INT",
+                            "left": {
+                              "identifier": "ptr"
+                            },
+                            "right": {
+                              "identifier": "i"
+                            }
+                          }
+                        },
+                        "field": {
+                          "identifier": "age"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "return": {
+              "intconst": 0
             }
           }
         ]

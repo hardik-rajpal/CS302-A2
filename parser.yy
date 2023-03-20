@@ -734,6 +734,7 @@ postfix_expression: primary_expression{
         dereftype.deref();
         std::string structName  = dereftype.typeName;
         //TODO restrict global table search here.
+        $1->typeNode.compatibleWith(dereftype);
         SymEntry* memberEntry = Symbols::getSymEntry(Symbols::slsts[structName],$3,true);
         if(memberEntry){
             $$->typeNode = memberEntry->type;

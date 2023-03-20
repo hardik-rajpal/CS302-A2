@@ -374,6 +374,10 @@
 "op": "EQ_OP_FLOAT"
 ,
 "left": 
+{ "op_unary": {
+"op": "TO_FLOAT"
+,
+"child": 
 { "op_binary": {
 "op": "DIV_INT"
 ,
@@ -385,6 +389,8 @@
 "right": 
 {
 "intconst": 2}
+}
+}
 }
 }
 ,

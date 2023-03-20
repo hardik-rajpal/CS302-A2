@@ -1,1 +1,1 @@
-Error at line 22: Incompatible types: tried to assign  to int
+Error at line 25: Variable "i" not declared

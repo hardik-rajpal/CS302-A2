@@ -100,33 +100,26 @@ op_binary_astnode::op_binary_astnode(std::string op, exp_astnode* exp1, exp_astn
     std::set<std::string> boolgens={
         "LE_OP?","GE_OP?","GT_OP?","LT_OP?","NE_OP?","EQ_OP?"
     };
-    /*
-    if(boolops||boolgens){
-        typeNode = intc;
-    }
-    else{
-        bool isfloat = (t1=="float")||(t2==float)
-        if(isfloat){
-            type=float
-        }
-        elsE{
-            type = int;
-        }
-
-    }
-    if(!boolops){
-        //disambiguation of ? logic
-    }
-    */
    //TODO: parser does compatibility checks for operands.
     bool isfloat = exp1->typeNode.typeName=="float"||exp2->typeNode.typeName=="float";
     bool arrptrs = (exp1->typeNode.numptrstars+exp1->typeNode.arrsizes.size()==exp2->typeNode.numptrstars+exp2->typeNode.arrsizes.size())&&(exp1->typeNode.numptrstars+exp1->typeNode.arrsizes.size()>0);
+    bool ptrsdelta = (exp1->typeNode.numptrstars+exp1->typeNode.arrsizes.size()>0&&exp2->typeNode.typeName=="int")||(exp2->typeNode.numptrstars+exp2->typeNode.arrsizes.size()>0&&exp1->typeNode.typeName=="int");
     if(boolops.count(op)||boolgens.count(op)){
         typeNode = typespec_astnode::intc;
     }
     else{
         if(op=="MINUS?"&&arrptrs){
                 typeNode = typespec_astnode::intc;
+        }
+        else if(ptrsdelta){
+            //set type to ptr;
+            if(exp1->typeNode.typeName=="int"){
+                typeNode = exp2->typeNode;
+            }
+            else{
+                //exp2->typeNode.typeName =="int"
+                typeNode = exp1->typeNode;
+            }
         }
         else{
             if(isfloat){

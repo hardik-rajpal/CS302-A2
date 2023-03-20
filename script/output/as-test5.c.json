@@ -143,8 +143,14 @@
 }
 ,
 "right": 
+{ "op_unary": {
+"op": "TO_FLOAT"
+,
+"child": 
 {
 "intconst": 5}
+}
+}
 }
 }
 ,
@@ -162,8 +168,14 @@
 }
 ,
 "right": 
+{ "op_unary": {
+"op": "TO_FLOAT"
+,
+"child": 
 {
 "intconst": 5}
+}
+}
 }
 }
 }
@@ -207,8 +219,14 @@
 }
 ,
 "right": 
+{ "op_unary": {
+"op": "TO_FLOAT"
+,
+"child": 
 {
 "intconst": 7}
+}
+}
 }
 }
 }

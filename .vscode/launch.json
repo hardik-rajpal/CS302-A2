@@ -34,7 +34,7 @@
             "program": "${workspaceRoot}/iplC",
             "cwd": "${workspaceFolder}",
             "args": [
-                "testcases/test-manish.c",
+                "testcases/as-pointers.c",
                 ">",
                 "myout.json",
                 "2>mydebug.txt"
