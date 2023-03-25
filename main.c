@@ -1,5 +1,11 @@
+float dod(){
+    int i;
+    return i;
+}
+struct x{
+    int i;
+};
 int main(){
-    int a;
-    a = "abc"+1;
-    printf("bleh %d",1);
+    int ***b;
+    int **b;
 }

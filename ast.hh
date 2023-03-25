@@ -42,7 +42,9 @@ public:
     void addressOf();
     bool compatibleWith(typespec_astnode t2, bool isparam=false);
     bool comparableTypes(typespec_astnode t2);
+    bool equatableTypes(typespec_astnode t2);
     bool isNumeric();
+    int getnrs();
     int genTypeWidth();
     
 };
@@ -123,6 +125,7 @@ private:
 public:
     static std::set<std::string> boolops;
     static std::set<std::string> boolgens;
+    static std::set<std::string> boolgenseq;
 public:
     op_binary_astnode(std::string, exp_astnode*, exp_astnode*);
     void print();

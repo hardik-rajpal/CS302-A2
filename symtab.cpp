@@ -212,7 +212,10 @@ void Symbols::initGST(){
         "OR_OP","AND_OP",
     };
     op_binary_astnode::boolgens={
-        "LE_OP?","GE_OP?","GT_OP?","LT_OP?","NE_OP?","EQ_OP?"
+        "LE_OP?","GE_OP?","GT_OP?","LT_OP?"
+    };
+    op_binary_astnode::boolgenseq={
+        "NE_OP?","EQ_OP?"
     };
     typespec_astnode::voidc.baseTypeName = "void";
     typespec_astnode::voidc.baseTypeWidth = 0;

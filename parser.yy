@@ -407,7 +407,7 @@ assignment_expression: unary_expression '=' expression{
         if(($1->typeNode.compatibleWith($3->typeNode))){
             // std::cerr<<__LINE__<<std::endl;
             if(!($1->typeNode.islval)){
-                error(@$,"Error: "+$1->typeNode.typeName +" is not an lval.");
+                error(@$,"Error: Tried to assign value to rvalue.");
             }
             
             
@@ -644,6 +644,10 @@ unary_expression: postfix_expression{
             if($$->typeNode.typeName==$2->typeNode.typeName){
                 error(@$,"Invalid operand type \"" + $2->typeNode.typeName +"\" of unary *");
             }
+            int nrs = $2->typeNode.numptrstars + $2->typeNode.arrsizes.size();
+            if($1=="DEREF"&&$2->typeNode.typeName.substr(0,4)=="void"&&(nrs==1)){
+                error(@$,"Dereferenced incomplete type void*");
+            }
         }
     }
 }
@@ -680,7 +684,16 @@ postfix_expression: primary_expression{
     $$ = $1;
 }
 | postfix_expression '[' expression ']'{
-    if(Symbols::symTabConstructed){   
+    if(Symbols::symTabConstructed){
+        if($1->typeNode.typeName.substr(0,4)=="void"){
+            error(@$,"Tried to dereference an incomplete type.");
+        }
+        if($1->typeNode.numptrstars + $1->typeNode.arrsizes.size()==0){
+            error(@$, "Tried to dereference a non-pointer");
+        }
+        if($3->typeNode.typeName!="int"){
+            error(@$, "Argument passed to operator[] must be of type int.");
+        }
         $$ = new arrayref_astnode($1, $3);
     }
 }
@@ -755,6 +768,9 @@ postfix_expression: primary_expression{
 }
 | postfix_expression '.' IDENTIFIER{
     if(Symbols::symTabConstructed){
+        if($1->typeNode.typeName.substr(0,6)!="struct"){
+            error(@$,"LHS of . must be of type struct.");
+        }
         $$ = new member_astnode($1, new identifier_astnode($3));
         std::cerr<<"using this rule"<<std::endl;
         std::string structName = $1->typeNode.typeName;
@@ -771,6 +787,9 @@ postfix_expression: primary_expression{
 }
 | postfix_expression PTR_OP IDENTIFIER{
     if(Symbols::symTabConstructed){
+        if($1->typeNode.typeName.substr(0,6)!="struct"){
+            error(@$,"LHS of -> must be of type struct.");
+        }
         $$ = new arrow_astnode($1, new identifier_astnode($3));
         typespec_astnode dereftype = $1->typeNode;
         dereftype.deref();
@@ -788,10 +807,15 @@ postfix_expression: primary_expression{
 }
 | postfix_expression INC_OP{
     if(Symbols::symTabConstructed){
-        //type checks for $1
-        
+        if(!($1->typeNode.islval)){
+            error(@$,"Postfix operator "+$2+" can only be applied to lvalues.");
+        }
+        if(!($1->typeNode.isNumeric()||($1->typeNode.numptrstars>0&&$1->typeNode.arrsizes.size()==0))){
+            error(@$,"Invalid data type for postfix operator "+$2);
+        }
         $$ = new op_unary_astnode("PP",$1);
         $$->typeNode = $1->typeNode;
+        $$->typeNode.islval = false;
     }
 }
 ;
@@ -867,7 +891,10 @@ unary_operator: '-'{
 ;
 
 selection_statement: IF '(' expression ')' statement ELSE statement{
-    if(Symbols::symTabConstructed){   
+    if(Symbols::symTabConstructed){  
+        if(!($3->typeNode.isNumeric()||$3->typeNode.getnrs()>0)){
+            error(@$,"Invalid type for condition expression in for loop");
+        }    
         $$ = new if_astnode($3, $5, $7);
     }
 }
@@ -875,11 +902,17 @@ selection_statement: IF '(' expression ')' statement ELSE statement{
 
 iteration_statement: WHILE '(' expression ')' statement{
     if(Symbols::symTabConstructed){   
+        if(!($3->typeNode.isNumeric()||$3->typeNode.getnrs()>0)){
+            error(@$,"Invalid type for condition expression in while loop");
+        }   
         $$ = new while_astnode($3, $5);
     }
 }
 | FOR '(' assignment_expression ';' expression ';' assignment_expression ')' statement{
-    if(Symbols::symTabConstructed){   
+    if(Symbols::symTabConstructed){
+        if(!($5->typeNode.isNumeric()||$5->typeNode.getnrs()>0)){
+            error(@$,"Invalid type for condition expression in for loop");
+        }   
         $$ = new for_astnode($3, $5, $7, $9);
     }
 }

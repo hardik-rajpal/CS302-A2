@@ -4,7 +4,7 @@
 #include "ast.hh"
 #include "util.hh"
 typespec_astnode typespec_astnode::voidc,typespec_astnode::intc,typespec_astnode::floatc,typespec_astnode::stringc,typespec_astnode::structc;
-std::set<std::string> op_binary_astnode::boolops,op_binary_astnode::boolgens;
+std::set<std::string> op_binary_astnode::boolops,op_binary_astnode::boolgens,op_binary_astnode::boolgenseq;
 identifier_astnode::identifier_astnode(std::string id) : id(id) { }
 
 void identifier_astnode::print() {
@@ -152,7 +152,7 @@ void op_binary_astnode::print() {
     );
 }
 bool typespec_astnode::comparableTypes(typespec_astnode t2){
-    if(compatibleWith(t2)){
+    if(isNumeric()&&(t2.isNumeric())){
         return true;
     }
     int nrs = numptrstars+arrsizes.size();
@@ -162,12 +162,35 @@ bool typespec_astnode::comparableTypes(typespec_astnode t2){
     }
     return false;
 }
+bool typespec_astnode::equatableTypes(typespec_astnode t2){
+    if(comparableTypes(t2)){
+        return true;
+    }
+    if(typeName=="void*"||t2.typeName=="void*"){
+        return true;
+    }
+    if(isnullval&&(t2.numptrstars+t2.arrsizes.size()>0)){
+        return true;
+    }
+    if(t2.isnullval&&(numptrstars+arrsizes.size()>0)){
+        return true;
+    }
+    return false;
+}
 bool op_binary_astnode::operandsCompatible(std::string op,exp_astnode* exp1, exp_astnode* exp2){
-    if(op_binary_astnode::boolgens.count(op)){
+    if(op_binary_astnode::boolgenseq.count(op)){
+        return exp1->typeNode.equatableTypes(exp2->typeNode);
+    }
+    else if(op_binary_astnode::boolgens.count(op)){
         return exp1->typeNode.comparableTypes(exp2->typeNode);
     }
     else if(op_binary_astnode::boolops.count(op)){
-        return true;
+        if(exp1->typeNode.isNumeric()||(exp1->typeNode.numptrstars+exp1->typeNode.arrsizes.size()>0)){
+            if(exp2->typeNode.isNumeric()||(exp2->typeNode.numptrstars+exp2->typeNode.arrsizes.size()>0)){
+                return true;
+            }
+        }
+        return false;
     }
     else{
         //numeric ops TODO
@@ -189,6 +212,7 @@ bool op_binary_astnode::operandsCompatible(std::string op,exp_astnode* exp1, exp
                     return true;
                 }
             }
+            return false;
         }
         return false;
     }
@@ -202,6 +226,12 @@ bool op_unary_astnode::compatibleOperand(std::string op, exp_astnode* exp){
         if(op=="ADDRESS"){
             return true;
         }
+        return false;
+    }
+    if(op=="UMINUS"&&(!exp->typeNode.isNumeric())){
+        return false;
+    }
+    if(op=="NOT"&&(!exp->typeNode.isNumeric())&&(nrs==0)){
         return false;
     }
     return true;
@@ -337,15 +367,21 @@ void typespec_astnode::deref(){
         //nothing done=> typeName unchanged=> error check in parser.yy
         return;
     }
+    islval = true;
     typeName = genTypeName();
 }
 void typespec_astnode::addressOf(){
     numptrstars+=1;
+    islval = false;
     typeName = genTypeName();
 }
 bool typespec_astnode::isNumeric(){
     return numtypes.count(typeName);
 }
+int typespec_astnode::getnrs(){
+    return numptrstars+arrsizes.size();
+}
+
 std::string typespec_astnode::genTypeName(){
     std::string tn = baseTypeName;
     int k = numptrstars;
