@@ -1,4 +1,0 @@
-1c1
-< Error at line 24: Expected "int*" but argument is of type "int**"
----
-> Error at line 24: Expected "int*" but argument is of type "int*(*)"

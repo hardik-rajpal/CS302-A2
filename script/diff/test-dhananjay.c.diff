@@ -1,4 +1,0 @@
-1c1
-< Error at line 8: Incompatible types: tried to assign int to int*
----
-> Error at line 8: Incompatible assignment when assigning to type "int*" from type "int"

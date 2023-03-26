@@ -1,4 +1,0 @@
-1c1
-< Error at line 5: Incompatible operands for EQ_OP?: "int", "int*"
----
-> Error at line 5: Invalid operands types for binary ==, "int" and "int*"

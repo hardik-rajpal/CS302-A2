@@ -1,4 +1,0 @@
-1c1
-< Error at line 26: Expected "int[20][10][10]" but argument is of type "void*[10]"
----
-> Error at line 26: Expected "int(*)[10][10]" but argument is of type "void**"
