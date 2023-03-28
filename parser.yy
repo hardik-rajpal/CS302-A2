@@ -303,6 +303,9 @@ declarator_arr: IDENTIFIER{
     $$.typeWidth = $$.baseTypeWidth;
     if(!Symbols::symTabConstructed){
         topvarname = $1;
+        // if(Symbols::getSymEntry(Symbols::gst, $$)){
+            //error(@$, "Identifier is taken.")
+        //}
     }
 }
 | declarator_arr '[' INT_CONSTANT ']'{
