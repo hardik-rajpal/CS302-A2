@@ -36,8 +36,8 @@
             "args": [
                 "main.c",
                 ">",
-                "myout.json",
-                "2>mydebug.txt"
+                "debug>myout.json",
+                "2>debug/mydebug.txt"
             ]
         }
     ]

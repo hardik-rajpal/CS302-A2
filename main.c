@@ -7,5 +7,6 @@ struct x{
 };
 int main(){
     int ***b;
-    int **b;
+    int **a;
+    if(a==b);else;
 }
