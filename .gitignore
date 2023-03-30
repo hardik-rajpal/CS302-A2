@@ -2,3 +2,5 @@ build
 gen
 debug
 iplC
+# mygcc alias:
+# alias mygcc='gcc -fno-asynchronous-unwind-tables -fno-exceptions -fno-pic -fno-stack-protector -mmanual-endbr  -mpreferred-stack-boundary=2 -m32 -S'
