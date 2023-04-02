@@ -3,7 +3,7 @@
 SymTab *Symbols::gst;
 map<string, SymTab *> Symbols::flsts;
 map<string, SymTab *> Symbols::slsts;
-bool Symbols::symTabConstructed = false;
+int Symbols::symTabStage = 0;
 using namespace std;
 void SymEntry::printJson(string varname)
 {

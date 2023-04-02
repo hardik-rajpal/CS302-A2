@@ -55,7 +55,7 @@ public:
 };
 class Symbols{
 public:
-    static bool symTabConstructed;
+    static int symTabStage;
     static SymTab * gst;
     static map<string, SymTab *> flsts;
     static map<string, SymTab *> slsts;

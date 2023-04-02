@@ -52,6 +52,7 @@
    #include <stack>
    #include "scanner.hh"
    #include "symtab.h"
+   #include "troins.hh"
 #undef yylex
 #define yylex IPL::Parser::scanner.yylex
 stack<SymTab*> ststack;
@@ -59,6 +60,7 @@ int retType;
 typespec_astnode structc,intc,voidc,floatc,stringc;
 typespec_astnode toptype;
 string topvarname;
+TroinBuffer code;
 }
 
 
@@ -112,12 +114,9 @@ string topvarname;
 %nterm <fundeclarator_astnode*> fun_declarator
 %%
 begin_nterm: {
-    if(!Symbols::symTabConstructed){
+    if(Symbols::symTabStage==0){
         Symbols::gst = new SymTab();
         Symbols::initGST();//initializes typespec vals, boolgen vals
-    }
-    else{
-        // std::cout<<"Here again";
     }
     ststack.push(Symbols::gst);
     structc = typespec_astnode::structc;
@@ -127,15 +126,10 @@ begin_nterm: {
     voidc = typespec_astnode::voidc;
 
 } translation_unit {
-    if(!Symbols::symTabConstructed){
-        Symbols::symTabConstructed = true;
-        // ststack.top()->printJson();
-        // std::cerr<<"Parsing round 1 done"<<std::endl;
-    }
-    else{
+    if(Symbols::symTabStage==1){
         ststack.top()->printJson();
-        // std::cout<<"here again"<<std::endl;
     }
+    Symbols::symTabStage+=1;
 }
 
 translation_unit: struct_specifier{
@@ -154,16 +148,16 @@ translation_unit: struct_specifier{
 
 struct_specifier: STRUCT IDENTIFIER {
     string structName = "struct " + $2;
-    if(!Symbols::symTabConstructed){
+    if(Symbols::symTabStage==0){
         ststack.top()->rows[structName] = SymEntry(structc,SymTab::ST_HL_type::STRUCT,SymTab::ST_LPG::GLOBAL,0,0);
         Symbols::slsts[structName] = new SymTab();
         Symbols::slsts[structName]->type = "struct";
     }
     ststack.push(Symbols::slsts[structName]);
 }'{' declaration_list '}' ';'{
-    // if(!Symbols::symTabConstructed){
+    // if(Symbols::symTabStage==0){
     ststack.pop();
-    if(!Symbols::symTabConstructed){
+    if(Symbols::symTabStage==0){
         for(auto entry: ststack.top()->rows){
             if(entry.second.size==0&&entry.second.hltype==SymTab::ST_HL_type::STRUCT){
                 ststack.top()->rows[entry.first].size = Symbols::getStructBaseTypeWidth(entry.first);
@@ -174,7 +168,7 @@ struct_specifier: STRUCT IDENTIFIER {
 };
 
 function_definition: type_specifier fun_declarator compound_statement{
-    if(Symbols::symTabConstructed){
+    if(Symbols::symTabStage==1){
         ststack.top()->ptr = new seq_astnode($3);
     }
     $$ = nullptr;
@@ -188,7 +182,7 @@ type_specifier: VOID{
     ts.typeWidth = ts.baseTypeWidth;
     ts.typeName = "void";
     $$ = ts;
-    if(!Symbols::symTabConstructed){
+    if(Symbols::symTabStage==0){
         toptype = ts;
     }
 
@@ -197,7 +191,7 @@ type_specifier: VOID{
     // retType = SymTab::ST_type::INT;
     typespec_astnode ts = intc;
     $$ = ts;
-    if(!Symbols::symTabConstructed){
+    if(Symbols::symTabStage==0){
         toptype = ts;
     }
 
@@ -206,7 +200,7 @@ type_specifier: VOID{
     // retType = SymTab::ST_type::FLOAT;
     typespec_astnode ts = floatc;
     $$ = ts;
-    if(!Symbols::symTabConstructed){
+    if(Symbols::symTabStage==0){
         toptype = ts;
     }
 }
@@ -218,7 +212,7 @@ type_specifier: VOID{
     ts.typeWidth = ts.baseTypeWidth;
     ts.baseTypeName = ts.typeName;
     $$ = ts;
-    if(!Symbols::symTabConstructed){
+    if(Symbols::symTabStage==0){
         toptype = ts;
     }
 }
@@ -226,7 +220,7 @@ type_specifier: VOID{
 
 fun_declarator: IDENTIFIER '('{
     std::string name = $1;
-    if(!Symbols::symTabConstructed){
+    if(Symbols::symTabStage==0){
         ststack.top()->rows[name] = SymEntry(toptype,SymTab::ST_HL_type::FUN,SymTab::ST_LPG::GLOBAL,0,0);
         Symbols::flsts[name] = new SymTab();
         Symbols::flsts[name]->type = "function";
@@ -236,7 +230,7 @@ fun_declarator: IDENTIFIER '('{
     ststack.push(Symbols::flsts[name]);
 } parameter_list ')'{
     $$ = NULL;
-    if(!Symbols::symTabConstructed){
+    if(Symbols::symTabStage==0){
         auto &rows = (ststack.top())->rows;
         long long minParamOffset = 0;
         for(auto entry:rows){
@@ -258,7 +252,7 @@ fun_declarator: IDENTIFIER '('{
 }
 | IDENTIFIER '(' ')'{
     std::string name = $1;
-    if(!Symbols::symTabConstructed){
+    if(Symbols::symTabStage==0){
         ststack.top()->rows[name] = SymEntry(toptype,SymTab::ST_HL_type::FUN,SymTab::ST_LPG::GLOBAL,0,0);
         Symbols::flsts[name] = new SymTab();
         Symbols::flsts[name]->rettype = new typespec_astnode;
@@ -273,13 +267,13 @@ fun_declarator: IDENTIFIER '('{
 ;
 
 parameter_list: parameter_declaration{
-    if(Symbols::symTabConstructed){
+    if(Symbols::symTabStage==1){
         $$ = std::vector<typespec_astnode>();
         $$.push_back($1);
     }
 }
 | parameter_declaration ',' parameter_list {
-    if(Symbols::symTabConstructed){
+    if(Symbols::symTabStage==1){
         $$ = $3;
         $$.push_back($1);
     }
@@ -288,7 +282,7 @@ parameter_list: parameter_declaration{
 
 parameter_declaration: type_specifier declarator{
     $$ = $1;
-    if(!Symbols::symTabConstructed){
+    if(Symbols::symTabStage==0){
         if($2.typeName=="void"){
             error(@$,"Cannot declare variable of type \"void\"");
         }
@@ -301,7 +295,7 @@ parameter_declaration: type_specifier declarator{
 declarator_arr: IDENTIFIER{
     $$ = toptype;
     $$.typeWidth = $$.baseTypeWidth;
-    if(!Symbols::symTabConstructed){
+    if(Symbols::symTabStage==0){
         topvarname = $1;
         // if(Symbols::getSymEntry(Symbols::gst, $$)){
             //error(@$, "Identifier is taken.")
@@ -310,7 +304,7 @@ declarator_arr: IDENTIFIER{
 }
 | declarator_arr '[' INT_CONSTANT ']'{
     $$ = $1;
-    if(!Symbols::symTabConstructed){
+    if(Symbols::symTabStage==0){
         typespec_astnode tstmp = $1;
         $$.arrsizes.insert($$.arrsizes.begin(),std::stoi($3));
         $$.typeWidth = $$.genTypeWidth();
@@ -360,12 +354,12 @@ statement_list: statement {
 ;
 
 statement: ';'{
-    if(Symbols::symTabConstructed){   
+    if(Symbols::symTabStage==1){   
         $$ = new empty_astnode();
     }
 }
 | '{' statement_list '}'{
-    if(Symbols::symTabConstructed){   
+    if(Symbols::symTabStage==1){   
         $$ = new seq_astnode($2);
     }
 }
@@ -382,7 +376,7 @@ statement: ';'{
     $$ = $1;
 }
 | RETURN expression ';'{
-    if(Symbols::symTabConstructed){
+    if(Symbols::symTabStage==1){
         typespec_astnode rt = *(ststack.top()->rettype);
         if (!rt.compatibleWith($2->typeNode)) {
             error(@$, "Function must return "+ rt.typeName+" but returns "+$2->typeNode.typeName );
@@ -404,7 +398,7 @@ statement: ';'{
 ;
 
 assignment_expression: unary_expression '=' expression{
-    if(Symbols::symTabConstructed){
+    if(Symbols::symTabStage==1){
         // std::cerr<<__LINE__<<std::endl;
         std::cerr<<$1->typeNode.typeName<<" = "<<$3->typeNode.typeName<<std::endl;
         if(($1->typeNode.compatibleWith($3->typeNode))){
@@ -438,14 +432,14 @@ assignment_expression: unary_expression '=' expression{
 ;
 
 assignment_statement: assignment_expression ';'{
-    if(Symbols::symTabConstructed){
+    if(Symbols::symTabStage==1){
         $$ = new assignS_astnode($1->exp1, $1->exp2);
     }
 }
 ;
 
 procedure_call: IDENTIFIER '(' ')' ';'{
-    if (Symbols::symTabConstructed) {
+    if (Symbols::symTabStage==1) {
         std::string function_name = $1;
         if(!($1=="printf"||$1=="scanf")){
             SymTab* fstab = Symbols::flsts[function_name];
@@ -472,7 +466,7 @@ procedure_call: IDENTIFIER '(' ')' ';'{
     }
 }
 | IDENTIFIER '(' expression_list ')' ';'{
-    if (Symbols::symTabConstructed) {
+    if (Symbols::symTabStage==1) {
         std::string function_name = $1;
         if(!($1=="printf"||$1=="scanf")){
             SymTab* fstab = Symbols::flsts[function_name];
@@ -521,7 +515,7 @@ expression: logical_and_expression{
     // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
 | expression OR_OP logical_and_expression{
-    if(Symbols::symTabConstructed){
+    if(Symbols::symTabStage==1){
         $$ = new op_binary_astnode("OR_OP",$1,$3);
     }
 }
@@ -532,7 +526,7 @@ logical_and_expression: equality_expression{
     // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
 | logical_and_expression AND_OP equality_expression{
-    if(Symbols::symTabConstructed){   
+    if(Symbols::symTabStage==1){   
         $$ = new op_binary_astnode("AND_OP", $1, $3);
     }
 }
@@ -543,7 +537,7 @@ equality_expression: relational_expression{
     // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
 | equality_expression EQ_OP relational_expression {
-    if(Symbols::symTabConstructed){
+    if(Symbols::symTabStage==1){
         std::string op = "EQ_OP?";
         if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
             error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
@@ -552,7 +546,7 @@ equality_expression: relational_expression{
     }
 }
 | equality_expression NE_OP relational_expression{
-    if(Symbols::symTabConstructed){ 
+    if(Symbols::symTabStage==1){ 
         std::string op = "NE_OP?";
         if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
             error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
@@ -567,7 +561,7 @@ relational_expression: additive_expression{
     // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
 | relational_expression '<' additive_expression{
-    if(Symbols::symTabConstructed){
+    if(Symbols::symTabStage==1){
         std::string op = "LT_OP?";
         if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
             error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
@@ -576,7 +570,7 @@ relational_expression: additive_expression{
     }
 }
 | relational_expression '>' additive_expression{
-    if(Symbols::symTabConstructed){
+    if(Symbols::symTabStage==1){
         std::string op = "GT_OP?";
         if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
             error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
@@ -585,7 +579,7 @@ relational_expression: additive_expression{
     }
 }
 | relational_expression LE_OP additive_expression{
-    if(Symbols::symTabConstructed){
+    if(Symbols::symTabStage==1){
         std::string op = "LE_OP?";
         if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
             error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
@@ -594,7 +588,7 @@ relational_expression: additive_expression{
     }
 }
 | relational_expression GE_OP additive_expression{
-    if(Symbols::symTabConstructed){
+    if(Symbols::symTabStage==1){
         std::string op = "GE_OP?";
         if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
             error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
@@ -609,7 +603,7 @@ additive_expression: multiplicative_expression{
     // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
 | additive_expression '+' multiplicative_expression{
-    if(Symbols::symTabConstructed){
+    if(Symbols::symTabStage==1){
         std::string op = "PLUS?";
         if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
             error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
@@ -618,7 +612,7 @@ additive_expression: multiplicative_expression{
     }
 }
 | additive_expression '-' multiplicative_expression{
-    if(Symbols::symTabConstructed){
+    if(Symbols::symTabStage==1){
         std::string op = "MINUS?";
         if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
             error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
@@ -633,7 +627,7 @@ unary_expression: postfix_expression{
     // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
 | unary_operator unary_expression{
-    if(Symbols::symTabConstructed){
+    if(Symbols::symTabStage==1){
         //validity checks.
         std::string op = $1;
         if(!op_unary_astnode::compatibleOperand($1,$2)){
@@ -657,14 +651,14 @@ unary_expression: postfix_expression{
 ;
 
 multiplicative_expression: unary_expression{
-    if(Symbols::symTabConstructed){   
+    if(Symbols::symTabStage==1){   
         $$ = (op_binary_astnode*) $1;
     }
 
 }
 | multiplicative_expression '*' unary_expression{
     //operator and expression match check here.
-    if(Symbols::symTabConstructed){
+    if(Symbols::symTabStage==1){
         std::string op = "MULT?";
         if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
             error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
@@ -673,7 +667,7 @@ multiplicative_expression: unary_expression{
     }
 }
 | multiplicative_expression '/' unary_expression{
-    if(Symbols::symTabConstructed){
+    if(Symbols::symTabStage==1){
         std::string op = "DIV?";
         if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
             error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
@@ -687,7 +681,7 @@ postfix_expression: primary_expression{
     $$ = $1;
 }
 | postfix_expression '[' expression ']'{
-    if(Symbols::symTabConstructed){
+    if(Symbols::symTabStage==1){
         if($1->typeNode.typeName.substr(0,4)=="void"){
             error(@$,"Tried to dereference an incomplete type.");
         }
@@ -701,7 +695,7 @@ postfix_expression: primary_expression{
     }
 }
 | IDENTIFIER '(' ')'{
-    if (Symbols::symTabConstructed) {
+    if (Symbols::symTabStage==1) {
         std::string function_name = $1;
         if(!($1=="printf"||$1=="scanf")){
             SymTab* fstab = Symbols::flsts[function_name];
@@ -727,7 +721,7 @@ postfix_expression: primary_expression{
     }
 }
 | IDENTIFIER '(' expression_list ')'{
-    if (Symbols::symTabConstructed) {
+    if (Symbols::symTabStage==1) {
         std::string function_name = $1;
         if(!($1=="printf"||$1=="scanf")){
             SymTab* fstab = Symbols::flsts[function_name];
@@ -770,7 +764,7 @@ postfix_expression: primary_expression{
     }
 }
 | postfix_expression '.' IDENTIFIER{
-    if(Symbols::symTabConstructed){
+    if(Symbols::symTabStage==1){
         if($1->typeNode.typeName.substr(0,6)!="struct"){
             error(@$,"LHS of . must be of type struct.");
         }
@@ -789,7 +783,7 @@ postfix_expression: primary_expression{
     }
 }
 | postfix_expression PTR_OP IDENTIFIER{
-    if(Symbols::symTabConstructed){
+    if(Symbols::symTabStage==1){
         if($1->typeNode.typeName.substr(0,6)!="struct"){
             error(@$,"LHS of -> must be of type struct.");
         }
@@ -809,7 +803,7 @@ postfix_expression: primary_expression{
     }
 }
 | postfix_expression INC_OP{
-    if(Symbols::symTabConstructed){
+    if(Symbols::symTabStage==1){
         if(!($1->typeNode.islval)){
             error(@$,"Postfix operator "+$2+" can only be applied to lvalues.");
         }
@@ -824,7 +818,7 @@ postfix_expression: primary_expression{
 ;
 
 primary_expression: IDENTIFIER{
-    if(Symbols::symTabConstructed){
+    if(Symbols::symTabStage==1){
         $$ = new identifier_astnode($1);
         SymEntry * entry = Symbols::getSymEntry(ststack.top(),$1);
         if(!entry){
@@ -840,7 +834,7 @@ primary_expression: IDENTIFIER{
     std::cerr<<"bloom"<<std::endl;
 }
 | INT_CONSTANT{
-    if(Symbols::symTabConstructed){   
+    if(Symbols::symTabStage==1){   
         $$ = new intconst_astnode($1);
         $$->typeNode = intc;
         $$->typeNode.islval = false;
@@ -850,14 +844,14 @@ primary_expression: IDENTIFIER{
     }
 }
 | FLOAT_CONSTANT{
-    if(Symbols::symTabConstructed){   
+    if(Symbols::symTabStage==1){   
         $$ = new floatconst_astnode($1);
         $$->typeNode = floatc;
         $$->typeNode.islval = false;
     }
 }
 | STRING_LITERAL{
-    if(Symbols::symTabConstructed){   
+    if(Symbols::symTabStage==1){   
         $$ = new stringconst_astnode($1);
         $$->typeNode = stringc;
         $$->typeNode.islval = false;
@@ -894,7 +888,7 @@ unary_operator: '-'{
 ;
 
 selection_statement: IF '(' expression ')' statement ELSE statement{
-    if(Symbols::symTabConstructed){  
+    if(Symbols::symTabStage==1){  
         if(!($3->typeNode.isNumeric()||$3->typeNode.getnrs()>0)){
             error(@$,"Invalid type for condition expression in for loop");
         }    
@@ -904,7 +898,7 @@ selection_statement: IF '(' expression ')' statement ELSE statement{
 ;
 
 iteration_statement: WHILE '(' expression ')' statement{
-    if(Symbols::symTabConstructed){   
+    if(Symbols::symTabStage==1){   
         if(!($3->typeNode.isNumeric()||$3->typeNode.getnrs()>0)){
             error(@$,"Invalid type for condition expression in while loop");
         }   
@@ -912,7 +906,7 @@ iteration_statement: WHILE '(' expression ')' statement{
     }
 }
 | FOR '(' assignment_expression ';' expression ';' assignment_expression ')' statement{
-    if(Symbols::symTabConstructed){
+    if(Symbols::symTabStage==1){
         if(!($5->typeNode.isNumeric()||$5->typeNode.getnrs()>0)){
             error(@$,"Invalid type for condition expression in for loop");
         }   
@@ -936,7 +930,7 @@ declarator_list: declarator{
     // std::cerr<<$1.typeName<<" has "<<$1.numptrstars<<" stars"<<std::endl;
     string type = $1.typeName;
     int size = $1.typeWidth;
-    if(!Symbols::symTabConstructed){
+    if(Symbols::symTabStage==0){
         // std::cerr<<topvarname<<": "<<size<<" "<<std::endl;
         int offset = ststack.top()->getNewOffset(size);
         SymTab* st = ststack.top();
@@ -950,7 +944,7 @@ declarator_list: declarator{
     $$ = $3;
     string type = $3.typeName;
     int size = $3.typeWidth;
-    if(!Symbols::symTabConstructed){
+    if(Symbols::symTabStage==0){
         if($3.typeName=="void"){
             error(@$,"Cannot declare variable of type \"void\"");
         }

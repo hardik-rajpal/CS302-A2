@@ -5,8 +5,8 @@ CXXSTD = -std=c++11
 
 
 .PHONY: all
-all: parser lexer ast.o symtab.cpp symtab.h
-	$(CXX) $(CXXDEBUG) -o iplC driver.cpp symtab.cpp build/parser.o build/scanner.o build/ast.o
+all: parser lexer ast.o troins.o symtab.cpp symtab.h
+	$(CXX) $(CXXDEBUG) -o iplC driver.cpp symtab.cpp build/parser.o build/scanner.o build/ast.o build/troins.o
 	mv parser.tab.cc gen/parser.tab.cc
 	mv parser.tab.hh gen/parser.tab.hh
 	mv stack.hh gen/stack.hh
@@ -25,7 +25,9 @@ lexer: scanner.l scanner.hh
 	flex++ --outfile=scanner.yy.cc  $<
 	$(CXX)  $(CXXDEBUG) -c scanner.yy.cc -o build/scanner.o
 ast.o: ast.cpp ast.hh util.hh
-	g++ -c -g ast.cpp -o build/ast.o
+	$(CXX) -c $(CXXDEBUG) ast.cpp -o build/ast.o
+troins.o: troins.cpp troins.hh
+	$(CXX) -c $(CXXDEBUG) troins.cpp -o build/troins.o
 graph: 
 	./ipl_parser main.c 2>debug_messages > output.txt
 .PHONY: clean
