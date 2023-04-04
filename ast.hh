@@ -56,6 +56,7 @@ struct offsetcomp{
 class exp_astnode: public abstract_astnode {
 public:
     typespec_astnode typeNode;
+    std::string addr;
 };
 
 class ref_astnode: public exp_astnode {

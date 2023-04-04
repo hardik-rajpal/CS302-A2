@@ -55,6 +55,7 @@
    #include "troins.hh"
 #undef yylex
 #define yylex IPL::Parser::scanner.yylex
+#define GEN(X) code.gen(troins(X));
 stack<SymTab*> ststack;
 int retType;
 typespec_astnode structc,intc,voidc,floatc,stringc;
@@ -127,7 +128,10 @@ begin_nterm: {
 
 } translation_unit {
     if(Symbols::symTabStage==1){
-        ststack.top()->printJson();
+        // ststack.top()->printJson();
+    }
+    else if(Symbols::symTabStage==2){
+        code.printCode();
     }
     Symbols::symTabStage+=1;
 }
@@ -428,6 +432,9 @@ assignment_expression: unary_expression '=' expression{
             error(@$,"Incompatible types: tried to assign "+$3->typeNode.typeName+" to "+$1->typeNode.typeName);
         }
     }
+    else if(Symbols::symTabStage==2){
+        code.gen(troins(troins::ass,troins::na,{$1->addr,$3->addr}));
+    }
 }
 ;
 
@@ -603,12 +610,16 @@ additive_expression: multiplicative_expression{
     // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
 | additive_expression '+' multiplicative_expression{
-    if(Symbols::symTabStage==1){
+    if(Symbols::symTabStage!=0){
         std::string op = "PLUS?";
         if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
             error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
         }
         $$ = new op_binary_astnode(op, $1, $3);
+    }
+    if(Symbols::symTabStage==2){
+        $$->addr = Symbols::newTemp(ststack.top());
+        code.gen(troins(troins::ass,troins::bop,{$$->addr,$1->addr,"+",$3->addr}));
     }
 }
 | additive_expression '-' multiplicative_expression{
@@ -651,10 +662,9 @@ unary_expression: postfix_expression{
 ;
 
 multiplicative_expression: unary_expression{
-    if(Symbols::symTabStage==1){   
+    if(Symbols::symTabStage!=0){   
         $$ = (op_binary_astnode*) $1;
     }
-
 }
 | multiplicative_expression '*' unary_expression{
     //operator and expression match check here.
@@ -818,7 +828,8 @@ postfix_expression: primary_expression{
 ;
 
 primary_expression: IDENTIFIER{
-    if(Symbols::symTabStage==1){
+    if(Symbols::symTabStage!=0){
+        //0 is pre symtab construction.
         $$ = new identifier_astnode($1);
         SymEntry * entry = Symbols::getSymEntry(ststack.top(),$1);
         if(!entry){
@@ -831,7 +842,10 @@ primary_expression: IDENTIFIER{
         }
  
     }
-    std::cerr<<"bloom"<<std::endl;
+    if(Symbols::symTabStage==2){
+        $$->addr = $1;
+    }
+    // std::cerr<<"bloom"<<std::endl;
 }
 | INT_CONSTANT{
     if(Symbols::symTabStage==1){   

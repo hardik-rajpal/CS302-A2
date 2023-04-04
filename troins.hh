@@ -3,12 +3,34 @@
 #include<vector>
 #include<string>
 #include<map>
+#include<iostream>
 using namespace std;
 class troins{
 public:
-    string keyword;
-    string specs;
+    enum kws{
+        gt,
+        ret,
+        prm,
+        ass
+    };
+    enum specs{
+        na,
+        ifs,
+        iff,
+        call,
+        bop,
+        uop,
+        arrr,
+        arrl,
+        adr,
+        ptrr,
+        ptrl
+    };
+    kws keyword;
+    specs spec;
     vector<string> args;
+    troins(kws kw, specs spec, vector<string> args);
+    string toString();
 };
 class TroinBuffer{
 public:
@@ -18,27 +40,7 @@ public:
     int nextinstr();//return buffer.length();
     void backpatch(vector<int> ilist,string label);
     string newlabel();
-};
-class keywords{
-public:
-    string gt="goto";
-    string ret="return";
-    string prm="param";
-    string ass="=";
-};
-class specs{
-public:
-    string na="";
-    string ifs="if";
-    string iff="ifFalse";
-    string call="call";
-    string bop="bop";
-    string uop="uop";
-    string arrr="arrr";
-    string arrl="arrl";
-    string adr="adr";
-    string ptrr="ptrr";
-    string ptrl="ptrl";
+    void printCode();
 };
 /*
 keyword = "goto"

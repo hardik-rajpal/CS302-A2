@@ -62,5 +62,7 @@ public:
     static int getStructBaseTypeWidth(string structname);
     static SymEntry* getSymEntry(SymTab * tst, string symbol, bool isMember=false);
     static void initGST();
+    static int tmpcnt;
+    static string newTemp(SymTab *currt);
 };
 #endif

@@ -1,6 +1,7 @@
 #include "symtab.h"
 #include "util.hh"
 SymTab *Symbols::gst;
+int Symbols::tmpcnt;
 map<string, SymTab *> Symbols::flsts;
 map<string, SymTab *> Symbols::slsts;
 int Symbols::symTabStage = 0;
@@ -208,6 +209,7 @@ int SymTab::getParamOffset(size_t posSize)
     return newOffset;
 }
 void Symbols::initGST(){
+    tmpcnt = 0;
     op_binary_astnode::boolops={
         "OR_OP","AND_OP",
     };
@@ -237,4 +239,11 @@ void Symbols::initGST(){
     typespec_astnode::stringc.baseTypeName = "string";
     typespec_astnode::stringc.typeName = typespec_astnode::stringc.baseTypeName;
     typespec_astnode::stringc.typeWidth = typespec_astnode::stringc.baseTypeWidth;
+}
+string Symbols::newTemp(SymTab *currt){
+    string name = "t"+to_string(tmpcnt++);
+    while(gst->rows.count(name)||currt->rows.count(name)){
+        name = "t"+to_string(tmpcnt++);
+    }
+    return name;
 }
