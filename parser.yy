@@ -55,13 +55,13 @@
    #include "troins.hh"
 #undef yylex
 #define yylex IPL::Parser::scanner.yylex
-#define GEN(X) code.gen(troins(X));
 stack<SymTab*> ststack;
 int retType;
 typespec_astnode structc,intc,voidc,floatc,stringc;
 typespec_astnode toptype;
 string topvarname;
 TroinBuffer code;
+#define gen(...) code.gen(troins(__VA_ARGS__))
 }
 
 
@@ -433,7 +433,7 @@ assignment_expression: unary_expression '=' expression{
         }
     }
     else if(Symbols::symTabStage==2){
-        code.gen(troins(troins::ass,troins::na,{$1->addr,$3->addr}));
+        gen(troins::ass,troins::na,{$1->addr,$3->addr});
     }
 }
 ;
@@ -619,7 +619,7 @@ additive_expression: multiplicative_expression{
     }
     if(Symbols::symTabStage==2){
         $$->addr = Symbols::newTemp(ststack.top());
-        code.gen(troins(troins::ass,troins::bop,{$$->addr,$1->addr,"+",$3->addr}));
+        gen(troins::ass,troins::bop,{$$->addr,$1->addr,"+",$3->addr});
     }
 }
 | additive_expression '-' multiplicative_expression{
@@ -630,6 +630,10 @@ additive_expression: multiplicative_expression{
         }
         $$ = new op_binary_astnode(op, $1, $3);
     }
+    if(Symbols::symTabStage==2){
+        $$->addr = Symbols::newTemp(ststack.top());
+        gen(troins::ass,troins::bop,{$$->addr,$1->addr,"-",$3->addr});
+    }
 }
 ;
 
@@ -638,7 +642,7 @@ unary_expression: postfix_expression{
     // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
 | unary_operator unary_expression{
-    if(Symbols::symTabStage==1){
+    if(Symbols::symTabStage!=0){
         //validity checks.
         std::string op = $1;
         if(!op_unary_astnode::compatibleOperand($1,$2)){
@@ -658,6 +662,10 @@ unary_expression: postfix_expression{
             }
         }
     }
+    if(Symbols::symTabStage==2){
+        $$->addr = Symbols::newTemp(ststack.top());
+        gen(troins::ass,troins::uop,{$$->addr,unopName($1,true),$2->addr});
+    }
 }
 ;
 
@@ -668,21 +676,29 @@ multiplicative_expression: unary_expression{
 }
 | multiplicative_expression '*' unary_expression{
     //operator and expression match check here.
-    if(Symbols::symTabStage==1){
+    if(Symbols::symTabStage!=0){
         std::string op = "MULT?";
         if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
             error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
         }
         $$ = new op_binary_astnode(op, $1, $3);
     }
+    if(Symbols::symTabStage==2){
+        $$->addr = Symbols::newTemp(ststack.top());
+        gen(troins::ass,troins::bop,{$$->addr,$1->addr,"*",$3->addr});
+    }
 }
 | multiplicative_expression '/' unary_expression{
-    if(Symbols::symTabStage==1){
+    if(Symbols::symTabStage!=0){
         std::string op = "DIV?";
         if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
             error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
         }
         $$ = new op_binary_astnode(op, $1, $3);
+    }
+    if(Symbols::symTabStage==2){
+        $$->addr = Symbols::newTemp(ststack.top());
+        gen(troins::ass,troins::bop,{$$->addr,$1->addr,"/",$3->addr});
     }
 }
 ;
@@ -774,13 +790,13 @@ postfix_expression: primary_expression{
     }
 }
 | postfix_expression '.' IDENTIFIER{
-    if(Symbols::symTabStage==1){
+    std::string structName;
+    if(Symbols::symTabStage!=0){
         if($1->typeNode.typeName.substr(0,6)!="struct"){
             error(@$,"LHS of . must be of type struct.");
         }
         $$ = new member_astnode($1, new identifier_astnode($3));
-        std::cerr<<"using this rule"<<std::endl;
-        std::string structName = $1->typeNode.typeName;
+        structName = $1->typeNode.typeName;
         // std::cerr<<"symtab constr, structname: "<<structName<<std::endl;
         SymEntry* memberEntry = Symbols::getSymEntry(Symbols::slsts[structName],$3,true);
         if(memberEntry){
@@ -790,6 +806,23 @@ postfix_expression: primary_expression{
             string errormsg = "Member "+$3+" not found in "+structName;
             error(@$,errormsg);
         }
+    }
+    if(Symbols::symTabStage==2){
+        /*
+        a.b
+        t1 = &a
+        t2 = t1 + offset
+        t3 = *t2
+        */
+        std::cout<<"here"<<endl;
+        string t1 = Symbols::newTemp(ststack.top());
+        string t2 = Symbols::newTemp(ststack.top());
+        string t3 = Symbols::newTemp(ststack.top());
+        string offset = to_string(Symbols::getOffsetInStruct(structName,$3));
+        gen(troins::ass,troins::uop,{t1,"&",$1->addr});
+        gen(troins::ass,troins::bop,{t2,t1,"+",offset});
+        gen(troins::ass,troins::uop,{t3,"*",t2});
+        $$->addr = t3;
     }
 }
 | postfix_expression PTR_OP IDENTIFIER{
@@ -887,6 +920,7 @@ expression_list: expression{
     $$ = $1;
 }
 ;
+//TODO use unopName function here.
 unary_operator: '-'{
     $$ = std::string("UMINUS");
 }

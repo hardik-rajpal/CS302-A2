@@ -246,5 +246,5 @@ private:
     std::vector<exp_astnode*> exp_list;
     bool is_proc;
 };
-
+std::string unopName(std::string inp,bool toSymbol=false);
 #endif

@@ -34,9 +34,9 @@
             "program": "${workspaceRoot}/iplC",
             "cwd": "${workspaceFolder}",
             "args": [
-                "main.c",
+                "tests/main.c",
                 ">",
-                "debug>myout.json",
+                "tests>out.txt",
                 "2>debug/mydebug.txt"
             ]
         }

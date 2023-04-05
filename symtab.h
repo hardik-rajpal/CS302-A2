@@ -63,6 +63,7 @@ public:
     static SymEntry* getSymEntry(SymTab * tst, string symbol, bool isMember=false);
     static void initGST();
     static int tmpcnt;
+    static int getOffsetInStruct(string structname,string member);
     static string newTemp(SymTab *currt);
 };
 #endif

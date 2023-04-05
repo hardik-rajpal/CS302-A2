@@ -247,3 +247,7 @@ string Symbols::newTemp(SymTab *currt){
     }
     return name;
 }
+int Symbols::getOffsetInStruct(string structname,string member){
+    SymEntry *se = getSymEntry(gst,member,true);
+    return se->offset;
+}

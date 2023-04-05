@@ -454,3 +454,34 @@ void return_astnode::print() {
 void empty_astnode::print() {
     std::cout << "\"empty\"";
 }
+std::string unopName(std::string inp,bool toSymbol){
+    if(toSymbol){
+        if(inp=="UMINUS"){
+            return "-";
+        }
+        else if(inp=="NOT"){
+            return "!";
+        }
+        else if(inp=="ADDRESS"){
+            return "&";
+        }
+        else if(inp=="DEREF"){
+            return "*";
+        }
+    }
+    else{
+        switch (inp[0])
+        {
+        case '-':
+            return "UMINUS";
+            break;
+        case '!':
+            return "NOT";
+        case '&':
+            return "ADDRESS";
+        case '*':
+            return "DEREF";
+        }
+    }
+    return "unopNameScrewup";
+}
