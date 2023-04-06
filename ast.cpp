@@ -369,11 +369,13 @@ void typespec_astnode::deref(){
     }
     islval = true;
     typeName = genTypeName();
+    typeWidth = genTypeWidth();
 }
 void typespec_astnode::addressOf(){
     numptrstars+=1;
     islval = false;
     typeName = genTypeName();
+    typeWidth = genTypeWidth();
 }
 bool typespec_astnode::isNumeric(){
     return numtypes.count(typeName);

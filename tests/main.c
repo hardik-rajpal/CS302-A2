@@ -4,7 +4,9 @@ struct book{
 };
 int main(){
     int a,b,c,d;
-    struct book sapiens;
+    int f[10][10][10];
+    struct book * sapiens;
     a = b + c*d/b/d+c*b;
-    a = sapiens.pages;
+    a = sapiens->rating;
+    a = f[2][3][4];
 }

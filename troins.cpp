@@ -32,6 +32,9 @@ string troins::toString(){
         case (specs::na):
             ans = args[0] + " = " + args[1];
             break;
+        case (specs::uop):
+            ans = args[0] + " = " + args[1] + args[2];
+            break;
         }
         break;
     case (kws::gt):

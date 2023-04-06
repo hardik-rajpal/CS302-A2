@@ -62,6 +62,7 @@ typespec_astnode toptype;
 string topvarname;
 TroinBuffer code;
 #define gen(...) code.gen(troins(__VA_ARGS__))
+#define newtemp() Symbols::newTemp(ststack.top())
 }
 
 
@@ -618,7 +619,7 @@ additive_expression: multiplicative_expression{
         $$ = new op_binary_astnode(op, $1, $3);
     }
     if(Symbols::symTabStage==2){
-        $$->addr = Symbols::newTemp(ststack.top());
+        $$->addr = newtemp();
         gen(troins::ass,troins::bop,{$$->addr,$1->addr,"+",$3->addr});
     }
 }
@@ -631,7 +632,7 @@ additive_expression: multiplicative_expression{
         $$ = new op_binary_astnode(op, $1, $3);
     }
     if(Symbols::symTabStage==2){
-        $$->addr = Symbols::newTemp(ststack.top());
+        $$->addr = newtemp();
         gen(troins::ass,troins::bop,{$$->addr,$1->addr,"-",$3->addr});
     }
 }
@@ -663,7 +664,7 @@ unary_expression: postfix_expression{
         }
     }
     if(Symbols::symTabStage==2){
-        $$->addr = Symbols::newTemp(ststack.top());
+        $$->addr = newtemp();
         gen(troins::ass,troins::uop,{$$->addr,unopName($1,true),$2->addr});
     }
 }
@@ -684,7 +685,7 @@ multiplicative_expression: unary_expression{
         $$ = new op_binary_astnode(op, $1, $3);
     }
     if(Symbols::symTabStage==2){
-        $$->addr = Symbols::newTemp(ststack.top());
+        $$->addr = newtemp();
         gen(troins::ass,troins::bop,{$$->addr,$1->addr,"*",$3->addr});
     }
 }
@@ -697,7 +698,7 @@ multiplicative_expression: unary_expression{
         $$ = new op_binary_astnode(op, $1, $3);
     }
     if(Symbols::symTabStage==2){
-        $$->addr = Symbols::newTemp(ststack.top());
+        $$->addr = newtemp();
         gen(troins::ass,troins::bop,{$$->addr,$1->addr,"/",$3->addr});
     }
 }
@@ -707,7 +708,7 @@ postfix_expression: primary_expression{
     $$ = $1;
 }
 | postfix_expression '[' expression ']'{
-    if(Symbols::symTabStage==1){
+    if(Symbols::symTabStage!=0){
         if($1->typeNode.typeName.substr(0,4)=="void"){
             error(@$,"Tried to dereference an incomplete type.");
         }
@@ -719,6 +720,25 @@ postfix_expression: primary_expression{
         }
         $$ = new arrayref_astnode($1, $3);
     }
+    if(Symbols::symTabStage==2){
+        /*
+        t1 = $1->addr
+        type = $1->typeNode
+        type.deref()
+        t2 = newTemp(); gen(t2 = expression.addr '*' type.typeWidth)
+        gen: t3 = t1 + t2
+        gen: t4 = *t3
+        */
+        typespec_astnode tmp = $1->typeNode;tmp.deref();
+        string t1 = newtemp();
+        string t2 = newtemp();
+        string t3 = newtemp();
+        gen(troins::ass,troins::bop,{t1, to_string(tmp.typeWidth),"*",$3->addr});
+        gen(troins::ass,troins::bop,{t2, $1->addr, "+", t1});
+        gen(troins::ass,troins::uop,{t3, "*", t2});
+        $$->addr = t3;
+    }
+
 }
 | IDENTIFIER '(' ')'{
     if (Symbols::symTabStage==1) {
@@ -814,10 +834,9 @@ postfix_expression: primary_expression{
         t2 = t1 + offset
         t3 = *t2
         */
-        std::cout<<"here"<<endl;
-        string t1 = Symbols::newTemp(ststack.top());
-        string t2 = Symbols::newTemp(ststack.top());
-        string t3 = Symbols::newTemp(ststack.top());
+        string t1 = newtemp();
+        string t2 = newtemp();
+        string t3 = newtemp();
         string offset = to_string(Symbols::getOffsetInStruct(structName,$3));
         gen(troins::ass,troins::uop,{t1,"&",$1->addr});
         gen(troins::ass,troins::bop,{t2,t1,"+",offset});
@@ -826,14 +845,15 @@ postfix_expression: primary_expression{
     }
 }
 | postfix_expression PTR_OP IDENTIFIER{
-    if(Symbols::symTabStage==1){
+    std::string structName;
+    if(Symbols::symTabStage!=0){
         if($1->typeNode.typeName.substr(0,6)!="struct"){
             error(@$,"LHS of -> must be of type struct.");
         }
         $$ = new arrow_astnode($1, new identifier_astnode($3));
         typespec_astnode dereftype = $1->typeNode;
         dereftype.deref();
-        std::string structName  = dereftype.typeName;
+        structName  = dereftype.typeName;
         $1->typeNode.compatibleWith(dereftype);
         SymEntry* memberEntry = Symbols::getSymEntry(Symbols::slsts[structName],$3,true);
         if(memberEntry){
@@ -844,8 +864,22 @@ postfix_expression: primary_expression{
             error(@$,errormsg);
         }
     }
+    if(Symbols::symTabStage==2){
+        /*
+        a.b
+        t1 = a + offset
+        t2 = *t1
+        */
+        string t1 = newtemp();
+        string t2 = newtemp();
+        string offset = to_string(Symbols::getOffsetInStruct(structName,$3));
+        gen(troins::ass,troins::bop,{t1,$1->addr,"+",offset});
+        gen(troins::ass,troins::uop,{t2,"*",t1});
+        $$->addr = t2;
+    }
 }
 | postfix_expression INC_OP{
+    //TODO this for 3A
     if(Symbols::symTabStage==1){
         if(!($1->typeNode.islval)){
             error(@$,"Postfix operator "+$2+" can only be applied to lvalues.");
@@ -881,7 +915,7 @@ primary_expression: IDENTIFIER{
     // std::cerr<<"bloom"<<std::endl;
 }
 | INT_CONSTANT{
-    if(Symbols::symTabStage==1){   
+    if(Symbols::symTabStage!=0){   
         $$ = new intconst_astnode($1);
         $$->typeNode = intc;
         $$->typeNode.islval = false;
@@ -889,20 +923,31 @@ primary_expression: IDENTIFIER{
             $$->typeNode.isnullval = true;
         }
     }
+    if(Symbols::symTabStage==2){
+        $$->addr = $1;
+    }
+
 }
 | FLOAT_CONSTANT{
-    if(Symbols::symTabStage==1){   
+    if(Symbols::symTabStage!=0){   
         $$ = new floatconst_astnode($1);
         $$->typeNode = floatc;
         $$->typeNode.islval = false;
     }
+    if(Symbols::symTabStage==2){
+        $$->addr = $1;
+    }
+
 }
 | STRING_LITERAL{
-    if(Symbols::symTabStage==1){   
+    if(Symbols::symTabStage!=0){   
         $$ = new stringconst_astnode($1);
         $$->typeNode = stringc;
         $$->typeNode.islval = false;
         // $$->print();
+    }
+    if(Symbols::symTabStage==2){
+        $$->addr = $1;
     }
 }
 | '(' expression ')'{
@@ -913,7 +958,6 @@ primary_expression: IDENTIFIER{
 expression_list: expression{
     $$ = std::vector<exp_astnode*>();
     $$.push_back($1);
-    // std::cerr << __LINE__ << (*($$.rbegin()))->typeNode.typeName<<std::endl;
 }
 | expression_list ',' expression{
     $1.push_back($3);
