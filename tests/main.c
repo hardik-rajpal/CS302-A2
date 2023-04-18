@@ -8,5 +8,5 @@ int main(){
     struct book * sapiens;
     a = b + c*d/b/d+c*b;
     a = sapiens->rating;
-    a = f[2][3][4];
+    a = f[2][3][4];//f + 2*10*10*4 + 3*10*4 + 4*4
 }
