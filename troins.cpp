@@ -1,3 +1,5 @@
+#include<algorithm>
+#include<set>
 #include"troins.hh"
 void TroinBuffer::gen(troins ins){
     buffer.push_back(ins);
@@ -12,7 +14,18 @@ void TroinBuffer::backpatch(vector<int> list, string label){
         args[args.size()-1]=label;//all goto instructions satisfy L being last arg.
     }
 }
-string TroinBuffer::newlabel(){
+vector<int> TroinBuffer::merge(vector<int> l1,vector<int> l2){
+    vector<int> res;
+    for(int x:l1){
+        res.push_back(x);
+    }
+    for(int x:l2){
+        res.push_back(x);
+    }
+    return res;
+}
+
+string TroinBuffer::newLabel(){
     return "L"+to_string(labels.size());
 }
 troins::troins(kws kw, specs spc, vector<string> _args){
@@ -38,6 +51,19 @@ string troins::toString(){
         }
         break;
     case (kws::gt):
+        switch(spec)
+        {
+        case (specs::na):
+            ans = "goto "+args[0];
+            break;
+        case (specs::ifs):
+            if(args.size()>2){
+                ans = "if "+ args[0] + args[1] + args[2]+" goto "+args[3];
+            }
+            else{
+                ans = "if "+args[0] + " goto "+args[1];
+            }
+        }
         break;
     case (kws::prm):
         break;
@@ -47,7 +73,14 @@ string troins::toString(){
     return ans;
 }
 void TroinBuffer::printCode(){
-    for(troins t:buffer){
-        std::cout<<t.toString()<<std::endl;
+    for(int i=0;i<buffer.size();i++){
+        troins t = buffer[i];
+        if(labels.count(i)){
+            std::cout<<labels[i]<<":"<<std::endl;
+        }
+        std::cout<<"\t"<<t.toString()<<std::endl;
     }
+}
+void TroinBuffer::setLabel(string name){
+    labels[buffer.size()] = name;
 }

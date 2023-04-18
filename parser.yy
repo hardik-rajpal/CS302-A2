@@ -99,9 +99,11 @@ TroinBuffer code;
 
 %nterm <exp_astnode*> expression unary_expression postfix_expression primary_expression //assignment_expression
 
-%nterm <op_binary_astnode*> logical_and_expression equality_expression relational_expression additive_expression multiplicative_expression
+%nterm <op_binary_astnode*> logical_and_expression equality_expression relational_expression additive_expression multiplicative_expression ifgotocoder
 
 %nterm <funcall_astnode*> procedure_call
+
+%nterm <mnt*> mnterm
 
 %nterm <assignE_astnode*> assignment_expression
 
@@ -233,6 +235,9 @@ fun_declarator: IDENTIFIER '('{
         *(Symbols::flsts[name]->rettype) = toptype;
     }
     ststack.push(Symbols::flsts[name]);
+    if(Symbols::symTabStage==2){
+        code.setLabel("."+name);
+    }
 } parameter_list ')'{
     $$ = NULL;
     if(Symbols::symTabStage==0){
@@ -266,6 +271,9 @@ fun_declarator: IDENTIFIER '('{
     }
     else{
         $$ = new fundeclarator_astnode(name,std::vector<typespec_astnode>());
+        if(Symbols::symTabStage==2){
+            code.setLabel("."+name);
+        }
     }
     ststack.push(Symbols::flsts[name]);
 }
@@ -528,14 +536,39 @@ expression: logical_and_expression{
     }
 }
 ;
-
-logical_and_expression: equality_expression{
-    $$ = $1;
-    // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
+mnterm:{
+    $$ = new mnt();
+    $$->nil = code.newLabel();
+    code.setLabel($$->nil);
 }
-| logical_and_expression AND_OP equality_expression{
-    if(Symbols::symTabStage==1){   
-        $$ = new op_binary_astnode("AND_OP", $1, $3);
+ifgotocoder: equality_expression{
+    $$ = $1;
+    if(Symbols::symTabStage==2){
+        if(code.condcode){
+            $$->tl = {code.nextinstr()};
+            gen(troins::gt,troins::ifs,{$1->addr,""});
+            $$->fl = {code.nextinstr()};
+            gen(troins::gt,troins::na,{""});
+        }
+    }
+}
+logical_and_expression: ifgotocoder{
+    $$ = $1;
+}
+| logical_and_expression AND_OP mnterm ifgotocoder{
+    if(Symbols::symTabStage>0){
+        $$ = new op_binary_astnode("AND_OP", $1, $4);
+    }
+    if(Symbols::symTabStage==2){
+        $$->addr = newtemp();
+        if(code.condcode){
+            $$->tl = $4->tl;
+            code.backpatch($1->tl,$3->nil);
+            $$->fl = code.merge($1->fl,$4->fl);
+        }
+        else{
+            gen(troins::ass,troins::bop,{$$->addr,"AND_OP",$1->addr,$4->addr});
+        }
     }
 }
 ;
@@ -569,39 +602,67 @@ relational_expression: additive_expression{
     // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
 | relational_expression '<' additive_expression{
-    if(Symbols::symTabStage==1){
-        std::string op = "LT_OP?";
+    std::string op = "LT_OP?";
+    if(Symbols::symTabStage>0){
         if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
             error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
         }
         $$ = new op_binary_astnode(op, $1, $3);
     }
+    if(Symbols::symTabStage==2){
+        op = op.substr(0,op.size()-1);
+        std::string t1 = newtemp();
+        gen(troins::ass,troins::bop,{t1,$1->addr,op,$3->addr});
+        $$->addr = t1;
+    }
+
 }
 | relational_expression '>' additive_expression{
-    if(Symbols::symTabStage==1){
-        std::string op = "GT_OP?";
+    std::string op = "GT_OP?";
+    if(Symbols::symTabStage>0){
         if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
             error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
         }
         $$ = new op_binary_astnode(op, $1, $3);
+    }
+    if(Symbols::symTabStage==2){
+        op = op.substr(0,op.size()-1);
+        std::string t1 = newtemp();
+        gen(troins::ass,troins::bop,{t1,$1->addr,op,$3->addr});
+        $$->addr = t1;
+
     }
 }
 | relational_expression LE_OP additive_expression{
-    if(Symbols::symTabStage==1){
-        std::string op = "LE_OP?";
+    std::string op = "LE_OP?";
+    if(Symbols::symTabStage>0){
         if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
             error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
         }
         $$ = new op_binary_astnode(op, $1, $3);
     }
+    if(Symbols::symTabStage==2){
+        op = op.substr(0,op.size()-1);
+        std::string t1 = newtemp();
+        gen(troins::ass,troins::bop,{t1,$1->addr,op,$3->addr});
+        $$->addr = t1;
+
+    }
 }
 | relational_expression GE_OP additive_expression{
-    if(Symbols::symTabStage==1){
-        std::string op = "GE_OP?";
+    std::string op = "GE_OP?";
+    if(Symbols::symTabStage>0){
         if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
             error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
         }
         $$ = new op_binary_astnode(op, $1, $3);
+    }
+    if(Symbols::symTabStage==2){
+        op = op.substr(0,op.size()-1);
+        std::string t1 = newtemp();
+        gen(troins::ass,troins::bop,{t1,$1->addr,op,$3->addr});
+        $$->addr = t1;
+
     }
 }
 ;
@@ -979,30 +1040,63 @@ unary_operator: '-'{
 }
 ;
 
-selection_statement: IF '(' expression ')' statement ELSE statement{
+selection_statement: IF {
+    if(Symbols::symTabStage==2){
+        code.condcode = true;
+    }
+} '(' expression ')' {
+    if(Symbols::symTabStage==2){
+        code.condcode = false;
+        std::string label = code.newLabel();
+        code.setLabel(label);
+        code.backpatch($4->tl,label);
+    }
+} statement ELSE {
+    if(Symbols::symTabStage==2){
+        std::string label = code.newLabel();
+        code.setLabel(label);
+        code.backpatch($4->fl,label);
+    }
+} statement{
     if(Symbols::symTabStage==1){  
-        if(!($3->typeNode.isNumeric()||$3->typeNode.getnrs()>0)){
+        if(!($4->typeNode.isNumeric()||$4->typeNode.getnrs()>0)){
             error(@$,"Invalid type for condition expression in for loop");
         }    
-        $$ = new if_astnode($3, $5, $7);
+        $$ = new if_astnode($4, $7, $10);
     }
 }
 ;
 
-iteration_statement: WHILE '(' expression ')' statement{
+iteration_statement: WHILE {
+    if(Symbols::symTabStage==2){
+        code.condcode = true;
+    }
+} '(' expression ')' {
+    if(Symbols::symTabStage==2){
+        code.condcode=false;
+    }
+} statement{
     if(Symbols::symTabStage==1){   
-        if(!($3->typeNode.isNumeric()||$3->typeNode.getnrs()>0)){
+        if(!($4->typeNode.isNumeric()||$4->typeNode.getnrs()>0)){
             error(@$,"Invalid type for condition expression in while loop");
         }   
-        $$ = new while_astnode($3, $5);
+        $$ = new while_astnode($4, $7);
     }
 }
-| FOR '(' assignment_expression ';' expression ';' assignment_expression ')' statement{
+| FOR '(' assignment_expression ';' {
+    if(Symbols::symTabStage==2){
+        code.condcode=true;
+    }
+} expression {
+    if(Symbols::symTabStage==2){
+        code.condcode=false;
+    }
+} ';' assignment_expression ')' statement{
     if(Symbols::symTabStage==1){
-        if(!($5->typeNode.isNumeric()||$5->typeNode.getnrs()>0)){
+        if(!($6->typeNode.isNumeric()||$6->typeNode.getnrs()>0)){
             error(@$,"Invalid type for condition expression in for loop");
         }   
-        $$ = new for_astnode($3, $5, $7, $9);
+        $$ = new for_astnode($3, $6, $9, $11);
     }
 }
 ;

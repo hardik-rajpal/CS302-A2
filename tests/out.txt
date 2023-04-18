@@ -1,20 +1,29 @@
-t0 = c * d
-t1 = t0 / b
-t2 = t1 / d
-t3 = b + t2
-t4 = c * b
-t5 = t3 + t4
-a = t5
-t6 = sapiens + 4
-t7 = *t6
-a = t7
-t8 = 400 * 2
-t9 = f + t8
-t10 = *t9
-t11 = 40 * 3
-t12 = t10 + t11
-t13 = *t12
-t14 = 4 * 4
-t15 = t13 + t14
-t16 = *t15
-a = t16
+.dostuff:
+	t0 = a + b
+	a = t0
+.main:
+	t1 = 400 * 2
+	t2 = f + t1
+	t3 = *t2
+	t4 = 40 * 3
+	t5 = t3 + t4
+	t6 = *t5
+	t7 = 4 * 4
+	t8 = t6 + t7
+	t9 = *t8
+	a = t9
+	t10 = a LT_OP 1
+	if t10 goto L2
+	goto L4
+L2:
+	t11 = b LT_OP 1
+	if t11 goto L3
+	goto L4
+L3:
+	t13 = c * d
+	t14 = b + t13
+	a = t14
+L4:
+	t15 = b * b
+	t16 = t15 + d
+	a = t16

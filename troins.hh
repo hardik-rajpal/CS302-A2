@@ -34,13 +34,16 @@ public:
 };
 class TroinBuffer{
 public:
+    bool condcode = false;
     vector<troins> buffer;
-    map<string,int> labels;
+    map<int,string> labels;
     void gen(troins ins);//append to buffer.
     int nextinstr();//return buffer.length();
     void backpatch(vector<int> ilist,string label);
-    string newlabel();
+    vector<int> merge(vector<int> l1,vector<int> l2);
+    string newLabel();
     void printCode();
+    void setLabel(string name);
 };
 /*
 keyword = "goto"

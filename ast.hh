@@ -56,6 +56,8 @@ struct offsetcomp{
 class exp_astnode: public abstract_astnode {
 public:
     typespec_astnode typeNode;
+    std::vector<int> fl;
+    std::vector<int> tl;
     std::string addr;
 };
 
@@ -247,4 +249,10 @@ private:
     bool is_proc;
 };
 std::string unopName(std::string inp,bool toSymbol=false);
+class mnt{
+public:
+    std::string nil;
+    std::vector<int> next;
+    mnt(){};
+};
 #endif
