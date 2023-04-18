@@ -530,9 +530,19 @@ expression: logical_and_expression{
     $$ = $1;
     // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
-| expression OR_OP logical_and_expression{
-    if(Symbols::symTabStage==1){
-        $$ = new op_binary_astnode("OR_OP",$1,$3);
+| expression OR_OP mnterm logical_and_expression{
+    if(Symbols::symTabStage>0){
+        $$ = new op_binary_astnode("OR_OP",$1,$4);
+    }
+    if(Symbols::symTabStage==2){
+        if(code.condcode){
+            code.backpatch($1->fl,$3->nil);
+            $$->tl = code.merge($1->tl,$4->tl);
+            $$->fl = $4->fl;
+        }
+        else{
+            gen(troins::ass,troins::bop,{$$->addr,$1->addr,"OR_OP",$4->addr});
+        }
     }
 }
 ;
@@ -567,7 +577,7 @@ logical_and_expression: ifgotocoder{
             $$->fl = code.merge($1->fl,$4->fl);
         }
         else{
-            gen(troins::ass,troins::bop,{$$->addr,"AND_OP",$1->addr,$4->addr});
+            gen(troins::ass,troins::bop,{$$->addr,$1->addr,"AND_OP",$4->addr});
         }
     }
 }
