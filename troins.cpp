@@ -69,7 +69,11 @@ string troins::toString(){
         break;
     case (kws::ret):
         break;    
+    case (kws::nop):
+        ans = "nop";
+        break;
     }
+    
     return ans;
 }
 void TroinBuffer::printCode(){
@@ -82,5 +86,22 @@ void TroinBuffer::printCode(){
     }
 }
 void TroinBuffer::setLabel(string name){
+    if(labels.count(buffer.size())){
+        string oldname = labels[buffer.size()];
+        for(int i=buffer.size()-1;i>-1;i--){
+            troins &t = buffer[i];
+            if(t.keyword==troins::gt){
+                std::cerr<<"found gt stmt: "<<t.args[t.args.size()-1]<<endl;
+                if(t.args[t.args.size()-1]==oldname){
+                    t.args[t.args.size()-1] = name;
+                }
+            }
+        }
+    }
     labels[buffer.size()] = name;
+    std::cerr<<"{"<<endl;
+    for(auto entry:labels){
+        std::cerr<<"\t"<<entry.first<<":"<<entry.second<<endl;
+    }
+    std::cerr<<"}"<<endl;
 }

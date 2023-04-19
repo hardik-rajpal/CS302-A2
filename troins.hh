@@ -11,7 +11,8 @@ public:
         gt,
         ret,
         prm,
-        ass
+        ass,
+        nop
     };
     enum specs{
         na,
@@ -35,6 +36,7 @@ public:
 class TroinBuffer{
 public:
     bool condcode = false;
+    string condtype="";
     vector<troins> buffer;
     map<int,string> labels;
     void gen(troins ins);//append to buffer.

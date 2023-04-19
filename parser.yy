@@ -548,8 +548,10 @@ expression: logical_and_expression{
 ;
 mnterm:{
     $$ = new mnt();
-    $$->nil = code.newLabel();
-    code.setLabel($$->nil);
+    if(code.condcode){
+        $$->nil = code.condtype+"_"+code.newLabel();
+        code.setLabel($$->nil);
+    }
 }
 ifgotocoder: equality_expression{
     $$ = $1;
@@ -695,7 +697,7 @@ additive_expression: multiplicative_expression{
     }
 }
 | additive_expression '-' multiplicative_expression{
-    if(Symbols::symTabStage==1){
+    if(Symbols::symTabStage>0){
         std::string op = "MINUS?";
         if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
             error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
@@ -1053,17 +1055,19 @@ unary_operator: '-'{
 selection_statement: IF {
     if(Symbols::symTabStage==2){
         code.condcode = true;
+        code.condtype = "if_cond";
     }
 } '(' expression ')' {
     if(Symbols::symTabStage==2){
         code.condcode = false;
-        std::string label = code.newLabel();
+        code.condtype = "";
+        std::string label = "if_stmt_"+code.newLabel();
         code.setLabel(label);
         code.backpatch($4->tl,label);
     }
 } statement ELSE {
     if(Symbols::symTabStage==2){
-        std::string label = code.newLabel();
+        std::string label = "else_stmt"+code.newLabel();
         code.setLabel(label);
         code.backpatch($4->fl,label);
     }
@@ -1079,34 +1083,74 @@ selection_statement: IF {
 
 iteration_statement: WHILE {
     if(Symbols::symTabStage==2){
+        code.condtype="while_cond";
         code.condcode = true;
     }
-} '(' expression ')' {
+} mnterm '(' expression ')' {
+    if(Symbols::symTabStage==2){
+        code.condtype="while_stmt";
+    }
+} mnterm {
     if(Symbols::symTabStage==2){
         code.condcode=false;
+        code.condtype="";
+        gen(troins::nop,troins::na,{});
     }
 } statement{
-    if(Symbols::symTabStage==1){   
-        if(!($4->typeNode.isNumeric()||$4->typeNode.getnrs()>0)){
+    if(Symbols::symTabStage>0){   
+        if(!($5->typeNode.isNumeric()||$5->typeNode.getnrs()>0)){
             error(@$,"Invalid type for condition expression in while loop");
         }   
-        $$ = new while_astnode($4, $7);
+        $$ = new while_astnode($5, $10);
+    }
+    if(Symbols::symTabStage==2){
+        code.backpatch($5->tl,$8->nil);
+        gen(troins::gt,troins::na,{$3->nil});
+        std::string label = "while_exit_"+code.newLabel();
+        code.setLabel(label);
+        code.backpatch($5->fl,label);
     }
 }
-| FOR '(' assignment_expression ';' {
+| FOR '('  assignment_expression ';' {
     if(Symbols::symTabStage==2){
         code.condcode=true;
+        code.condtype="for_cond";
     }
-} expression {
+} mnterm/*6*/ expression/*7*/ {
+    if(Symbols::symTabStage==2){
+        code.condtype="for_incrementor";
+    }
+} mnterm/*9*/{
     if(Symbols::symTabStage==2){
         code.condcode=false;
+        code.condtype="";
     }
-} ';' assignment_expression ')' statement{
-    if(Symbols::symTabStage==1){
-        if(!($6->typeNode.isNumeric()||$6->typeNode.getnrs()>0)){
+} ';' assignment_expression ')'{
+    if(Symbols::symTabStage==2){
+        gen(troins::gt,troins::na,{$6->nil});
+        code.condcode = true;
+        code.condtype = "for_stmt";
+    }
+} mnterm {
+    if(Symbols::symTabStage==2){
+        code.condcode = false;
+        code.condtype = "";
+        gen(troins::nop,troins::na,{});
+    }
+} statement{
+    if(Symbols::symTabStage>0){
+        //TODO update \$\nums
+        if(!($7->typeNode.isNumeric()||$7->typeNode.getnrs()>0)){
             error(@$,"Invalid type for condition expression in for loop");
         }   
-        $$ = new for_astnode($3, $6, $9, $11);
+        $$ = new for_astnode($3, $7, $12, $17);
+    }
+    if(Symbols::symTabStage==2){
+        code.backpatch($7->tl,$15->nil);
+        gen(troins::gt,troins::na,{$9->nil});
+        std::string label = "for_exit_"+code.newLabel();
+        code.setLabel(label);
+        code.backpatch($7->fl,label);
     }
 }
 ;
