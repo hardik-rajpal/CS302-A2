@@ -22,6 +22,8 @@ public:
 
 /* Abstract Classes */
 class statement_astnode: public abstract_astnode {
+public:
+    std::vector<int> next;
 };
 class typespec_astnode{
     std::set<std::string> numtypes= {"int","float"};

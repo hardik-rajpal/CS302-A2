@@ -103,7 +103,7 @@ TroinBuffer code;
 
 %nterm <funcall_astnode*> procedure_call
 
-%nterm <mnt*> mnterm
+%nterm <mnt*> mnterm nexter
 
 %nterm <assignE_astnode*> assignment_expression
 
@@ -360,19 +360,35 @@ statement_list: statement {
     }
     $$ = temp;
 }
-| statement_list statement{
-    $1.push_back($2);
+| statement_list {
+    if(Symbols::symTabStage==2){code.condcode=true;}
+} mnterm {
+    if(Symbols::symTabStage==2){code.condcode=false;}
+} statement{
+    vector<statement_astnode*> &L = $1;
+    L.push_back($5);
     $$ = $1;
+    if(Symbols::symTabStage==2){
+        int lastIndex = L.size()-1;
+        if(lastIndex>-1){
+            statement_astnode* pstmt = L[lastIndex];
+            vector<int> pnext = pstmt->next;
+            pnext.size();
+            if(pnext.size()>0){
+                code.backpatch(pnext,$3->nil);
+            }
+        }
+    }
 }
 ;
 
 statement: ';'{
-    if(Symbols::symTabStage==1){   
+    if(Symbols::symTabStage>0){   
         $$ = new empty_astnode();
     }
 }
 | '{' statement_list '}'{
-    if(Symbols::symTabStage==1){   
+    if(Symbols::symTabStage>0){   
         $$ = new seq_astnode($2);
     }
 }
@@ -563,6 +579,13 @@ mnterm:{
     if(code.condcode){
         $$->nil = code.condtype+"_"+code.newLabel();
         code.setLabel($$->nil);
+    }
+}
+nexter:{
+    $$ = new mnt();
+    if(code.condcode){
+        $$->next = {(code.nextinstr())};
+        gen(troins::gt,troins::na,{""});
     }
 }
 ifgotocoder: equality_expression{
@@ -1104,18 +1127,21 @@ selection_statement: IF {
         code.setLabel(label);
         code.backpatch($4->tl,label);
     }
-} statement ELSE {
+} statement nexter ELSE {
     if(Symbols::symTabStage==2){
         std::string label = "else_stmt"+code.newLabel();
         code.setLabel(label);
         code.backpatch($4->fl,label);
     }
 } statement{
-    if(Symbols::symTabStage==1){  
+    if(Symbols::symTabStage>0){  
         if(!($4->typeNode.isNumeric()||$4->typeNode.getnrs()>0)){
             error(@$,"Invalid type for condition expression in for loop");
         }    
-        $$ = new if_astnode($4, $7, $10);
+        $$ = new if_astnode($4, $7, $11);
+    }
+    if(Symbols::symTabStage==2){
+        $$->next = $8->next;
     }
 }
 ;

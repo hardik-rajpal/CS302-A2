@@ -27,14 +27,14 @@ int main()
             for (d = 0; d < 6; d = d + 1)
             {
 
-                if (a < 1 || b < 1)
+             */   if (a < 1 || b < 1)
                 {
                     a = b + c * d;
                 }
                 else
                 {
                     a = b * b + d;
-                }
+                }/*
             }
         }
     }*/
