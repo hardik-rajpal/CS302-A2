@@ -15,7 +15,9 @@ void identifier_astnode::print() {
     );
 }
 
-stringconst_astnode::stringconst_astnode(std::string value) : value(value) { }
+stringconst_astnode::stringconst_astnode(std::string value) : value(value) {
+    addr = value;
+}
 
 void stringconst_astnode::print() {
     printAst(

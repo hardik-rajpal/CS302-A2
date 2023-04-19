@@ -37,6 +37,8 @@
 %printer { std::cerr << $$; } IF
 %printer { std::cerr << $$; } ELSE
 %printer { std::cerr << $$; } WHILE
+%printer { std::cerr << $$; } MAIN
+%printer { std::cerr << $$; } PRINTF
 %printer { std::cerr << $$; } FOR
 %printer { std::cerr << $$; } RETURN
 %printer { std::cerr << $$; } OTHERS
@@ -86,6 +88,8 @@ TroinBuffer code;
 %token <std::string> INC_OP
 %token <std::string> PTR_OP
 %token <std::string> IF
+%token <std::string> MAIN
+%token <std::string> PRINTF
 %token <std::string> ELSE
 %token <std::string> WHILE
 %token <std::string> FOR
@@ -94,24 +98,23 @@ TroinBuffer code;
 %left '+' '-'
 %left '*' '/'
 %token '=' '(' ')' ',' '{' '}' '[' ']' '!' '&' '<' '>' ';' '\n'
-%nterm <std::vector<abstract_astnode*>> translation_unit begin_nterm
-%nterm <abstract_astnode*> struct_specifier declaration_list
+%nterm <std::vector<abstract_astnode*>> translation_unit begin_nterm program
+%nterm <abstract_astnode*> struct_specifier declaration_list 
 
 %nterm <exp_astnode*> expression unary_expression postfix_expression primary_expression //assignment_expression
 
 %nterm <op_binary_astnode*> logical_and_expression equality_expression relational_expression additive_expression multiplicative_expression ifgotocoder
 
-%nterm <funcall_astnode*> procedure_call
+%nterm <funcall_astnode*> procedure_call printf_call
 
 %nterm <mnt*> mnterm
 
 %nterm <assignE_astnode*> assignment_expression
 
-%nterm <statement_astnode*> function_definition statement selection_statement iteration_statement assignment_statement
+%nterm <statement_astnode*> function_definition statement selection_statement iteration_statement assignment_statement main_definition
 
 %nterm <std::vector<statement_astnode*>> compound_statement statement_list
 %nterm <std::vector<exp_astnode*>> expression_list
-
 %nterm <std::string> unary_operator
 %nterm <typespec_astnode> type_specifier declaration declarator_list declarator declarator_arr parameter_declaration
 %nterm <std::vector<typespec_astnode>> parameter_list 
@@ -129,7 +132,7 @@ begin_nterm: {
     stringc = typespec_astnode::stringc;
     voidc = typespec_astnode::voidc;
 
-} translation_unit {
+} program {
     if(Symbols::symTabStage==1){
         // ststack.top()->printJson();
     }
@@ -137,6 +140,35 @@ begin_nterm: {
         code.printCode();
     }
     Symbols::symTabStage+=1;
+}
+program:main_definition{
+
+}
+|translation_unit main_definition{
+
+}
+
+main_definition:INT MAIN '(' ')' {
+    std::string name = $2;
+    if(Symbols::symTabStage==0){
+        ststack.top()->rows[name] = SymEntry(toptype,SymTab::ST_HL_type::FUN,SymTab::ST_LPG::GLOBAL,0,0);
+        Symbols::flsts[name] = new SymTab();
+        Symbols::flsts[name]->rettype = new typespec_astnode;
+        Symbols::flsts[name]->type = "function";
+        *(Symbols::flsts[name]->rettype) = toptype;
+    }
+    else{
+        if(Symbols::symTabStage==2){
+            code.setLabel("."+name);
+        }
+    }
+    ststack.push(Symbols::flsts[name]);
+} compound_statement{
+    if(Symbols::symTabStage>0){
+        ststack.top()->ptr = new seq_astnode($6);
+    }
+    $$ = nullptr;
+    ststack.pop();
 }
 
 translation_unit: struct_specifier{
@@ -175,7 +207,7 @@ struct_specifier: STRUCT IDENTIFIER {
 };
 
 function_definition: type_specifier fun_declarator compound_statement{
-    if(Symbols::symTabStage==1){
+    if(Symbols::symTabStage>0){
         ststack.top()->ptr = new seq_astnode($3);
     }
     $$ = nullptr;
@@ -202,14 +234,6 @@ type_specifier: VOID{
         toptype = ts;
     }
 
-}
-| FLOAT{
-    // retType = SymTab::ST_type::FLOAT;
-    typespec_astnode ts = floatc;
-    $$ = ts;
-    if(Symbols::symTabStage==0){
-        toptype = ts;
-    }
 }
 | STRUCT IDENTIFIER{
     // retType = SymTab::ST_type::STRUCT_TYPE;
@@ -285,10 +309,10 @@ parameter_list: parameter_declaration{
         $$.push_back($1);
     }
 }
-| parameter_declaration ',' parameter_list {
+| parameter_list ',' parameter_declaration {
     if(Symbols::symTabStage==1){
-        $$ = $3;
-        $$.push_back($1);
+        $$ = $1;
+        $$.push_back($3);
     }
 }
 ;
@@ -388,6 +412,9 @@ statement: ';'{
 | procedure_call{
     $$ = $1;
 }
+| printf_call{
+    $$ = $1;
+}
 | RETURN expression ';'{
     if(Symbols::symTabStage>0){
         typespec_astnode rt = *(ststack.top()->rettype);
@@ -412,7 +439,27 @@ statement: ';'{
     }
 }
 ;
-
+printf_call
+: PRINTF '(' STRING_LITERAL ')' ';' {
+    exp_astnode* arg1 = new stringconst_astnode($3);
+    $$ = new funcall_astnode(new identifier_astnode($1), std::vector<exp_astnode*>(1,arg1), true);
+    if(Symbols::symTabStage==2){
+        gen(troins::func,troins::param,{arg1->addr});
+        gen(troins::func,troins::call,{$1,"1"});
+    }
+}// P1
+| PRINTF '(' STRING_LITERAL ',' expression_list ')' ';'{
+    std::vector<exp_astnode*> args = $5;
+    exp_astnode* strnode = new stringconst_astnode($3);
+    args.insert(args.begin(),strnode);
+    $$ = new funcall_astnode(new identifier_astnode($1), args, true);
+    if(Symbols::symTabStage==2){
+        for(exp_astnode* prm:args){
+            gen(troins::func,troins::param,{prm->addr});
+        }
+        gen(troins::func,troins::call,{$1,to_string(args.size())});
+    }
+} // P1
 assignment_expression: unary_expression '=' expression{
     if(Symbols::symTabStage>0){
         // std::cerr<<__LINE__<<std::endl;
@@ -1034,17 +1081,6 @@ primary_expression: IDENTIFIER{
         if($1=="0"){
             $$->typeNode.isnullval = true;
         }
-    }
-    if(Symbols::symTabStage==2){
-        $$->addr = $1;
-    }
-
-}
-| FLOAT_CONSTANT{
-    if(Symbols::symTabStage!=0){   
-        $$ = new floatconst_astnode($1);
-        $$->typeNode = floatc;
-        $$->typeNode.islval = false;
     }
     if(Symbols::symTabStage==2){
         $$->addr = $1;

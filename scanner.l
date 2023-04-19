@@ -61,6 +61,14 @@ while {
   yylval->emplace< std::string >( YYText() );
   return token_type::WHILE;
 }
+main {
+  yylval->emplace< std::string >( YYText() );
+  return token_type::MAIN;
+}
+printf {
+  yylval->emplace< std::string >( YYText() );
+  return token_type::PRINTF;
+}
 for {
   yylval->emplace< std::string >( YYText() );
   return token_type::FOR;

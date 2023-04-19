@@ -23,24 +23,77 @@
 	c = t11
 	t12 =  call getint, 0
 	b = t12
-	t13 = a LT_OP 1
-	if t13 goto if_stmt_L4
-	goto if_cond_L3
-if_cond_L3:
-	t14 = b LT_OP 1
-	if t14 goto if_stmt_L4
-	goto else_stmtL5
-if_stmt_L4:
-	t15 = c * d
-	t16 = b + t15
-	a = t16
-	goto if_exit_L6
-else_stmtL5:
-	t17 = b * b
-	t18 = t17 + d
-	a = t18
-if_exit_L6:
+	param "my mom loves me."
+	call printf, 1
+	t13 = 50 + 50
+	param "and so does yours, %d/%d"
+	param 100
+	param t13
+	call printf, 3
+	d = 0
+for_cond_L3:
+	t14 = d EQ_OP 6
+	if t14 goto for_cond_L4
+	goto for_exit_L20
+for_cond_L4:
+	t15 = c NE_OP b
+	if t15 goto for_stmt_L6
+	goto for_exit_L20
+for_incrementor_L5:
+	t17 = d + 1
+	d = t17
+	goto for_cond_L3
+for_stmt_L6:
 	nop
-	t19 = c + d
-	c = t19
+while_cond_L7:
+	t18 = b LT_OP a
+	if t18 goto while_cond_L8
+	goto while_exit_L19
+while_cond_L8:
+	t19 = b GT_OP c
+	if t19 goto while_cond_L9
+	goto while_exit_L19
+while_cond_L9:
+	t21 = d GT_OP c
+	if t21 goto while_stmt_L10
+	goto while_exit_L19
+while_stmt_L10:
+	nop
+	d = 0
+for_cond_L11:
+	t23 = d LT_OP 6
+	if t23 goto for_stmt_L13
+	goto for_exit_L18
+for_incrementor_L12:
+	t24 = d + 1
+	d = t24
+	goto for_cond_L11
+for_stmt_L13:
+	nop
+	t25 = a LT_OP 1
+	if t25 goto if_stmt_L15
+	goto if_cond_L14
+if_cond_L14:
+	t26 = b LT_OP 1
+	if t26 goto if_stmt_L15
+	goto else_stmtL16
+if_stmt_L15:
+	t27 = c * d
+	t28 = b + t27
+	a = t28
+	goto if_exit_L17
+else_stmtL16:
+	t29 = b * b
+	t30 = t29 + d
+	a = t30
+if_exit_L17:
+	nop
+	goto for_incrementor_L12
+for_exit_L18:
+	goto while_cond_L7
+while_exit_L19:
+	goto for_incrementor_L5
+for_exit_L20:
+	t31 = c + d
+	c = t31
 	return 0
