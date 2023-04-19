@@ -1,10 +1,14 @@
-.dostuff:
+.strlt1:
+	.string "and so does yours, %d/%d"
+.strlt0:
+	.string "my mom loves me."
+dostuff:
 	t0 = a + b
 	a = t0
 	return a
-.getint:
+getint:
 	return 23
-.main:
+main:
 	t1 = c AND_OP d
 	b = t1
 	t2 = 400 * 2
@@ -17,18 +21,18 @@
 	t9 = t7 + t8
 	t10 = *t9
 	a = t10
-	param 2
 	param 4
+	param 2
 	t11 =  call dostuff, 2
 	c = t11
 	t12 =  call getint, 0
 	b = t12
-	param "my mom loves me."
+	param .strlt0
 	call printf, 1
 	t13 = 50 + 50
-	param "and so does yours, %d/%d"
-	param 100
 	param t13
+	param 100
+	param .strlt1
 	call printf, 3
 	d = 0
 for_cond_L3:

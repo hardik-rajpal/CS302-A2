@@ -17,7 +17,6 @@ int main()
     int f[10][10][10];
     struct book *sapiens;
     b = c && d;
-    
     a = f[2][3][4]; /*f + 2*10*10*4 + 3*10*4 + 4*4*/
     c = dostuff(2,4);
     b = getint();

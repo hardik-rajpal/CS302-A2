@@ -65,5 +65,7 @@ public:
     static int tmpcnt;
     static int getOffsetInStruct(string structname,string member);
     static string newTemp(SymTab *currt);
+    static string newStrLit(string sl);
+    static map<string,string> strlits;
 };
 #endif

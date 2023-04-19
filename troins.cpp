@@ -1,6 +1,7 @@
 #include<algorithm>
 #include<set>
 #include"troins.hh"
+#include"symtab.h"
 void TroinBuffer::gen(troins ins){
     buffer.push_back(ins);
 }
@@ -92,6 +93,9 @@ string troins::toString(){
     return ans;
 }
 void TroinBuffer::printCode(){
+    for(auto strlit:Symbols::strlits){
+        cout<<strlit.second<<":\n\t"<<".string "<<strlit.first<<endl;
+    }
     for(int i=0;i<buffer.size();i++){
         troins t = buffer[i];
         if(labels.count(i)){

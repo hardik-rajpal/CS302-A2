@@ -1,11 +1,20 @@
 #include "symtab.h"
 #include "util.hh"
 SymTab *Symbols::gst;
+map<string,string> Symbols::strlits;
 int Symbols::tmpcnt;
 map<string, SymTab *> Symbols::flsts;
 map<string, SymTab *> Symbols::slsts;
 int Symbols::symTabStage = 0;
 using namespace std;
+string Symbols::newStrLit(string sl){
+    if(!strlits.count(sl)){
+        strlits[sl] = ".strlt";
+        strlits[sl] = strlits[sl] +to_string(strlits.size()-1);
+    }
+    return strlits[sl];
+ }
+
 void SymEntry::printJson(string varname)
 {
     cout << "[\n\"" << varname << "\",";

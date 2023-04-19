@@ -159,7 +159,7 @@ main_definition:INT MAIN '(' ')' {
     }
     else{
         if(Symbols::symTabStage==2){
-            code.setLabel("."+name);
+            code.setLabel(name);
         }
     }
     ststack.push(Symbols::flsts[name]);
@@ -260,7 +260,7 @@ fun_declarator: IDENTIFIER '('{
     }
     ststack.push(Symbols::flsts[name]);
     if(Symbols::symTabStage==2){
-        code.setLabel("."+name);
+        code.setLabel(name);
     }
 } parameter_list ')'{
     $$ = NULL;
@@ -296,7 +296,7 @@ fun_declarator: IDENTIFIER '('{
     else{
         $$ = new fundeclarator_astnode(name,std::vector<typespec_astnode>());
         if(Symbols::symTabStage==2){
-            code.setLabel("."+name);
+            code.setLabel(name);
         }
     }
     ststack.push(Symbols::flsts[name]);
@@ -442,6 +442,7 @@ statement: ';'{
 printf_call
 : PRINTF '(' STRING_LITERAL ')' ';' {
     exp_astnode* arg1 = new stringconst_astnode($3);
+    arg1->addr = Symbols::newStrLit($3);
     $$ = new funcall_astnode(new identifier_astnode($1), std::vector<exp_astnode*>(1,arg1), true);
     if(Symbols::symTabStage==2){
         gen(troins::func,troins::param,{arg1->addr});
@@ -451,7 +452,10 @@ printf_call
 | PRINTF '(' STRING_LITERAL ',' expression_list ')' ';'{
     std::vector<exp_astnode*> args = $5;
     exp_astnode* strnode = new stringconst_astnode($3);
+    strnode->addr = Symbols::newStrLit($3);
     args.insert(args.begin(),strnode);
+    std::reverse(args.begin(),args.end());
+
     $$ = new funcall_astnode(new identifier_astnode($1), args, true);
     if(Symbols::symTabStage==2){
         for(exp_astnode* prm:args){
@@ -535,6 +539,7 @@ procedure_call: IDENTIFIER '(' ')' ';'{
     }
 }
 | IDENTIFIER '(' expression_list ')' ';'{
+    std::reverse($3.begin(),$3.end());
     if (Symbols::symTabStage>0) {
         std::string function_name = $1;
         if(!($1=="printf"||$1=="scanf")){
@@ -917,6 +922,7 @@ postfix_expression: primary_expression{
     }
 }
 | IDENTIFIER '(' expression_list ')'{
+    std::reverse($3.begin(),$3.end());
     if (Symbols::symTabStage>0) {
         std::string function_name = $1;
         if(!($1=="printf"||$1=="scanf")){
@@ -1095,7 +1101,7 @@ primary_expression: IDENTIFIER{
         // $$->print();
     }
     if(Symbols::symTabStage==2){
-        $$->addr = $1;
+        $$->addr = Symbols::newStrLit($1);
     }
 }
 | '(' expression ')'{
