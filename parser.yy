@@ -103,7 +103,7 @@ TroinBuffer code;
 
 %nterm <funcall_astnode*> procedure_call
 
-%nterm <mnt*> mnterm nexter
+%nterm <mnt*> mnterm
 
 %nterm <assignE_astnode*> assignment_expression
 
@@ -360,25 +360,9 @@ statement_list: statement {
     }
     $$ = temp;
 }
-| statement_list {
-    if(Symbols::symTabStage==2){code.condcode=true;}
-} mnterm {
-    if(Symbols::symTabStage==2){code.condcode=false;}
-} statement{
-    vector<statement_astnode*> &L = $1;
-    L.push_back($5);
+| statement_list statement{
+    $1.push_back($2);
     $$ = $1;
-    if(Symbols::symTabStage==2){
-        int lastIndex = L.size()-1;
-        if(lastIndex>-1){
-            statement_astnode* pstmt = L[lastIndex];
-            vector<int> pnext = pstmt->next;
-            pnext.size();
-            if(pnext.size()>0){
-                code.backpatch(pnext,$3->nil);
-            }
-        }
-    }
 }
 ;
 
@@ -430,7 +414,7 @@ statement: ';'{
 ;
 
 assignment_expression: unary_expression '=' expression{
-    if(Symbols::symTabStage==1){
+    if(Symbols::symTabStage>0){
         // std::cerr<<__LINE__<<std::endl;
         std::cerr<<$1->typeNode.typeName<<" = "<<$3->typeNode.typeName<<std::endl;
         if(($1->typeNode.compatibleWith($3->typeNode))){
@@ -460,14 +444,14 @@ assignment_expression: unary_expression '=' expression{
             error(@$,"Incompatible types: tried to assign "+$3->typeNode.typeName+" to "+$1->typeNode.typeName);
         }
     }
-    else if(Symbols::symTabStage==2){
+    if(Symbols::symTabStage==2){
         gen(troins::ass,troins::na,{$1->addr,$3->addr});
     }
 }
 ;
 
 assignment_statement: assignment_expression ';'{
-    if(Symbols::symTabStage==1){
+    if(Symbols::symTabStage>0){
         $$ = new assignS_astnode($1->exp1, $1->exp2);
     }
 }
@@ -579,13 +563,6 @@ mnterm:{
     if(code.condcode){
         $$->nil = code.condtype+"_"+code.newLabel();
         code.setLabel($$->nil);
-    }
-}
-nexter:{
-    $$ = new mnt();
-    if(code.condcode){
-        $$->next = {(code.nextinstr())};
-        gen(troins::gt,troins::na,{""});
     }
 }
 ifgotocoder: equality_expression{
@@ -1127,7 +1104,13 @@ selection_statement: IF {
         code.setLabel(label);
         code.backpatch($4->tl,label);
     }
-} statement nexter ELSE {
+} statement {
+    if(Symbols::symTabStage==2){
+        
+        $7->next = {code.nextinstr()};
+        gen(troins::gt,troins::na,{""});
+    }
+} ELSE {
     if(Symbols::symTabStage==2){
         std::string label = "else_stmt"+code.newLabel();
         code.setLabel(label);
@@ -1141,7 +1124,10 @@ selection_statement: IF {
         $$ = new if_astnode($4, $7, $11);
     }
     if(Symbols::symTabStage==2){
-        $$->next = $8->next;
+        std::string label="if_exit_"+code.newLabel();
+        code.setLabel(label);
+        gen(troins::nop,troins::na,{});
+        code.backpatch($7->next,label);
     }
 }
 ;

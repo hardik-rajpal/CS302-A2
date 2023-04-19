@@ -1,0 +1,46 @@
+.dostuff:
+	t0 = a + b
+	a = t0
+	return a
+.getint:
+	return 23
+.main:
+	t1 = c AND_OP d
+	b = t1
+	t2 = 400 * 2
+	t3 = f + t2
+	t4 = *t3
+	t5 = 40 * 3
+	t6 = t4 + t5
+	t7 = *t6
+	t8 = 4 * 4
+	t9 = t7 + t8
+	t10 = *t9
+	a = t10
+	param 2
+	param 4
+	t11 =  call dostuff, 2
+	c = t11
+	t12 =  call getint, 0
+	b = t12
+	t13 = a LT_OP 1
+	if t13 goto if_stmt_L4
+	goto if_cond_L3
+if_cond_L3:
+	t14 = b LT_OP 1
+	if t14 goto if_stmt_L4
+	goto else_stmtL5
+if_stmt_L4:
+	t15 = c * d
+	t16 = b + t15
+	a = t16
+	goto if_exit_L6
+else_stmtL5:
+	t17 = b * b
+	t18 = t17 + d
+	a = t18
+if_exit_L6:
+	nop
+	t19 = c + d
+	c = t19
+	return 0
