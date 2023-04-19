@@ -138,6 +138,10 @@ begin_nterm: {
     }
     else if(Symbols::symTabStage==2){
         code.printCode();
+        std::cout<<"\n****************ASM Starts here********** "<<std::endl;
+        //TODO: will comment out last two instructions before submission, 
+        //to print only asm.
+        code.printASM();
     }
     Symbols::symTabStage+=1;
 }

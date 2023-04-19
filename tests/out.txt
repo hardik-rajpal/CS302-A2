@@ -101,3 +101,9 @@ for_exit_L20:
 	t31 = c + d
 	c = t31
 	return 0
+
+****************ASM Starts here********** 
+.strlt1:
+	.string "and so does yours, %d/%d"
+.strlt0:
+	.string "my mom loves me."

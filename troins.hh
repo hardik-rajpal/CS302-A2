@@ -40,6 +40,8 @@ public:
     string condtype="";
     vector<troins> buffer;
     map<int,string> labels;
+    map<int,string> asmlabels;
+
     void gen(troins ins);//append to buffer.
     int nextinstr();//return buffer.length();
     void backpatch(vector<int> ilist,string label);
@@ -47,7 +49,10 @@ public:
     string newLabel();
     void printCode();
     void setLabel(string name);
+    void printASM();
+
 };
+vector<string> getASM(vector<troins> buf, map<int,string> labels);
 /*
 keyword = "goto"
     goto L //specs = "", args = {L}

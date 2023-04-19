@@ -104,6 +104,34 @@ void TroinBuffer::printCode(){
         std::cout<<"\t"<<t.toString()<<std::endl;
     }
 }
+vector<string> getASM(vector<troins> buf, map<int,string> labels){
+    vector<string> ans;
+    //NOTE: SymTabs are accessible using Symbols:: gst, flsts, slsts and funcalls.
+    //For ebp offsets, etc.
+    /*
+    write code to generate assembly instructions from buf of troins, labels.
+    labels:
+    {
+        index in buf==> label of line if any
+    }
+    */
+   return ans;
+}
+void TroinBuffer::printASM(){
+    vector<string> ans;
+    ans = getASM(buffer,labels);
+    for(auto strlit:Symbols::strlits){
+        cout<<strlit.second<<":\n\t"<<".string "<<strlit.first<<endl;
+    }
+    for(int i=0;i<ans.size();i++){
+        string instr = ans[i];
+        if(asmlabels.count(i)){
+            std::cout<<asmlabels[i]<<":"<<std::endl;
+        }
+        std::cout<<"\t"<<instr<<std::endl;
+    }
+    return ;
+}
 void TroinBuffer::setLabel(string name){
     // if(labels.count(buffer.size())){
     //     string oldname = labels[buffer.size()];
