@@ -1,6 +1,9 @@
 .dostuff:
 	t0 = a + b
 	a = t0
+	return a
+.getint:
+	return 23
 .main:
 	t1 = c AND_OP d
 	b = t1
@@ -14,62 +17,12 @@
 	t9 = t7 + t8
 	t10 = *t9
 	a = t10
-	d = 0
-for_cond_L2:
-	t11 = d LT_OP 6
-	if t11 goto for_stmt_L4
-	goto for_exit_L17
-for_incrementor_L3:
-	t12 = d + 1
-	d = t12
-	goto for_cond_L2
-for_stmt_L4:
-	nop
-while_cond_L5:
-	t13 = b LT_OP a
-	if t13 goto while_cond_L6
-	goto while_exit_L16
-while_cond_L6:
-	t14 = b GT_OP c
-	if t14 goto while_cond_L7
-	goto while_exit_L16
-while_cond_L7:
-	t16 = d GT_OP c
-	if t16 goto while_stmt_L8
-	goto while_exit_L16
-while_stmt_L8:
-	nop
-	d = 0
-for_cond_L9:
-	t18 = d LT_OP 6
-	if t18 goto for_stmt_L11
-	goto for_exit_L15
-for_incrementor_L10:
-	t19 = d + 1
-	d = t19
-	goto for_cond_L9
-for_stmt_L11:
-	nop
-	t20 = a LT_OP 1
-	if t20 goto if_stmt_L13
-	goto if_cond_L12
-if_cond_L12:
-	t21 = b LT_OP 1
-	if t21 goto if_stmt_L13
-	goto else_stmtL14
-if_stmt_L13:
-	t22 = c * d
-	t23 = b + t22
-	a = t23
-else_stmtL14:
-	t24 = b * b
-	t25 = t24 + d
-	a = t25
-	goto for_incrementor_L10
-for_exit_L15:
-	goto while_cond_L5
-while_exit_L16:
-	goto for_incrementor_L3
-for_exit_L17:
-	t26 = c + d
-	c = t26
+	param 2
+	param 4
+	t11 =  call dostuff, 2
+	c = t11
+	t12 =  call getint, 0
+	b = t12
+	t13 = c + d
+	c = t13
+	return 0

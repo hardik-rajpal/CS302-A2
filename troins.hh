@@ -10,7 +10,7 @@ public:
     enum kws{
         gt,
         ret,
-        prm,
+        func,
         ass,
         nop
     };
@@ -19,6 +19,7 @@ public:
         ifs,
         iff,
         call,
+        param,
         bop,
         uop,
         arrr,
@@ -55,8 +56,9 @@ keyword = "goto"
     if x relop y goto L//specs = "if", args = {x, relop, y, L}
 keyword:return
     return y\\args = {y}
-keword: param
-    param x\\args = {x}
+keword: func
+    param x\\specs="param"args = {x}
+    call f,n\\specs="call",args={f,n}
 keyword: =
     y = call p,n\\specs="call"; args = {y,p,n}
     x = y op z\\specs="bop";args = {x,y,op,z}

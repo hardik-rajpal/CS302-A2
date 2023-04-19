@@ -389,7 +389,7 @@ statement: ';'{
     $$ = $1;
 }
 | RETURN expression ';'{
-    if(Symbols::symTabStage==1){
+    if(Symbols::symTabStage>0){
         typespec_astnode rt = *(ststack.top()->rettype);
         if (!rt.compatibleWith($2->typeNode)) {
             error(@$, "Function must return "+ rt.typeName+" but returns "+$2->typeNode.typeName );
@@ -406,6 +406,9 @@ statement: ';'{
                 }
             }
         }
+    }
+    if(Symbols::symTabStage==2){
+        gen(troins::ret,troins::na,{$2->addr});
     }
 }
 ;
@@ -455,7 +458,7 @@ assignment_statement: assignment_expression ';'{
 ;
 
 procedure_call: IDENTIFIER '(' ')' ';'{
-    if (Symbols::symTabStage==1) {
+    if (Symbols::symTabStage>0) {
         std::string function_name = $1;
         if(!($1=="printf"||$1=="scanf")){
             SymTab* fstab = Symbols::flsts[function_name];
@@ -480,9 +483,12 @@ procedure_call: IDENTIFIER '(' ')' ';'{
             $$->typeNode = voidc;
         }
     }
+    if(Symbols::symTabStage==2){
+        gen(troins::func,troins::call,{$1,"0"});
+    }
 }
 | IDENTIFIER '(' expression_list ')' ';'{
-    if (Symbols::symTabStage==1) {
+    if (Symbols::symTabStage>0) {
         std::string function_name = $1;
         if(!($1=="printf"||$1=="scanf")){
             SymTab* fstab = Symbols::flsts[function_name];
@@ -522,6 +528,12 @@ procedure_call: IDENTIFIER '(' ')' ';'{
             $$ = new funcall_astnode(new identifier_astnode($1), $3, true);
             $$->typeNode = voidc;
         }
+    }
+    if(Symbols::symTabStage==2){
+        for(exp_astnode* prm:$3){
+            gen(troins::func,troins::param,{prm->addr});
+        }
+        gen(troins::func,troins::call,{$1,to_string($3.size())});
     }
 }
 ;
@@ -590,21 +602,35 @@ equality_expression: relational_expression{
     // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
 | equality_expression EQ_OP relational_expression {
-    if(Symbols::symTabStage==1){
-        std::string op = "EQ_OP?";
+    std::string op = "EQ_OP?";
+    if(Symbols::symTabStage>0){
         if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
             error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
         }
         $$ = new op_binary_astnode(op, $1, $3);
     }
+    if(Symbols::symTabStage==2){
+        op = op.substr(0,op.size()-1);
+        std::string t1 = newtemp();
+        gen(troins::ass,troins::bop,{t1,$1->addr,op,$3->addr});
+        $$->addr = t1;
+
+    }
 }
 | equality_expression NE_OP relational_expression{
-    if(Symbols::symTabStage==1){ 
-        std::string op = "NE_OP?";
+    std::string op = "NE_OP?";
+    if(Symbols::symTabStage>0){ 
         if(!op_binary_astnode::operandsCompatible(op,$1,$3)){
             error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
         }
         $$ = new op_binary_astnode(op, $1, $3);
+    }
+    if(Symbols::symTabStage==2){
+        op = op.substr(0,op.size()-1);
+        std::string t1 = newtemp();
+        gen(troins::ass,troins::bop,{t1,$1->addr,op,$3->addr});
+        $$->addr = t1;
+
     }
 }
 ;
@@ -814,7 +840,7 @@ postfix_expression: primary_expression{
 
 }
 | IDENTIFIER '(' ')'{
-    if (Symbols::symTabStage==1) {
+    if (Symbols::symTabStage>0) {
         std::string function_name = $1;
         if(!($1=="printf"||$1=="scanf")){
             SymTab* fstab = Symbols::flsts[function_name];
@@ -838,9 +864,13 @@ postfix_expression: primary_expression{
             $$->typeNode = voidc;
         }
     }
+    if(Symbols::symTabStage==2){
+        $$->addr = newtemp();
+        gen(troins::ass,troins::call,{$$->addr,$1,"0"});
+    }
 }
 | IDENTIFIER '(' expression_list ')'{
-    if (Symbols::symTabStage==1) {
+    if (Symbols::symTabStage>0) {
         std::string function_name = $1;
         if(!($1=="printf"||$1=="scanf")){
             SymTab* fstab = Symbols::flsts[function_name];
@@ -880,6 +910,13 @@ postfix_expression: primary_expression{
             $$ = new funcall_astnode(new identifier_astnode($1), $3, false);
             $$->typeNode = voidc;
         }
+    }
+    if(Symbols::symTabStage==2){
+        $$->addr = newtemp();
+        for(exp_astnode* prm:$3){
+            gen(troins::func,troins::param,{prm->addr});
+        }
+        gen(troins::ass,troins::call,{$$->addr,$1,to_string($3.size())});
     }
 }
 | postfix_expression '.' IDENTIFIER{
@@ -953,7 +990,7 @@ postfix_expression: primary_expression{
 }
 | postfix_expression INC_OP{
     //TODO this for 3A
-    if(Symbols::symTabStage==1){
+    if(Symbols::symTabStage>0){
         if(!($1->typeNode.islval)){
             error(@$,"Postfix operator "+$2+" can only be applied to lvalues.");
         }
@@ -963,6 +1000,8 @@ postfix_expression: primary_expression{
         $$ = new op_unary_astnode("PP",$1);
         $$->typeNode = $1->typeNode;
         $$->typeNode.islval = false;
+    }
+    if(Symbols::symTabStage==2){
     }
 }
 ;
@@ -1139,7 +1178,6 @@ iteration_statement: WHILE {
     }
 } statement{
     if(Symbols::symTabStage>0){
-        //TODO update \$\nums
         if(!($7->typeNode.isNumeric()||$7->typeNode.getnrs()>0)){
             error(@$,"Invalid type for condition expression in for loop");
         }   

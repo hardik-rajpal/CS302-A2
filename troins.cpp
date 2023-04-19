@@ -48,6 +48,9 @@ string troins::toString(){
         case (specs::uop):
             ans = args[0] + " = " + args[1] + args[2];
             break;
+        case (specs::call):
+            ans = args[0] + " = " + " call "+args[1]+", "+args[2];
+            break;
         }
         break;
     case (kws::gt):
@@ -65,9 +68,21 @@ string troins::toString(){
             }
         }
         break;
-    case (kws::prm):
+    case (kws::func):
+        switch (spec)
+        {
+        case specs::call:
+            ans = "call "+args[0]+", "+args[1];
+            break;
+        case specs::param:
+            ans = "param "+args[0];
+            break;
+        default:
+            break;
+        }
         break;
     case (kws::ret):
+        ans = "return "+args[0];
         break;    
     case (kws::nop):
         ans = "nop";
@@ -86,22 +101,22 @@ void TroinBuffer::printCode(){
     }
 }
 void TroinBuffer::setLabel(string name){
-    if(labels.count(buffer.size())){
-        string oldname = labels[buffer.size()];
-        for(int i=buffer.size()-1;i>-1;i--){
-            troins &t = buffer[i];
-            if(t.keyword==troins::gt){
-                std::cerr<<"found gt stmt: "<<t.args[t.args.size()-1]<<endl;
-                if(t.args[t.args.size()-1]==oldname){
-                    t.args[t.args.size()-1] = name;
-                }
-            }
-        }
-    }
+    // if(labels.count(buffer.size())){
+    //     string oldname = labels[buffer.size()];
+    //     for(int i=buffer.size()-1;i>-1;i--){
+    //         troins &t = buffer[i];
+    //         if(t.keyword==troins::gt){
+    //             std::cerr<<"found gt stmt: "<<t.args[t.args.size()-1]<<endl;
+    //             if(t.args[t.args.size()-1]==oldname){
+    //                 t.args[t.args.size()-1] = name;
+    //             }
+    //         }
+    //     }
+    // }
     labels[buffer.size()] = name;
-    std::cerr<<"{"<<endl;
-    for(auto entry:labels){
-        std::cerr<<"\t"<<entry.first<<":"<<entry.second<<endl;
-    }
-    std::cerr<<"}"<<endl;
+    // std::cerr<<"{"<<endl;
+    // for(auto entry:labels){
+    //     std::cerr<<"\t"<<entry.first<<":"<<entry.second<<endl;
+    // }
+    // std::cerr<<"}"<<endl;
 }
