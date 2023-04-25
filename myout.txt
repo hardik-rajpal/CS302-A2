@@ -1,0 +1,246 @@
+.strlt1:
+	.string "and so does yours, %d/%d"
+.strlt0:
+	.string "my mom loves me."
+dostuff:
+	t0 = a + b
+	a = t0
+	return a
+getint:
+	return 23
+main:
+	t1 = &sapiens
+	t2 = t1 + 0
+	t3 = *t2
+	t3 = 1
+	t4 = &sapiens
+	t5 = t4 + 4
+	t6 = *t5
+	t6 = 2
+	t7 = c AND_OP d
+	b = t7
+	t8 = 400 * 2
+	t9 = f + t8
+	t10 = *t9
+	t11 = 40 * 3
+	t12 = t10 + t11
+	t13 = *t12
+	t14 = 4 * 4
+	t15 = t13 + t14
+	t16 = *t15
+	a = t16
+	param 4
+	param 2
+	t17 =  call dostuff, 2
+	c = t17
+	t18 =  call getint, 0
+	b = t18
+	param .strlt0
+	call printf, 1
+	t19 = 50 + 50
+	param t19
+	param 100
+	param .strlt1
+	call printf, 3
+	d = 0
+.for_cond_L3:
+	t20 = d EQ_OP 6
+	if t20 goto .for_cond_L4
+	goto .for_exit_L20
+.for_cond_L4:
+	t21 = c NE_OP b
+	if t21 goto .for_stmt_L6
+	goto .for_exit_L20
+.for_incrementor_L5:
+	t23 = d + 1
+	d = t23
+	goto .for_cond_L3
+.for_stmt_L6:
+	nop
+.while_cond_L7:
+	t24 = b LT_OP a
+	if t24 goto .while_cond_L8
+	goto .while_exit_L19
+.while_cond_L8:
+	t25 = b GT_OP c
+	if t25 goto .while_cond_L9
+	goto .while_exit_L19
+.while_cond_L9:
+	t27 = d GT_OP c
+	if t27 goto .while_stmt_L10
+	goto .while_exit_L19
+.while_stmt_L10:
+	nop
+	d = 0
+.for_cond_L11:
+	t29 = d LT_OP 6
+	if t29 goto .for_stmt_L13
+	goto .for_exit_L18
+.for_incrementor_L12:
+	t30 = d + 1
+	d = t30
+	goto .for_cond_L11
+.for_stmt_L13:
+	nop
+	t31 = a LT_OP 1
+	if t31 goto .if_stmt_L15
+	goto .if_cond_L14
+.if_cond_L14:
+	t32 = b LT_OP 1
+	if t32 goto .if_stmt_L15
+	goto .else_stmtL16
+.if_stmt_L15:
+	t33 = c * d
+	t34 = b + t33
+	a = t34
+	goto .if_exit_L17
+.else_stmtL16:
+	t35 = b * b
+	t36 = t35 + d
+	a = t36
+.if_exit_L17:
+	nop
+	goto .for_incrementor_L12
+.for_exit_L18:
+	goto .while_cond_L7
+.while_exit_L19:
+	goto .for_incrementor_L5
+.for_exit_L20:
+	t37 = c + d
+	c = t37
+	return 0
+
+****************ASM Starts here********** 
+.strlt1:
+	.string "and so does yours, %d/%d"
+.strlt0:
+	.string "my mom loves me."
+dostuff:
+	movl 16(%ebp), %eax
+addl 12(%ebp), %eax
+movl %eax, -4%(ebp)
+
+	movl 16(%ebp), %eax
+movl %eax, 16(%ebp)
+ret
+
+getint:
+	movl $23, %eax
+movl %eax, 0(%ebp)
+ret
+
+main:
+	movl -4028(%ebp), %eax
+addl $0, %eax
+movl %eax, -4032%(ebp)
+
+	movl -4040(%ebp), %eax
+addl $4, %eax
+movl %eax, -4044%(ebp)
+
+	movl -12(%ebp), %eax
+andl -16(%ebp), %eax
+movl %eax, -4052%(ebp)
+
+	400, movl %eax
+movl %eax, -4056%(ebp)
+
+	movl -4016(%ebp), %eax
+addl -4056(%ebp), %eax
+movl %eax, -4060%(ebp)
+
+	40, movl %eax
+movl %eax, -4068%(ebp)
+
+	movl -4064(%ebp), %eax
+addl -4068(%ebp), %eax
+movl %eax, -4072%(ebp)
+
+	4, movl %eax
+movl %eax, -4080%(ebp)
+
+	movl -4076(%ebp), %eax
+addl -4080(%ebp), %eax
+movl %eax, -4084%(ebp)
+
+	pushl $printf
+pushl $printf
+pushl $printf
+call printf
+
+	50, movl %eax
+addl $50, %eax
+movl %eax, -4100%(ebp)
+
+	pushl $printf
+pushl $printf
+pushl $printf
+call printf
+
+.for_cond_L3:
+	movl -16(%ebp), %eax
+movl %eax, -4104%(ebp)
+
+.for_cond_L4:
+	movl -12(%ebp), %eax
+movl %eax, -4108%(ebp)
+
+.for_incrementor_L5:
+	movl -16(%ebp), %eax
+addl $1, %eax
+movl %eax, -4116%(ebp)
+
+.for_stmt_L6:
+	movl -8(%ebp), %eax
+movl %eax, -4120%(ebp)
+
+.while_cond_L8:
+	movl -8(%ebp), %eax
+movl %eax, -4124%(ebp)
+
+.while_cond_L9:
+	movl -16(%ebp), %eax
+movl %eax, -4132%(ebp)
+
+.while_stmt_L10:
+	movl -16(%ebp), %eax
+movl %eax, -4140%(ebp)
+
+.for_incrementor_L12:
+	movl -16(%ebp), %eax
+addl $1, %eax
+movl %eax, -4144%(ebp)
+
+.for_stmt_L13:
+	movl -4(%ebp), %eax
+movl %eax, -4148%(ebp)
+
+.if_cond_L14:
+	movl -8(%ebp), %eax
+movl %eax, -4152%(ebp)
+
+.if_stmt_L15:
+	movl -12(%ebp), %eax
+movl %eax, -4156%(ebp)
+
+	movl -8(%ebp), %eax
+addl -4156(%ebp), %eax
+movl %eax, -4160%(ebp)
+
+.else_stmtL16:
+	movl -8(%ebp), %eax
+movl %eax, -4164%(ebp)
+
+	movl -4164(%ebp), %eax
+addl -16(%ebp), %eax
+movl %eax, -4168%(ebp)
+
+.if_exit_L17:
+	movl -12(%ebp), %eax
+addl -16(%ebp), %eax
+movl %eax, -4172%(ebp)
+
+	movl $0, %eax
+movl %eax, 0(%ebp)
+ret
+

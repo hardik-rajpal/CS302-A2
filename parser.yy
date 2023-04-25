@@ -443,8 +443,8 @@ statement: ';'{
     }
 }
 ;
-printf_call
-: PRINTF '(' STRING_LITERAL ')' ';' {
+
+printf_call: PRINTF '(' STRING_LITERAL ')' ';' {
     exp_astnode* arg1 = new stringconst_astnode($3);
     arg1->addr = Symbols::newStrLit($3);
     $$ = new funcall_astnode(new identifier_astnode($1), std::vector<exp_astnode*>(1,arg1), true);
@@ -1140,13 +1140,13 @@ unary_operator: '-'{
 selection_statement: IF {
     if(Symbols::symTabStage==2){
         code.condcode = true;
-        code.condtype = "if_cond";
+        code.condtype = ".if_cond";
     }
 } '(' expression ')' {
     if(Symbols::symTabStage==2){
         code.condcode = false;
         code.condtype = "";
-        std::string label = "if_stmt_"+code.newLabel();
+        std::string label = ".if_stmt_"+code.newLabel();
         code.setLabel(label);
         code.backpatch($4->tl,label);
     }
@@ -1158,7 +1158,7 @@ selection_statement: IF {
     }
 } ELSE {
     if(Symbols::symTabStage==2){
-        std::string label = "else_stmt"+code.newLabel();
+        std::string label = ".else_stmt"+code.newLabel();
         code.setLabel(label);
         code.backpatch($4->fl,label);
     }
@@ -1170,7 +1170,7 @@ selection_statement: IF {
         $$ = new if_astnode($4, $7, $11);
     }
     if(Symbols::symTabStage==2){
-        std::string label="if_exit_"+code.newLabel();
+        std::string label=".if_exit_"+code.newLabel();
         code.setLabel(label);
         gen(troins::nop,troins::na,{});
         code.backpatch($7->next,label);
@@ -1180,12 +1180,12 @@ selection_statement: IF {
 
 iteration_statement: WHILE {
     if(Symbols::symTabStage==2){
-        code.condtype="while_cond";
+        code.condtype=".while_cond";
         code.condcode = true;
     }
 } mnterm '(' expression ')' {
     if(Symbols::symTabStage==2){
-        code.condtype="while_stmt";
+        code.condtype=".while_stmt";
     }
 } mnterm {
     if(Symbols::symTabStage==2){
@@ -1203,7 +1203,7 @@ iteration_statement: WHILE {
     if(Symbols::symTabStage==2){
         code.backpatch($5->tl,$8->nil);
         gen(troins::gt,troins::na,{$3->nil});
-        std::string label = "while_exit_"+code.newLabel();
+        std::string label = ".while_exit_"+code.newLabel();
         code.setLabel(label);
         code.backpatch($5->fl,label);
     }
@@ -1211,11 +1211,11 @@ iteration_statement: WHILE {
 | FOR '('  assignment_expression ';' {
     if(Symbols::symTabStage==2){
         code.condcode=true;
-        code.condtype="for_cond";
+        code.condtype=".for_cond";
     }
 } mnterm/*6*/ expression/*7*/ {
     if(Symbols::symTabStage==2){
-        code.condtype="for_incrementor";
+        code.condtype=".for_incrementor";
     }
 } mnterm/*9*/{
     if(Symbols::symTabStage==2){
@@ -1226,7 +1226,7 @@ iteration_statement: WHILE {
     if(Symbols::symTabStage==2){
         gen(troins::gt,troins::na,{$6->nil});
         code.condcode = true;
-        code.condtype = "for_stmt";
+        code.condtype = ".for_stmt";
     }
 } mnterm {
     if(Symbols::symTabStage==2){
@@ -1244,7 +1244,7 @@ iteration_statement: WHILE {
     if(Symbols::symTabStage==2){
         code.backpatch($7->tl,$15->nil);
         gen(troins::gt,troins::na,{$9->nil});
-        std::string label = "for_exit_"+code.newLabel();
+        std::string label = ".for_exit_"+code.newLabel();
         code.setLabel(label);
         code.backpatch($7->fl,label);
     }

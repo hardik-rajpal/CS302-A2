@@ -15,7 +15,9 @@ int main()
 {
     int a, b, c, d;
     int f[10][10][10];
-    struct book *sapiens;
+    struct book sapiens;
+    sapiens.pages = 1;
+    sapiens.rating = 2;
     b = c && d;
     a = f[2][3][4]; /*f + 2*10*10*4 + 3*10*4 + 4*4*/
     c = dostuff(2,4);

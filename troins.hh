@@ -15,18 +15,18 @@ public:
         nop
     };
     enum specs{
-        na,
-        ifs,
-        iff,
-        call,
+        na, // not applicable
+        ifs, // if statement
+        iff, // if false
+        call, 
         param,
-        bop,
-        uop,
-        arrr,
-        arrl,
-        adr,
-        ptrr,
-        ptrl
+        bop, // binary operation
+        uop, // unary operator
+        arrr, // DON'T ASM 
+        arrl, // DON'T ASM 
+        adr, // address of 
+        ptrr, // pointer on right x = *y
+        ptrl // pointer on left  *x = y
     };
     kws keyword;
     specs spec;
@@ -50,9 +50,8 @@ public:
     void printCode();
     void setLabel(string name);
     void printASM();
-
+    vector<string> getASM();
 };
-vector<string> getASM(vector<troins> buf, map<int,string> labels);
 /*
 keyword = "goto"
     goto L //specs = "", args = {L}
@@ -61,7 +60,7 @@ keyword = "goto"
     if x relop y goto L//specs = "if", args = {x, relop, y, L}
 keyword:return
     return y\\args = {y}
-keword: func
+keyword: func
     param x\\specs="param"args = {x}
     call f,n\\specs="call",args={f,n}
 keyword: =

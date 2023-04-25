@@ -254,6 +254,7 @@ string Symbols::newTemp(SymTab *currt){
     while(gst->rows.count(name)||currt->rows.count(name)){
         name = "t"+to_string(tmpcnt++);
     }
+    currt->rows[name] = SymEntry(typespec_astnode::intc, SymTab::VAR, SymTab::LOCAL, 4, currt->getNewOffset(4));
     return name;
 }
 int Symbols::getOffsetInStruct(string structname,string member){

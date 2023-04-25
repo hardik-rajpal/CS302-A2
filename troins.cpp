@@ -1,4 +1,5 @@
 #include<algorithm>
+#include <sstream>
 #include<set>
 #include"troins.hh"
 #include"symtab.h"
@@ -93,7 +94,7 @@ string troins::toString(){
     return ans;
 }
 void TroinBuffer::printCode(){
-    for(auto strlit:Symbols::strlits){
+    for(auto strlit: Symbols::strlits){
         cout<<strlit.second<<":\n\t"<<".string "<<strlit.first<<endl;
     }
     for(int i=0;i<buffer.size();i++){
@@ -104,8 +105,12 @@ void TroinBuffer::printCode(){
         std::cout<<"\t"<<t.toString()<<std::endl;
     }
 }
-vector<string> getASM(vector<troins> buf, map<int,string> labels){
-    vector<string> ans;
+
+bool isTemp(std::string s) {
+    return true;
+}
+
+vector<string> TroinBuffer::getASM(){
     //NOTE: SymTabs are accessible using Symbols:: gst, flsts, slsts and funcalls.
     //For ebp offsets, etc.
     /*
@@ -115,11 +120,123 @@ vector<string> getASM(vector<troins> buf, map<int,string> labels){
         index in buf==> label of line if any
     }
     */
-   return ans;
+    std::vector<std::string> ans;
+    std::string function_name = "";
+    int offset;
+    std::stringstream ss;
+    std::vector<troins> params;
+
+    for (int i = 0; i < buffer.size(); ++i) {
+        troins t = buffer[i];
+        if (labels.count(i)) {
+            if (labels[i][0] != '.') {
+                // have reached a new function
+                function_name = labels[i];
+            }
+            asmlabels.insert(std::make_pair(ans.size(), labels[i]));
+        }
+        switch(t.keyword) {
+            case (troins::kws::ass):
+            switch(t.spec) {
+                case troins::specs::bop:
+                // x = y op z 
+                // args = {x,y,op,z}
+                // move y to eax
+                offset = Symbols::flsts[function_name]->rows[t.args[1]].offset;
+                // movl offset(%ebp), %eax, 
+                if (offset != 0) 
+                    ss << "movl " << offset << "(%ebp), %eax\n";
+                else
+                    ss << t.args[1] << ", movl %eax\n";
+                offset = Symbols::flsts[function_name]->rows[t.args[3]].offset;
+                if (offset) {
+                    if (t.args[2] == "+") 
+                        ss << "addl " << offset << "(%ebp), %eax\n";
+                    else if (t.args[2] == "-")
+                        ss << "subl " << offset << "(%ebp), %eax\n";
+                    else if (t.args[2] == "AND_OP")
+                        ss << "andl " << offset << "(%ebp), %eax\n";
+                }
+                else {
+                    if (t.args[2] == "+") 
+                        ss << "addl $" << t.args[3] << ", %eax\n";
+                    else if (t.args[2] == "-")
+                        ss << "subl $" << t.args[3] << ", %eax\n";
+                    else if (t.args[2] == "AND_OP")
+                        ss << "andl $" << t.args[3] << ", %eax\n";
+                }
+
+                // store result into x
+                offset = Symbols::flsts[function_name]->rows[t.args[0]].offset;
+                ss << "movl " << "%eax, " << offset << "%(ebp)\n";
+                ans.push_back(ss.str());
+                ss.str("");
+                break;
+            }
+            break;
+
+            case (troins::kws::func):
+            switch(t.spec) {
+                case (troins::specs::param):
+                params.push_back(t);
+                break;
+
+                case (troins::specs::call):
+                for (auto param: params) {
+                    offset = Symbols::flsts[function_name]->rows[t.args[0]].offset;
+                    if (offset) {
+                        ss << "pushl " << offset << "(%ebp)\n";
+                    }
+                    else {
+                        ss << "pushl $" << t.args[0] << "\n";
+                    }
+                }
+                ss << "call " << t.args[0] << "\n";
+                params.clear();
+                ans.push_back(ss.str());
+                ss.str("");
+                break;
+            }
+            break;
+
+            case (troins::kws::gt):
+            switch(t.spec) {
+                
+            }
+            break;
+
+            case (troins::kws::nop):
+            break;
+
+            case (troins::kws::ret):
+            if(t.args.size()) {
+                offset = Symbols::flsts[function_name]->rows[t.args[0]].offset;
+                if (offset)
+                    ss << "movl " << offset << "(%ebp), %eax\n";
+                else 
+                    ss << "movl $" << t.args[0] << ", %eax\n";
+                // calculate offset of return value 
+                int num_params = 1;
+                for(auto row: Symbols::flsts[function_name]->rows) {
+                    if (row.second.lpgtype == SymTab::ST_LPG::PARAM)
+                        num_params++;
+                }
+                int offset_ret_val = 4 * num_params;
+                ss << "movl %eax, " << offset << "(%ebp)\n";
+            }
+            ss << "ret\n";
+            ans.push_back(ss.str());
+            ss.str("");
+            break;
+
+            default:
+            break;
+        }
+    }
+    return ans;
 }
 void TroinBuffer::printASM(){
-    vector<string> ans;
-    ans = getASM(buffer,labels);
+    std::vector<std::string> ans = getASM();
     for(auto strlit:Symbols::strlits){
         cout<<strlit.second<<":\n\t"<<".string "<<strlit.first<<endl;
     }
