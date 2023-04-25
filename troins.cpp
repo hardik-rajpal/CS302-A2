@@ -112,7 +112,7 @@ vector<string> getASM(vector<troins> buf, map<int,string> labels){
     write code to generate assembly instructions from buf of troins, labels.
     labels:
     {
-        index in buf==> label of line if any
+        index in buf==>label of line if any
     }
     */
    return ans;

@@ -21,75 +21,83 @@ main:
 	t9 = t7 + t8
 	t10 = *t9
 	a = t10
+	t11 = b
+	b = b + 1
+	a = t11
+	t12 = d
+	d = d + 1
+	t13 = !c
+	t14 = t12 * t13
+	c = t14
 	param 4
 	param 2
-	t11 =  call dostuff, 2
-	c = t11
-	t12 =  call getint, 0
-	b = t12
+	t15 =  call dostuff, 2
+	c = t15
+	t16 =  call getint, 0
+	b = t16
 	param .strlt0
 	call printf, 1
-	t13 = 50 + 50
-	param t13
+	t17 = 50 + 50
+	param t17
 	param 100
 	param .strlt1
 	call printf, 3
 	d = 0
 for_cond_L3:
-	t14 = d EQ_OP 6
-	if t14 goto for_cond_L4
+	t18 = d EQ_OP 6
+	if t18 goto for_cond_L4
 	goto for_exit_L20
 for_cond_L4:
-	t15 = c NE_OP b
-	if t15 goto for_stmt_L6
+	t19 = c NE_OP b
+	if t19 goto for_stmt_L6
 	goto for_exit_L20
 for_incrementor_L5:
-	t17 = d + 1
-	d = t17
+	t21 = d + 1
+	d = t21
 	goto for_cond_L3
 for_stmt_L6:
 	nop
 while_cond_L7:
-	t18 = b LT_OP a
-	if t18 goto while_cond_L8
+	t22 = b LT_OP a
+	if t22 goto while_cond_L8
 	goto while_exit_L19
 while_cond_L8:
-	t19 = b GT_OP c
-	if t19 goto while_cond_L9
+	t23 = b GT_OP c
+	if t23 goto while_cond_L9
 	goto while_exit_L19
 while_cond_L9:
-	t21 = d GT_OP c
-	if t21 goto while_stmt_L10
+	t25 = d GT_OP c
+	if t25 goto while_stmt_L10
 	goto while_exit_L19
 while_stmt_L10:
 	nop
 	d = 0
 for_cond_L11:
-	t23 = d LT_OP 6
-	if t23 goto for_stmt_L13
+	t27 = d LT_OP 6
+	if t27 goto for_stmt_L13
 	goto for_exit_L18
 for_incrementor_L12:
-	t24 = d + 1
-	d = t24
+	t28 = d + 1
+	d = t28
 	goto for_cond_L11
 for_stmt_L13:
 	nop
-	t25 = a LT_OP 1
-	if t25 goto if_stmt_L15
+	t29 = a LT_OP 1
+	if t29 goto if_stmt_L15
 	goto if_cond_L14
 if_cond_L14:
-	t26 = b LT_OP 1
-	if t26 goto if_stmt_L15
+	t30 = b LT_OP 1
+	if t30 goto if_stmt_L15
 	goto else_stmtL16
 if_stmt_L15:
-	t27 = c * d
-	t28 = b + t27
-	a = t28
+	t31 = c * d
+	t32 = b + t31
+	a = t32
 	goto if_exit_L17
 else_stmtL16:
-	t29 = b * b
-	t30 = t29 + d
-	a = t30
+	t33 = b * b
+	t34 = t33 + d
+	a = t34
 if_exit_L17:
 	nop
 	goto for_incrementor_L12
@@ -98,8 +106,8 @@ for_exit_L18:
 while_exit_L19:
 	goto for_incrementor_L5
 for_exit_L20:
-	t31 = c + d
-	c = t31
+	t35 = c + d
+	c = t35
 	return 0
 
 ****************ASM Starts here********** 

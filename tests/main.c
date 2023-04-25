@@ -1,3 +1,4 @@
+int printf (const char *__restrict __fmt, ...);
 struct book
 {
     int pages;
@@ -18,10 +19,13 @@ int main()
     struct book *sapiens;
     b = c && d;
     a = f[2][3][4]; /*f + 2*10*10*4 + 3*10*4 + 4*4*/
+    a = b++;
+    c = d++*!c;
     c = dostuff(2,4);
     b = getint();
     printf("my mom loves me.");
     printf("and so does yours, %d/%d",100,50+50);
+
     for (d = 0; d == 6 && c!=b; d = d + 1)
     {
         while (b < a && b > c && d > c)

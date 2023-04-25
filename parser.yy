@@ -1046,7 +1046,6 @@ postfix_expression: primary_expression{
     }
 }
 | postfix_expression INC_OP{
-    //TODO this for 3A
     if(Symbols::symTabStage>0){
         if(!($1->typeNode.islval)){
             error(@$,"Postfix operator "+$2+" can only be applied to lvalues.");
@@ -1059,6 +1058,10 @@ postfix_expression: primary_expression{
         $$->typeNode.islval = false;
     }
     if(Symbols::symTabStage==2){
+        string t = newtemp();
+        $$->addr = t;
+        gen(troins::ass,troins::na,{$$->addr,$1->addr});
+        gen(troins::ass,troins::bop,{$1->addr,$1->addr,"+","1"});
     }
 }
 ;
@@ -1122,18 +1125,19 @@ expression_list: expression{
     $$ = $1;
 }
 ;
-//TODO use unopName function here.
 unary_operator: '-'{
-    $$ = std::string("UMINUS");
+    $$ = unopName("-");
 }
-| '!'{
-    $$ = std::string("NOT");
+|'!'{
+    $$ = unopName("!");
+
 }
-| '&'{
-    $$ = std::string("ADDRESS");
+|'&'{
+    $$ = unopName("&");
+
 }
-| '*'{
-    $$ = std::string("DEREF");
+|'*'{
+    $$ = unopName("*");
 }
 ;
 
