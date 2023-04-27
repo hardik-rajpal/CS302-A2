@@ -834,8 +834,23 @@ unary_expression: postfix_expression{
         }
     }
     if(Symbols::symTabStage==2){
-        $$->addr = newtemp();
-        gen(troins::ass,troins::uop,{$$->addr,unopName($1,true),$2->addr});
+        std::string t0;
+        if($2->isproxyaddr||$2->iselem){
+            t0 = newtemp();
+            gen(troins::ass,troins::uop,{t0,"*",$2->addr});
+        }
+        else{
+            t0 = $2->addr;
+        }
+        string op = unopName($1,true);
+        if(op=="*"){
+            $$->isproxyaddr = true;
+            $$->addr = t0;
+        }
+        else{
+            $$->addr = newtemp();
+            gen(troins::ass,troins::uop,{$$->addr,op,t0});
+        }
     }
 }
 ;

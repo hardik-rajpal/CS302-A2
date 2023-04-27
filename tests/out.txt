@@ -5,17 +5,13 @@ dostuff:
 getint:
 	return 23
 main:
-	t1 = &myshlf
-	t2 = 880 * 1
-	t3 = t1 + t2
-	t4 = 220 * 1
-	t5 = t3 + t4
-	t6 = t5 + 8
-	t7 = 20 * 2
-	t8 = t6 + t7
-	t9 = 4 * 3
-	t10 = t8 + t9
-	*t10 = 1
+	t1 = &sapiens
+	t2 = t1 + 8
+	t3 = 20 * 1
+	t4 = t2 + t3
+	t5 = *t4
+	t6 = *t5
+	a = t6
 	return 0
 
 ****************ASM Starts here********** 

@@ -7,6 +7,7 @@ struct book
     int pages;
     int rating;
     int pg[10][5];
+    int * rtptr;
     struct person author;
     struct person *authorptr;
 };
@@ -23,6 +24,5 @@ int main()
     struct book sapiens, *bkptr;
     struct book myshlf[4][4];
     int a;
-    myshlf[1][1].pg[2][3] = 1;
     return 0;
 }
