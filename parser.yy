@@ -807,8 +807,6 @@ additive_expression: multiplicative_expression{
 ;
 
 unary_expression: postfix_expression{
-
-    //fix offset here.
     $$ = $1;
     // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
@@ -859,6 +857,9 @@ multiplicative_expression: unary_expression{
     if(Symbols::symTabStage!=0){   
         $$ = (op_binary_astnode*) $1;
     }
+    if(Symbols::symTabStage==2){
+        $$->addr = Symbols::resolveProxies($1,code,ststack.top());
+    }
 }
 | multiplicative_expression '*' unary_expression{
     //operator and expression match check here.
@@ -870,6 +871,7 @@ multiplicative_expression: unary_expression{
         $$ = new op_binary_astnode(op, $1, $3);
     }
     if(Symbols::symTabStage==2){
+        $3->addr = Symbols::resolveProxies($3,code,ststack.top());
         $$->addr = newtemp();
         gen(troins::ass,troins::bop,{$$->addr,$1->addr,"*",$3->addr});
     }
@@ -883,6 +885,7 @@ multiplicative_expression: unary_expression{
         $$ = new op_binary_astnode(op, $1, $3);
     }
     if(Symbols::symTabStage==2){
+        $3->addr = Symbols::resolveProxies($3,code,ststack.top);
         $$->addr = newtemp();
         gen(troins::ass,troins::bop,{$$->addr,$1->addr,"/",$3->addr});
     }

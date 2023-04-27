@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 #include "ast.hh"
+#include "troins.hh"
 using namespace std;
 class SymEntry;
 class SymTab
@@ -66,6 +67,7 @@ public:
     static int getOffsetInStruct(string structname,string member);
     static string newTemp(SymTab *currt);
     static string newStrLit(string sl);
+    static string resolveProxies(exp_astnode* exp, TroinBuffer &buffer,SymTab* currst);
     static map<string,string> strlits;
 };
 #endif

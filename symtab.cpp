@@ -261,3 +261,11 @@ int Symbols::getOffsetInStruct(string structname,string member){
     SymEntry *se = getSymEntry(slsts[structname],member,true);
     return se->offset;
 }
+string Symbols::resolveProxies(exp_astnode* exp, TroinBuffer &buffer, SymTab* currst){
+    string t0 = exp->addr;
+    if(exp->iselem||exp->isproxyaddr){
+        t0 = Symbols::newTemp(currst);
+        buffer.gen(troins(troins::ass,troins::uop,{t0,"*",exp->addr}));
+    }
+    return t0;
+}

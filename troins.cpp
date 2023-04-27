@@ -208,6 +208,7 @@ vector<string> TroinBuffer::getASM(){
                 break;
 
                 case troins::specs::ptrr:
+                ans.push_back("here, motherfucker");
                 offset = Symbols::flsts[function_name]->rows[t.args[1]].offset;
                 ss << "movl " << offset << "(%ebp), %eax\n";
                 ss << "movl (%eax), %eax\n";
@@ -217,11 +218,32 @@ vector<string> TroinBuffer::getASM(){
                 ss.str("");
                 break;
 
+                case troins::specs::ptrl:
+                offset = Symbols::flsts[function_name]->rows[t.args[1]].offset;
+                if (offset)
+                    ss << "movl " << offset << "(%ebp), %eax\n";
+                else
+                    ss << "movl $" << t.args[1] << ", %eax\n";
+                offset = Symbols::flsts[function_name]->rows[t.args[0]].offset;
+                ss << "movl " << offset  << "(%ebp), %ebx\n";
+                ss << "movl %eax, (%ebx)\n";
+                ans.push_back(ss.str());
+                ss.str("");
+                break;
+
                 case troins::specs::uop:
                 if (t.args[1] == "&") {
                     offset = Symbols::flsts[function_name]->rows[t.args[2]].offset;
                     ss << "movl %ebp, %eax\n";
                     ss << "add $" << offset << ", %eax\n";
+                    offset = Symbols::flsts[function_name]->rows[t.args[0]].offset;
+                    ss << "movl %eax, " << offset << "(%ebp)\n";
+                }
+                else if (t.args[1] == "*") {
+                    // ans.push_back("here, motherfucker");
+                    offset = Symbols::flsts[function_name]->rows[t.args[2]].offset;
+                    ss << "movl " << offset << "(%ebp), %eax\n";
+                    ss << "movl (%eax), %eax\n";
                     offset = Symbols::flsts[function_name]->rows[t.args[0]].offset;
                     ss << "movl %eax, " << offset << "(%ebp)\n";
                 }
@@ -329,7 +351,7 @@ void TroinBuffer::printASM(){
             }
             std::cout<< asmlabels[i] << ":" << std::endl;
         }
-        std::cout<<"\t"<<instr<<std::endl;
+        std::cout<<instr<<std::endl;
     }
     return ;
 }
