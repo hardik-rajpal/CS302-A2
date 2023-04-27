@@ -61,6 +61,8 @@ public:
     std::vector<int> fl;
     std::vector<int> tl;
     std::string addr;
+    int offset=0;
+    bool isproxyaddr = false;
 };
 
 class ref_astnode: public exp_astnode {

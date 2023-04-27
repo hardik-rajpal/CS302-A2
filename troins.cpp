@@ -52,6 +52,9 @@ string troins::toString(){
         case (specs::call):
             ans = args[0] + " = " + " call "+args[1]+", "+args[2];
             break;
+        case (specs::ptrl):
+            ans = "*"+args[0]+" = "+args[1];
+            break;
         }
         break;
     case (kws::gt):

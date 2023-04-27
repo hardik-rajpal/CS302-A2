@@ -73,6 +73,6 @@ keyword: =
     x[i] = y\\specs = "arrl" \\args = {x,i,y}
     x = &y\\specs = "adr"\\args = {x,y}
     x = *y\\specs = "ptrr"\\args = {x,y}
-    *x = y\\specs = "ptrl"\\args = {*x,y}
+    *x = y\\specs = "ptrl"\\args = {x,y}
 */
 #endif
