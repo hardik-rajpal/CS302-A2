@@ -1,7 +1,7 @@
 	.file	"main.c"
 	.text
 	.globl	dostuff
-	.type	dostuff, @function
+	; .type	dostuff, @function
 dostuff:
 	pushl	%ebp
 	movl	%esp, %ebp
@@ -10,16 +10,16 @@ dostuff:
 	movl	8(%ebp), %eax
 	popl	%ebp
 	ret
-	.size	dostuff, .-dostuff
+	; .size	dostuff, .-dostuff
 	.globl	getint
-	.type	getint, @function
+	; .type	getint, @function
 getint:
 	pushl	%ebp
 	movl	%esp, %ebp
 	movl	$23, %eax
 	popl	%ebp
 	ret
-	.size	getint, .-getint
+	; .size	getint, .-getint
 	.section	.rodata
 .LC0:
 	.string	"my mom loves me."
@@ -27,7 +27,7 @@ getint:
 	.string	"and so does yours, %d/%d"
 	.text
 	.globl	main
-	.type	main, @function
+	; .type	main, @function
 main:
 	pushl	%ebp
 	movl	%esp, %ebp
@@ -113,6 +113,6 @@ main:
 	movl	$0, %eax
 	leave
 	ret
-	.size	main, .-main
-	.ident	"GCC: (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0"
-	.section	.note.GNU-stack,"",@progbits
+	; .size	main, .-main
+	; .ident	"GCC: (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0"
+	; .section	.note.GNU-stack,"",@progbits

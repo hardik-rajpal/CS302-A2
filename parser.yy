@@ -159,7 +159,7 @@ main_definition:INT MAIN '(' ')' {
         Symbols::flsts[name] = new SymTab();
         Symbols::flsts[name]->rettype = new typespec_astnode;
         Symbols::flsts[name]->type = "function";
-        *(Symbols::flsts[name]->rettype) = toptype;
+        *(Symbols::flsts[name]->rettype) = typespec_astnode::intc;
     }
     else{
         if(Symbols::symTabStage==2){
@@ -1007,8 +1007,8 @@ postfix_expression: primary_expression{
         string offset = to_string(Symbols::getOffsetInStruct(structName,$3));
         gen(troins::ass,troins::uop,{t1,"&",$1->addr});
         gen(troins::ass,troins::bop,{t2,t1,"+",offset});
-        gen(troins::ass,troins::uop,{t3,"*",t2});
-        $$->addr = t3;
+        // gen(troins::ass,troins::uop,{t3,"*",t2});
+        $$->addr = t2;
     }
 }
 | postfix_expression PTR_OP IDENTIFIER{

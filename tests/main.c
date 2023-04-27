@@ -3,6 +3,11 @@ struct book
     int pages;
     int rating;
 };
+
+void foo(struct book b) {
+    b.pages = b.rating;
+}
+
 int dostuff(int a, int b)
 {
     a = a + b;
@@ -20,6 +25,7 @@ int main()
     sapiens.rating = 2;
     b = c && d;
     a = f[2][3][4]; /*f + 2*10*10*4 + 3*10*4 + 4*4*/
+    foo(sapiens);
     c = dostuff(2,4);
     b = getint();
     printf("my mom loves me.");
