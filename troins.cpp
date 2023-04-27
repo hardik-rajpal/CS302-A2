@@ -53,6 +53,9 @@ string troins::toString(){
         case (specs::call):
             ans = args[0] + " = " + " call "+args[1]+", "+args[2];
             break;
+        case (specs::ptrl):
+            ans = "*"+args[0]+" = "+args[1];
+            break;
         }
         break;
     case (kws::gt):
@@ -117,7 +120,7 @@ vector<string> TroinBuffer::getASM(){
     write code to generate assembly instructions from buf of troins, labels.
     labels:
     {
-        index in buf==> label of line if any
+        index in buf==>label of line if any
     }
     */
     std::vector<std::string> ans;

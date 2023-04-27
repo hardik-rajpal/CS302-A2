@@ -1,7 +1,15 @@
+struct person{
+    int fnc;
+    int lnc;
+};
 struct book
 {
     int pages;
     int rating;
+    int pg[10][5];
+    int * rtptr;
+    struct person author;
+    struct person *authorptr;
 };
 
 void foo(struct book b) {

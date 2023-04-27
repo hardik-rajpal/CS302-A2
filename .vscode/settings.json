@@ -62,6 +62,7 @@
         "numbers": "cpp",
         "cinttypes": "cpp",
         "set": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "stdio.h": "c"
     }
 }

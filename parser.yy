@@ -500,7 +500,20 @@ assignment_expression: unary_expression '=' expression{
         }
     }
     if(Symbols::symTabStage==2){
-        gen(troins::ass,troins::na,{$1->addr,$3->addr});
+        std::string t1;
+        if($3->isproxyaddr||$3->iselem){
+            t1 = newtemp();
+            gen(troins::ass,troins::uop,{t1,"*",$3->addr});
+        }
+        else{
+            t1 = $3->addr;
+        }
+        if($1->isproxyaddr||$1->iselem){
+            gen(troins::ass,troins::ptrl,{$1->addr,t1});
+        }
+        else{
+            gen(troins::ass,troins::na,{$1->addr,t1});
+        }
     }
 }
 ;
@@ -794,6 +807,8 @@ additive_expression: multiplicative_expression{
 ;
 
 unary_expression: postfix_expression{
+
+    //fix offset here.
     $$ = $1;
     // std::cerr<<__LINE__<<$$->typeNode.typeName<<endl;
 }
@@ -819,8 +834,23 @@ unary_expression: postfix_expression{
         }
     }
     if(Symbols::symTabStage==2){
-        $$->addr = newtemp();
-        gen(troins::ass,troins::uop,{$$->addr,unopName($1,true),$2->addr});
+        std::string t0;
+        if($2->isproxyaddr||$2->iselem){
+            t0 = newtemp();
+            gen(troins::ass,troins::uop,{t0,"*",$2->addr});
+        }
+        else{
+            t0 = $2->addr;
+        }
+        string op = unopName($1,true);
+        if(op=="*"){
+            $$->isproxyaddr = true;
+            $$->addr = t0;
+        }
+        else{
+            $$->addr = newtemp();
+            gen(troins::ass,troins::uop,{$$->addr,op,t0});
+        }
     }
 }
 ;
@@ -882,16 +912,22 @@ postfix_expression: primary_expression{
         type.deref()
         t2 = newTemp(); gen(t2 = expression.addr '*' type.typeWidth)
         gen: t3 = t1 + t2
-        gen: t4 = *t3
         */
         typespec_astnode tmp = $1->typeNode;tmp.deref();
+        std::string t0;
+        if($1->isproxyaddr||$1->iselem){
+            t0 = $1->addr;
+        }
+        else{
+            t0 = newtemp();
+            gen(troins::ass,troins::uop,{t0,"&",$1->addr});
+        }
         string t1 = newtemp();
         string t2 = newtemp();
-        string t3 = newtemp();
         gen(troins::ass,troins::bop,{t1, to_string(tmp.typeWidth),"*",$3->addr});
-        gen(troins::ass,troins::bop,{t2, $1->addr, "+", t1});
-        gen(troins::ass,troins::uop,{t3, "*", t2});
-        $$->addr = t3;
+        gen(troins::ass,troins::bop,{t2, t0, "+", t1});
+        $$->addr = t2;
+        $$->iselem = true;
     }
 
 }
@@ -977,6 +1013,7 @@ postfix_expression: primary_expression{
     }
 }
 | postfix_expression '.' IDENTIFIER{
+    //fix offset 
     std::string structName;
     if(Symbols::symTabStage!=0){
         if($1->typeNode.typeName.substr(0,6)!="struct"){
@@ -1001,17 +1038,23 @@ postfix_expression: primary_expression{
         t2 = t1 + offset
         t3 = *t2
         */
-        string t1 = newtemp();
-        string t2 = newtemp();
-        string t3 = newtemp();
+        string t1;
         string offset = to_string(Symbols::getOffsetInStruct(structName,$3));
-        gen(troins::ass,troins::uop,{t1,"&",$1->addr});
+        if(!($1->isproxyaddr||$1->iselem)){
+            t1 = newtemp();
+            gen(troins::ass,troins::uop,{t1,"&",$1->addr});
+        }
+        else{
+            t1 = $1->addr;
+        }
+        string t2 = newtemp();
         gen(troins::ass,troins::bop,{t2,t1,"+",offset});
-        // gen(troins::ass,troins::uop,{t3,"*",t2});
         $$->addr = t2;
+        $$->isproxyaddr=true;
     }
 }
 | postfix_expression PTR_OP IDENTIFIER{
+    //fix offset
     std::string structName;
     if(Symbols::symTabStage!=0){
         if($1->typeNode.typeName.substr(0,6)!="struct"){
@@ -1035,18 +1078,24 @@ postfix_expression: primary_expression{
         /*
         a.b
         t1 = a + offset
-        t2 = *t1
         */
-        string t1 = newtemp();
+        string t1;
+        if($1->isproxyaddr){
+            t1 = newtemp();
+            gen(troins::ass,troins::uop,{t1,"*",$1->addr});
+        }
+        else{
+            t1 = $1->addr;
+        }
         string t2 = newtemp();
         string offset = to_string(Symbols::getOffsetInStruct(structName,$3));
-        gen(troins::ass,troins::bop,{t1,$1->addr,"+",offset});
-        gen(troins::ass,troins::uop,{t2,"*",t1});
+        gen(troins::ass,troins::bop,{t2,t1,"+",offset});
+        $$->isproxyaddr = true;
         $$->addr = t2;
     }
 }
 | postfix_expression INC_OP{
-    //TODO this for 3A
+    //fix offset.
     if(Symbols::symTabStage>0){
         if(!($1->typeNode.islval)){
             error(@$,"Postfix operator "+$2+" can only be applied to lvalues.");
@@ -1059,6 +1108,32 @@ postfix_expression: primary_expression{
         $$->typeNode.islval = false;
     }
     if(Symbols::symTabStage==2){
+        string t0;
+        if($1->isproxyaddr||$1->iselem){
+            t0 = newtemp();
+            gen(troins::ass,troins::uop,{t0,"*",$1->addr});
+        }
+        else{
+            t0 = $1->addr;
+        }
+        string t = newtemp();
+        $$->addr = t;
+        gen(troins::ass,troins::na,{$$->addr,t0});
+        if($1->isproxyaddr||$1->iselem){
+            string t1 = newtemp();
+            gen(troins::ass,troins::bop,{t1,t0,"+","1"});
+            gen(troins::ass,troins::ptrl,{$1->addr,t1});            
+        }
+        else{
+            gen(troins::ass,troins::bop,{$1->addr,t0,"+","1"});
+        }
+        /*
+        if \$\1 is proxy addr,
+        t1=  t0+1
+        *$\1->addr = t1
+        else
+        $\1->addr = t0+1
+        */
     }
 }
 ;
@@ -1122,18 +1197,19 @@ expression_list: expression{
     $$ = $1;
 }
 ;
-//TODO use unopName function here.
 unary_operator: '-'{
-    $$ = std::string("UMINUS");
+    $$ = unopName("-");
 }
-| '!'{
-    $$ = std::string("NOT");
+|'!'{
+    $$ = unopName("!");
+
 }
-| '&'{
-    $$ = std::string("ADDRESS");
+|'&'{
+    $$ = unopName("&");
+
 }
-| '*'{
-    $$ = std::string("DEREF");
+|'*'{
+    $$ = unopName("*");
 }
 ;
 

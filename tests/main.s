@@ -44,6 +44,18 @@ main:
 	movl	%eax, -16(%ebp)
 	movl	-3080(%ebp), %eax
 	movl	%eax, -4(%ebp)
+	movl	-16(%ebp), %eax
+	leal	1(%eax), %edx
+	movl	%edx, -16(%ebp)
+	movl	%eax, -4(%ebp)
+	movl	-8(%ebp), %eax
+	leal	1(%eax), %edx
+	movl	%edx, -8(%ebp)
+	cmpl	$0, -12(%ebp)
+	sete	%dl
+	movzbl	%dl, %edx
+	imull	%edx, %eax
+	movl	%eax, -12(%ebp)
 	pushl	$4
 	pushl	$2
 	call	dostuff
