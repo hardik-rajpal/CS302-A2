@@ -501,14 +501,14 @@ assignment_expression: unary_expression '=' expression{
     }
     if(Symbols::symTabStage==2){
         std::string t1;
-        if($3->isproxyaddr){
+        if($3->isproxyaddr||$3->iselem){
             t1 = newtemp();
             gen(troins::ass,troins::uop,{t1,"*",$3->addr});
         }
         else{
             t1 = $3->addr;
         }
-        if($1->isproxyaddr){
+        if($1->isproxyaddr||$1->iselem){
             gen(troins::ass,troins::ptrl,{$1->addr,t1});
         }
         else{
@@ -900,19 +900,19 @@ postfix_expression: primary_expression{
         */
         typespec_astnode tmp = $1->typeNode;tmp.deref();
         std::string t0;
-        if($1->isproxyaddr){
-            t0 = newtemp();
-            gen(troins::ass,troins::uop,{t0,"*",$1->addr});
+        if($1->isproxyaddr||$1->iselem){
+            t0 = $1->addr;
         }
         else{
-            t0 = $1->addr;
+            t0 = newtemp();
+            gen(troins::ass,troins::uop,{t0,"&",$1->addr});
         }
         string t1 = newtemp();
         string t2 = newtemp();
         gen(troins::ass,troins::bop,{t1, to_string(tmp.typeWidth),"*",$3->addr});
         gen(troins::ass,troins::bop,{t2, t0, "+", t1});
         $$->addr = t2;
-        // $$->isproxyaddr = false;
+        $$->iselem = true;
     }
 
 }
@@ -1025,7 +1025,7 @@ postfix_expression: primary_expression{
         */
         string t1;
         string offset = to_string(Symbols::getOffsetInStruct(structName,$3));
-        if(!($1->isproxyaddr)){
+        if(!($1->isproxyaddr||$1->iselem)){
             t1 = newtemp();
             gen(troins::ass,troins::uop,{t1,"&",$1->addr});
         }
@@ -1094,7 +1094,7 @@ postfix_expression: primary_expression{
     }
     if(Symbols::symTabStage==2){
         string t0;
-        if($1->isproxyaddr){
+        if($1->isproxyaddr||$1->iselem){
             t0 = newtemp();
             gen(troins::ass,troins::uop,{t0,"*",$1->addr});
         }
@@ -1104,7 +1104,7 @@ postfix_expression: primary_expression{
         string t = newtemp();
         $$->addr = t;
         gen(troins::ass,troins::na,{$$->addr,t0});
-        if($1->isproxyaddr){
+        if($1->isproxyaddr||$1->iselem){
             string t1 = newtemp();
             gen(troins::ass,troins::bop,{t1,t0,"+","1"});
             gen(troins::ass,troins::ptrl,{$1->addr,t1});            

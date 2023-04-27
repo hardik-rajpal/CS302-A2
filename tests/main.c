@@ -20,13 +20,9 @@ int getint(){
 }
 int main()
 {
-    int a[10][5];
-    int **p,*q;
-    a[3][2] = 45;
-    p = a;//size of p = 4B
-    printf("%p, %p\n",a,a+3);
-    printf("%p, %p\n",p,p+3*5);
-    q = *(p+3*5+2);
-    printf("%d\n",q);
+    struct book sapiens, *bkptr;
+    struct book myshlf[4][4];
+    int a;
+    myshlf[1][1].pg[2][3] = 1;
     return 0;
 }

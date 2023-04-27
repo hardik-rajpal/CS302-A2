@@ -62,6 +62,7 @@ public:
     std::vector<int> tl;
     std::string addr;
     int offset=0;
+    bool iselem=false;
     bool isproxyaddr = false;
 };
 
