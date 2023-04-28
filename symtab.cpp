@@ -249,12 +249,12 @@ void Symbols::initGST(){
     typespec_astnode::stringc.typeName = typespec_astnode::stringc.baseTypeName;
     typespec_astnode::stringc.typeWidth = typespec_astnode::stringc.baseTypeWidth;
 }
-string Symbols::newTemp(SymTab *currt){
+string Symbols::newTemp(SymTab *currt,typespec_astnode tn){
     string name = "t"+to_string(tmpcnt++);
     while(gst->rows.count(name)||currt->rows.count(name)){
         name = "t"+to_string(tmpcnt++);
     }
-    currt->rows[name] = SymEntry(typespec_astnode::intc, SymTab::VAR, SymTab::LOCAL, 4, currt->getNewOffset(4));
+    currt->rows[name] = SymEntry(tn, SymTab::VAR, SymTab::LOCAL, tn.typeWidth, currt->getNewOffset(tn.typeWidth));
     return name;
 }
 int Symbols::getOffsetInStruct(string structname,string member){
@@ -264,7 +264,9 @@ int Symbols::getOffsetInStruct(string structname,string member){
 string Symbols::resolveProxies(exp_astnode* exp, TroinBuffer &buffer, SymTab* currst){
     string t0 = exp->addr;
     if(exp->iselem||exp->isproxyaddr){
-        t0 = Symbols::newTemp(currst);
+        typespec_astnode tn = exp->typeNode;
+        tn.deref();
+        t0 = Symbols::newTemp(currst,tn);
         buffer.gen(troins(troins::ass,troins::uop,{t0,"*",exp->addr}));
     }
     return t0;

@@ -64,7 +64,7 @@ typespec_astnode toptype;
 string topvarname;
 TroinBuffer code;
 #define gen(...) code.gen(troins(__VA_ARGS__))
-#define newtemp() Symbols::newTemp(ststack.top())
+#define newtemp(A) Symbols::newTemp(ststack.top(),A)
 }
 
 
@@ -502,7 +502,9 @@ assignment_expression: unary_expression '=' expression{
     if(Symbols::symTabStage==2){
         std::string t1;
         if($3->isproxyaddr||$3->iselem){
-            t1 = newtemp();
+            typespec_astnode tn = $3->typeNode;
+            tn.deref();
+            t1 = newtemp(tn);
             gen(troins::ass,troins::uop,{t1,"*",$3->addr});
         }
         else{
@@ -653,7 +655,7 @@ logical_and_expression: ifgotocoder{
         $$ = new op_binary_astnode("AND_OP", $1, $4);
     }
     if(Symbols::symTabStage==2){
-        $$->addr = newtemp();
+        $$->addr = newtemp(typespec_astnode::intc);
         if(code.condcode){
             $$->tl = $4->tl;
             code.backpatch($1->tl,$3->nil);
@@ -680,7 +682,7 @@ equality_expression: relational_expression{
     }
     if(Symbols::symTabStage==2){
         op = op.substr(0,op.size()-1);
-        std::string t1 = newtemp();
+        std::string t1 = newtemp(typespec_astnode::intc);
         gen(troins::ass,troins::bop,{t1,$1->addr,op,$3->addr});
         $$->addr = t1;
 
@@ -696,7 +698,7 @@ equality_expression: relational_expression{
     }
     if(Symbols::symTabStage==2){
         op = op.substr(0,op.size()-1);
-        std::string t1 = newtemp();
+        std::string t1 = newtemp(typespec_astnode::intc);
         gen(troins::ass,troins::bop,{t1,$1->addr,op,$3->addr});
         $$->addr = t1;
 
@@ -718,7 +720,7 @@ relational_expression: additive_expression{
     }
     if(Symbols::symTabStage==2){
         op = op.substr(0,op.size()-1);
-        std::string t1 = newtemp();
+        std::string t1 = newtemp(typespec_astnode::intc);
         gen(troins::ass,troins::bop,{t1,$1->addr,op,$3->addr});
         $$->addr = t1;
     }
@@ -734,7 +736,7 @@ relational_expression: additive_expression{
     }
     if(Symbols::symTabStage==2){
         op = op.substr(0,op.size()-1);
-        std::string t1 = newtemp();
+        std::string t1 = newtemp(typespec_astnode::intc);
         gen(troins::ass,troins::bop,{t1,$1->addr,op,$3->addr});
         $$->addr = t1;
 
@@ -750,7 +752,7 @@ relational_expression: additive_expression{
     }
     if(Symbols::symTabStage==2){
         op = op.substr(0,op.size()-1);
-        std::string t1 = newtemp();
+        std::string t1 = newtemp(typespec_astnode::intc);
         gen(troins::ass,troins::bop,{t1,$1->addr,op,$3->addr});
         $$->addr = t1;
 
@@ -766,7 +768,7 @@ relational_expression: additive_expression{
     }
     if(Symbols::symTabStage==2){
         op = op.substr(0,op.size()-1);
-        std::string t1 = newtemp();
+        std::string t1 = newtemp(typespec_astnode::intc);
         gen(troins::ass,troins::bop,{t1,$1->addr,op,$3->addr});
         $$->addr = t1;
 
@@ -787,7 +789,7 @@ additive_expression: multiplicative_expression{
         $$ = new op_binary_astnode(op, $1, $3);
     }
     if(Symbols::symTabStage==2){
-        $$->addr = newtemp();
+        $$->addr = newtemp(typespec_astnode::intc);
         gen(troins::ass,troins::bop,{$$->addr,$1->addr,"+",$3->addr});
     }
 }
@@ -800,7 +802,7 @@ additive_expression: multiplicative_expression{
         $$ = new op_binary_astnode(op, $1, $3);
     }
     if(Symbols::symTabStage==2){
-        $$->addr = newtemp();
+        $$->addr = newtemp(typespec_astnode::intc);
         gen(troins::ass,troins::bop,{$$->addr,$1->addr,"-",$3->addr});
     }
 }
@@ -834,7 +836,9 @@ unary_expression: postfix_expression{
     if(Symbols::symTabStage==2){
         std::string t0;
         if($2->isproxyaddr||$2->iselem){
-            t0 = newtemp();
+            typespec_astnode tn = $2->typeNode;
+            tn.deref();
+            t0 = newtemp(tn);
             gen(troins::ass,troins::uop,{t0,"*",$2->addr});
         }
         else{
@@ -846,7 +850,11 @@ unary_expression: postfix_expression{
             $$->addr = t0;
         }
         else{
-            $$->addr = newtemp();
+            typespec_astnode tn = Symbols::getSymEntry(ststack.top(),t0,false)->type;
+            if(op=="&"){
+                tn.addressOf();
+            }
+            $$->addr = newtemp(tn);
             gen(troins::ass,troins::uop,{$$->addr,op,t0});
         }
     }
@@ -872,7 +880,7 @@ multiplicative_expression: unary_expression{
     }
     if(Symbols::symTabStage==2){
         $3->addr = Symbols::resolveProxies($3,code,ststack.top());
-        $$->addr = newtemp();
+        $$->addr = newtemp(typespec_astnode::intc);
         gen(troins::ass,troins::bop,{$$->addr,$1->addr,"*",$3->addr});
     }
 }
@@ -886,7 +894,7 @@ multiplicative_expression: unary_expression{
     }
     if(Symbols::symTabStage==2){
         $3->addr = Symbols::resolveProxies($3,code,ststack.top());
-        $$->addr = newtemp();
+        $$->addr = newtemp(typespec_astnode::intc);
         gen(troins::ass,troins::bop,{$$->addr,$1->addr,"/",$3->addr});
     }
 }
@@ -922,12 +930,15 @@ postfix_expression: primary_expression{
             t0 = $1->addr;
         }
         else{
-            t0 = newtemp();
+            typespec_astnode tn = $1->typeNode;
+            tn.addressOf();
+            t0 = newtemp(tn);
             gen(troins::ass,troins::uop,{t0,"&",$1->addr});
         }
-        string t1 = newtemp();
-        string t2 = newtemp();
+        string t1 = newtemp(typespec_astnode::intc);
         gen(troins::ass,troins::bop,{t1, to_string(tmp.typeWidth),"*",$3->addr});
+        typespec_astnode tn = Symbols::getSymEntry(ststack.top(),t0,false)->type;
+        string t2 = newtemp(tn);
         gen(troins::ass,troins::bop,{t2, t0, "+", t1});
         $$->addr = t2;
         $$->iselem = true;
@@ -960,7 +971,8 @@ postfix_expression: primary_expression{
         }
     }
     if(Symbols::symTabStage==2){
-        $$->addr = newtemp();
+        typespec_astnode tn = Symbols::getSymEntry(ststack.top(),$1,false)->type;
+        $$->addr = newtemp(tn);
         gen(troins::ass,troins::call,{$$->addr,$1,"0"});
     }
 }
@@ -1008,7 +1020,8 @@ postfix_expression: primary_expression{
         }
     }
     if(Symbols::symTabStage==2){
-        $$->addr = newtemp();
+        typespec_astnode tn = Symbols::getSymEntry(ststack.top(),$1,false)->type;
+        $$->addr = newtemp(tn);
         for(exp_astnode* prm:$3){
             gen(troins::func,troins::param,{prm->addr});
         }
@@ -1043,14 +1056,19 @@ postfix_expression: primary_expression{
         */
         string t1;
         string offset = to_string(Symbols::getOffsetInStruct(structName,$3));
+        typespec_astnode tn = $1->typeNode;
         if(!($1->isproxyaddr||$1->iselem)){
-            t1 = newtemp();
+            tn.addressOf();
+            t1 = newtemp(tn);    
             gen(troins::ass,troins::uop,{t1,"&",$1->addr});
         }
         else{
             t1 = $1->addr;
         }
-        string t2 = newtemp();
+        SymEntry* memberEntry = Symbols::getSymEntry(Symbols::slsts[structName],$3,true);
+        tn = memberEntry->type;
+        tn.addressOf();
+        string t2 = newtemp(tn);
         gen(troins::ass,troins::bop,{t2,t1,"+",offset});
         $$->addr = t2;
         $$->isproxyaddr=true;
@@ -1083,15 +1101,20 @@ postfix_expression: primary_expression{
         t1 = a + offset
         */
         string t1;
+        typespec_astnode tn = $1->typeNode;
         if($1->isproxyaddr){
-            t1 = newtemp();
+            tn.deref();
+            t1 = newtemp(tn);
             gen(troins::ass,troins::uop,{t1,"*",$1->addr});
         }
         else{
             t1 = $1->addr;
         }
-        string t2 = newtemp();
         string offset = to_string(Symbols::getOffsetInStruct(structName,$3));
+        SymEntry*memberEntry = Symbols::getSymEntry(Symbols::slsts[structName],$3,true);
+        tn = memberEntry->type;
+        tn.addressOf();
+        string t2 = newtemp(tn);
         gen(troins::ass,troins::bop,{t2,t1,"+",offset});
         $$->isproxyaddr = true;
         $$->addr = t2;
@@ -1113,17 +1136,19 @@ postfix_expression: primary_expression{
     if(Symbols::symTabStage==2){
         string t0;
         if($1->isproxyaddr||$1->iselem){
-            t0 = newtemp();
+            typespec_astnode tn = $1->typeNode;
+            tn.deref();
+            t0 = newtemp(tn);
             gen(troins::ass,troins::uop,{t0,"*",$1->addr});
         }
         else{
             t0 = $1->addr;
         }
-        string t = newtemp();
+        string t = newtemp($1->typeNode);
         $$->addr = t;
         gen(troins::ass,troins::na,{$$->addr,t0});
         if($1->isproxyaddr||$1->iselem){
-            string t1 = newtemp();
+            string t1 = newtemp($1->typeNode);
             gen(troins::ass,troins::bop,{t1,t0,"+","1"});
             gen(troins::ass,troins::ptrl,{$1->addr,t1});            
         }

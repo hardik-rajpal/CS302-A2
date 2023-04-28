@@ -65,7 +65,7 @@ public:
     static void initGST();
     static int tmpcnt;
     static int getOffsetInStruct(string structname,string member);
-    static string newTemp(SymTab *currt);
+    static string newTemp(SymTab *currt,typespec_astnode typeNode);
     static string newStrLit(string sl);
     static string resolveProxies(exp_astnode* exp, TroinBuffer &buffer,SymTab* currst);
     static map<string,string> strlits;
