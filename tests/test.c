@@ -54,11 +54,6 @@ int main() {
     struct ghosala g;
     struct pair p;
     int a,b,c;
-    c = 1;
-    a = 3;
-    g = bird(1,a,5);
-    printf("g.eggs: %d, g.kk.x: %d, g.kk.y: %d\n",g.eggs,g.koyal_koila.x,g.koyal_koila.y);
-    p = bird(1,a,5).koyal_koila;
-    printf("p.x: %d, p.y:%d\n",p.x,p.y);
+    dostuff();
     return 0;
 }
