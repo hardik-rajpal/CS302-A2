@@ -17,14 +17,17 @@ struct ghosala bird(int x) {
 }
 
 int main() {
-    int a, b;
-    a = 15;
-    b = 10;
-    if(a == b){
-        printf("not fuck you\n");
+    int a, b, i;
+    a = 1;
+    while(a<35){
+        a = a*2;
     }
-    else {
-        printf("fuck you\n");
+    if(a==2){
+        b = a+1;
     }
+    else{
+        b = a+3;
+    }
+    printf("a: %d, b: %d\n",a,b);
     return 0;
 }

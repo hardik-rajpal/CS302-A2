@@ -17,53 +17,53 @@ string Symbols::newStrLit(string sl){
 
 void SymEntry::printJson(string varname)
 {
-    cout << "# [\n # \"" << varname << "\",";
+    cout << "[\n# \"" << varname << "\",";
     switch (hltype)
     {
     case SymTab::FUN:
-        cout << "\"fun\",\n # ";
+        cout << "\"fun\",\n# ";
         break;
     case SymTab::STRUCT:
-        cout << "\"struct\",\n # ";
+        cout << "\"struct\",\n# ";
         break;
     case SymTab::VAR:
-        cout << "\"var\",\n # ";
+        cout << "\"var\",\n# ";
         break;
     }
     switch (lpgtype)
     {
     case SymTab::LOCAL:
-        cout << "\"local\",\n # ";
+        cout << "\"local\",\n# ";
         break;
     case SymTab::PARAM:
-        cout << "\"param\",\n # ";
+        cout << "\"param\",\n# ";
         break;
     case SymTab::GLOBAL:
-        cout << "\"global\",\n # ";
+        cout << "\"global\",\n# ";
         break;
     }
-    cout << size << ",\n # ";
+    cout << size << ",\n# ";
     if (hltype == SymTab::STRUCT)
     {
-        cout << "\"-\",\n # ";
+        cout << "\"-\",\n# ";
     }
     else
     {
-        cout << offset << ",\n # ";
+        cout << offset << ",\n# ";
     }
     if (hltype == SymTab::STRUCT)
     {
-        cout << "\"-\"\n # ";
+        cout << "\"-\"\n# ";
     }
     else
     {
         cout << "\"" << type.typeName << "\"";
     }
-    cout << "\n # ]";
+    cout << "\n# ]";
 }
 void SymTab::printJson()
 {
-    cout << "# {\n # \"globalST\": [\n # ";
+    cout << "# {\n# \"globalST\": [\n# ";
     auto iter = rows.begin();
     for (; iter != rows.end();)
     {
@@ -72,13 +72,13 @@ void SymTab::printJson()
         {
             cout << ",";
         }
-        cout << "\n # ";
+        cout << "\n# ";
     }
-    cout << "],\n # \"structs\":[\n # ";
+    cout << "],\n# \"structs\":[\n# ";
     auto iterlst = Symbols::slsts.begin();
     for (; iterlst != Symbols::slsts.end();)
     {
-        cout << "{\n # \"name\":\"" << (*iterlst).first << "\",\n # \"localST\":[\n # "
+        cout << "{\n# \"name\":\"" << (*iterlst).first << "\",\n# \"localST\":[\n# "
              << endl;
         cout <<"# ";
         auto rows = (*iterlst).second->rows;
@@ -90,23 +90,23 @@ void SymTab::printJson()
             {
                 cout << ",";
             }
-            cout << "\n # ";
+            cout << "\n# ";
         }
-        cout << "]\n # ";
+        cout << "]\n# ";
         cout << "}" << endl;
         cout <<"# ";
         if ((++iterlst) != (Symbols::slsts).end())
         {
             cout << ",";
         }
-        cout << "\n # ";
+        cout << "\n# ";
     }
-    cout << "],\n # \"functions\":[" << endl;
+    cout << "],\n# \"functions\":[" << endl;
     cout <<"# ";
     iterlst = Symbols::flsts.begin();
     for (; iterlst != Symbols::flsts.end();)
     {
-        cout << "{\n # \"name\":\"" << (*iterlst).first << "\",\n # \"localST\":[\n # ";
+        cout << "{\n# \"name\":\"" << (*iterlst).first << "\",\n# \"localST\":[\n# ";
         auto iterent = (*iterlst).second->rows.begin();
         for (; iterent != (*iterlst).second->rows.end();)
         {
@@ -115,9 +115,9 @@ void SymTab::printJson()
             {
                 cout << ",";
             }
-            cout << "\n # ";
+            cout << "\n# ";
         }
-        cout << "],\n # ";
+        cout << "],\n# ";
         cout << "\"ast\":";
         iterlst->second->ptr->print();
         cout << "}" << endl;
@@ -126,9 +126,9 @@ void SymTab::printJson()
         {
             cout << ",";
         }
-        cout << "\n # ";
+        cout << "\n# ";
     }
-    cout << "]\n # ";
+    cout << "]\n# ";
     cout << "}" << endl;
     cout <<"# ";
 }

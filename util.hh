@@ -36,7 +36,7 @@ inline void printAst(const char *astname, const char *fmt...) // fmt is a format
 			char *field = va_arg(args, char *);
 			char *str = va_arg(args, char *);
 			cout << "\"" << field << "\": ";
-			cout << "\"" << str << "\"\n #";
+			cout << "\"" << str << "\"\n# ";
 		}
 		else if (*fmt == 'i')
 		{
