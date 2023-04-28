@@ -286,59 +286,150 @@
 # "name":"main",
 # "localST":[
 # [
-# "a","var",
+# "g","var",
 # "local",
-# 4,
-# -4,
-# "int"
-# ],
-# [
-# "b","var",
-# "local",
-# 4,
-# -8,
-# "int"
-# ],
-# [
-# "i","var",
-# "local",
-# 4,
+# 12,
 # -12,
-# "int"
+# "struct ghosala"
+# ],
+# [
+# "p","var",
+# "local",
+# 8,
+# -20,
+# "struct pair"
 # ],
 # [
 # "t10","var",
 # "local",
 # 4,
-# -16,
-# "int"
+# -24,
+# "struct pair*"
 # ],
 # [
 # "t11","var",
 # "local",
 # 4,
-# -20,
-# "int"
+# -28,
+# "int*"
 # ],
 # [
 # "t12","var",
 # "local",
 # 4,
-# -24,
-# "int"
+# -32,
+# "struct pair*"
 # ],
 # [
 # "t13","var",
 # "local",
 # 4,
-# -28,
-# "int"
+# -36,
+# "int*"
 # ],
 # [
 # "t14","var",
 # "local",
 # 4,
-# -32,
+# -40,
+# "struct ghosala*"
+# ],
+# [
+# "t15","var",
+# "local",
+# 4,
+# -44,
+# "int*"
+# ],
+# [
+# "t16","var",
+# "local",
+# 4,
+# -48,
+# "struct ghosala*"
+# ],
+# [
+# "t17","var",
+# "local",
+# 4,
+# -52,
+# "struct pair*"
+# ],
+# [
+# "t18","var",
+# "local",
+# 4,
+# -56,
+# "struct ghosala*"
+# ],
+# [
+# "t19","var",
+# "local",
+# 4,
+# -60,
+# "int*"
+# ],
+# [
+# "t20","var",
+# "local",
+# 4,
+# -64,
+# "int"
+# ],
+# [
+# "t21","var",
+# "local",
+# 4,
+# -68,
+# "struct ghosala*"
+# ],
+# [
+# "t22","var",
+# "local",
+# 4,
+# -72,
+# "struct pair*"
+# ],
+# [
+# "t23","var",
+# "local",
+# 4,
+# -76,
+# "int*"
+# ],
+# [
+# "t24","var",
+# "local",
+# 4,
+# -80,
+# "int"
+# ],
+# [
+# "t25","var",
+# "local",
+# 4,
+# -84,
+# "struct ghosala*"
+# ],
+# [
+# "t26","var",
+# "local",
+# 4,
+# -88,
+# "struct pair*"
+# ],
+# [
+# "t27","var",
+# "local",
+# 4,
+# -92,
+# "int*"
+# ],
+# [
+# "t28","var",
+# "local",
+# 4,
+# -96,
 # "int"
 # ]
 # ],
@@ -346,72 +437,59 @@
 # "seq": [
 # { "assignS": {
 # "left": 
+# { "member": {
+# "struct": 
 # {
-# "identifier": "a"
+# "identifier": "p"
+# }
+# ,
+# "field": 
+# {
+# "identifier": "x"
+# }
+# }
 # }
 # ,
 # "right": 
 # {
-# "intconst": 1}
+# "intconst": 12}
 # }
 # }
 # ,
-# { "while": {
-# "cond": 
-# { "op_binary": {
-# "op": "LT_OP_INT"
-# ,
-# "left": 
-# {
-# "identifier": "a"
-# }
-# ,
-# "right": 
-# {
-# "intconst": 35}
-# }
-# }
-# ,
-# "stmt": 
-# {
-# "seq": [
 # { "assignS": {
 # "left": 
+# { "member": {
+# "struct": 
 # {
-# "identifier": "a"
+# "identifier": "p"
+# }
+# ,
+# "field": 
+# {
+# "identifier": "y"
+# }
+# }
 # }
 # ,
 # "right": 
-# { "op_binary": {
-# "op": "MULT_INT"
+# {
+# "intconst": 34}
+# }
+# }
 # ,
+# { "assignS": {
 # "left": 
+# { "member": {
+# "struct": 
 # {
-# "identifier": "a"
+# "identifier": "g"
 # }
 # ,
-# "right": 
+# "field": 
 # {
-# "intconst": 2}
+# "identifier": "eggs"
 # }
 # }
-# }
-# }
-# 
-# 
-# ]
-# }
-# }
-# }
-# ,
-# { "if": {
-# "cond": 
-# { "op_binary": {
-# "op": "EQ_OP_INT"
-# ,
-# "left": 
-# {
-# "identifier": "a"
 # }
 # ,
 # "right": 
@@ -420,64 +498,24 @@
 # }
 # }
 # ,
-# "then": 
-# {
-# "seq": [
 # { "assignS": {
 # "left": 
+# { "member": {
+# "struct": 
 # {
-# "identifier": "b"
+# "identifier": "g"
 # }
 # ,
-# "right": 
-# { "op_binary": {
-# "op": "PLUS_INT"
-# ,
-# "left": 
+# "field": 
 # {
-# "identifier": "a"
-# }
-# ,
-# "right": 
-# {
-# "intconst": 1}
+# "identifier": "koyal_koila"
 # }
 # }
-# }
-# }
-# 
-# 
-# ]
-# }
-# ,
-# "else": 
-# {
-# "seq": [
-# { "assignS": {
-# "left": 
-# {
-# "identifier": "b"
-# }
-# ,
-# "right": 
-# { "op_binary": {
-# "op": "PLUS_INT"
-# ,
-# "left": 
-# {
-# "identifier": "a"
 # }
 # ,
 # "right": 
 # {
-# "intconst": 3}
-# }
-# }
-# }
-# }
-# 
-# 
-# ]
+# "identifier": "p"
 # }
 # }
 # }
@@ -489,16 +527,65 @@
 # }
 # ,
 # "params": [
+# { "member": {
+# "struct": 
+# { "member": {
+# "struct": 
 # {
-# "identifier": "b"
+# "identifier": "g"
+# }
+# ,
+# "field": 
+# {
+# "identifier": "koyal_koila"
+# }
+# }
+# }
+# ,
+# "field": 
+# {
+# "identifier": "y"
+# }
+# }
+# }
+# ,
+# { "member": {
+# "struct": 
+# { "member": {
+# "struct": 
+# {
+# "identifier": "g"
+# }
+# ,
+# "field": 
+# {
+# "identifier": "koyal_koila"
+# }
+# }
+# }
+# ,
+# "field": 
+# {
+# "identifier": "x"
+# }
+# }
+# }
+# ,
+# { "member": {
+# "struct": 
+# {
+# "identifier": "g"
+# }
+# ,
+# "field": 
+# {
+# "identifier": "eggs"
+# }
+# }
 # }
 # ,
 # {
-# "identifier": "a"
-# }
-# ,
-# {
-# "stringconst": "a: %d, b: %d\n"
+# "stringconst": "g.eggs: %d, g.kk.x: %d, g.kk.y: %d\n"
 # }
 # 
 # 
@@ -522,7 +609,7 @@
 # 
 # *****************3A starts here**************
 # .strlt0:
-#	.string "a: %d, b: %d\n"
+#	.string "g.eggs: %d, g.kk.x: %d, g.kk.y: %d\n"
 # bird:
 #	t0 = &g
 #	t1 = t0 + 0
@@ -539,39 +626,40 @@
 #	*t8 = t9
 #	return g
 # main:
-#	a = 1
-# .while_cond_L2:
-#	t10 = a LT_OP 35
-#	if t10 goto .while_stmt_L3
-#	goto .while_exit_L4
-# .while_stmt_L3:
-#	nop
-#	t11 = a * 2
-#	a = t11
-#	goto .while_cond_L2
-# .while_exit_L4:
-#	t12 = a EQ_OP 2
-#	if t12 goto .if_stmt_L5
-#	goto .else_stmtL6
-# .if_stmt_L5:
-#	t13 = a + 1
-#	b = t13
-#	goto .if_exit_L7
-# .else_stmtL6:
-#	t14 = a + 3
-#	b = t14
-# .if_exit_L7:
-#	nop
-#	param b
-#	param a
+#	t10 = &p
+#	t11 = t10 + 0
+#	*t11 = 12
+#	t12 = &p
+#	t13 = t12 + 4
+#	*t13 = 34
+#	t14 = &g
+#	t15 = t14 + 0
+#	*t15 = 2
+#	t16 = &g
+#	t17 = t16 + 4
+#	*t17 = p
+#	t18 = &g
+#	t19 = t18 + 0
+#	t20 = *t19
+#	t21 = &g
+#	t22 = t21 + 4
+#	t23 = t22 + 0
+#	t24 = *t23
+#	t25 = &g
+#	t26 = t25 + 4
+#	t27 = t26 + 4
+#	t28 = *t27
+#	param t28
+#	param t24
+#	param t20
 #	param .strlt0
-#	call printf, 3
+#	call printf, 4
 #	return 0
 
 # ****************ASM Starts here********** 
 .section .rodata
 .strlt0:
-	.string "a: %d, b: %d\n"
+	.string "g.eggs: %d, g.kk.x: %d, g.kk.y: %d\n"
 .text
 # t0 = &g
 
@@ -671,125 +759,180 @@ movl %eax, 20(%ebp)
 leave
 movl $0, %eax
 ret
-# a = 1
+# t10 = &p
 
 .globl main
 main:
 pushl %ebp
 movl %esp, %ebp
-subl $32, %esp
-movl $1, %eax
-movl %eax, -4(%ebp)
-
-# t10 = a LT_OP 35
-
-.while_cond_L2:
-movl -4(%ebp), %eax
-cmpl $35, %eax
-setl %al
-movzbl %al, %eax
-movl %eax, -16(%ebp)
-
-# if t10 goto .while_stmt_L3
-
-movl -16(%ebp), %eax
-cmpl $0, %eax
-jne .while_stmt_L3
-
-# goto .while_exit_L4
-
-jmp .while_exit_L4
-
-# nop
-
-.while_stmt_L3:
-nop
-
-# t11 = a * 2
-
-movl -4(%ebp), %eax
-imull $2, %eax
-movl %eax, -20(%ebp)
-
-# a = t11
-
-movl -20(%ebp), %eax
-movl %eax, -4(%ebp)
-
-# goto .while_cond_L2
-
-jmp .while_cond_L2
-
-# t12 = a EQ_OP 2
-
-.while_exit_L4:
-movl -4(%ebp), %eax
-cmpl $2, %eax
-sete %al
-movzbl %al, %eax
+subl $96, %esp
+movl %ebp, %eax
+add $-20, %eax
 movl %eax, -24(%ebp)
 
-# if t12 goto .if_stmt_L5
+
+# t11 = t10 + 0
 
 movl -24(%ebp), %eax
-cmpl $0, %eax
-jne .if_stmt_L5
-
-# goto .else_stmtL6
-
-jmp .else_stmtL6
-
-# t13 = a + 1
-
-.if_stmt_L5:
-movl -4(%ebp), %eax
-addl $1, %eax
+addl $0, %eax
 movl %eax, -28(%ebp)
 
-# b = t13
+# *t11 = 12
 
-movl -28(%ebp), %eax
-movl %eax, -8(%ebp)
+movl $12, %eax
+movl -28(%ebp), %ebx
+movl %eax, (%ebx)
 
-# goto .if_exit_L7
+# t12 = &p
 
-jmp .if_exit_L7
-
-# t14 = a + 3
-
-.else_stmtL6:
-movl -4(%ebp), %eax
-addl $3, %eax
+movl %ebp, %eax
+add $-20, %eax
 movl %eax, -32(%ebp)
 
-# b = t14
+
+# t13 = t12 + 4
 
 movl -32(%ebp), %eax
-movl %eax, -8(%ebp)
+addl $4, %eax
+movl %eax, -36(%ebp)
 
-# nop
+# *t13 = 34
 
-.if_exit_L7:
-nop
+movl $34, %eax
+movl -36(%ebp), %ebx
+movl %eax, (%ebx)
 
-# param b
+# t14 = &g
 
-# param a
+movl %ebp, %eax
+add $-12, %eax
+movl %eax, -40(%ebp)
+
+
+# t15 = t14 + 0
+
+movl -40(%ebp), %eax
+addl $0, %eax
+movl %eax, -44(%ebp)
+
+# *t15 = 2
+
+movl $2, %eax
+movl -44(%ebp), %ebx
+movl %eax, (%ebx)
+
+# t16 = &g
+
+movl %ebp, %eax
+add $-12, %eax
+movl %eax, -48(%ebp)
+
+
+# t17 = t16 + 4
+
+movl -48(%ebp), %eax
+addl $4, %eax
+movl %eax, -52(%ebp)
+
+# *t17 = p
+
+movl -20(%ebp), %eax
+movl -52(%ebp), %ebx
+movl %eax, (%ebx)
+
+# t18 = &g
+
+movl %ebp, %eax
+add $-12, %eax
+movl %eax, -56(%ebp)
+
+
+# t19 = t18 + 0
+
+movl -56(%ebp), %eax
+addl $0, %eax
+movl %eax, -60(%ebp)
+
+# t20 = *t19
+
+movl -60(%ebp), %eax
+movl (%eax), %eax
+movl %eax, -64(%ebp)
+
+
+# t21 = &g
+
+movl %ebp, %eax
+add $-12, %eax
+movl %eax, -68(%ebp)
+
+
+# t22 = t21 + 4
+
+movl -68(%ebp), %eax
+addl $4, %eax
+movl %eax, -72(%ebp)
+
+# t23 = t22 + 0
+
+movl -72(%ebp), %eax
+addl $0, %eax
+movl %eax, -76(%ebp)
+
+# t24 = *t23
+
+movl -76(%ebp), %eax
+movl (%eax), %eax
+movl %eax, -80(%ebp)
+
+
+# t25 = &g
+
+movl %ebp, %eax
+add $-12, %eax
+movl %eax, -84(%ebp)
+
+
+# t26 = t25 + 4
+
+movl -84(%ebp), %eax
+addl $4, %eax
+movl %eax, -88(%ebp)
+
+# t27 = t26 + 4
+
+movl -88(%ebp), %eax
+addl $4, %eax
+movl %eax, -92(%ebp)
+
+# t28 = *t27
+
+movl -92(%ebp), %eax
+movl (%eax), %eax
+movl %eax, -96(%ebp)
+
+
+# param t28
+
+# param t24
+
+# param t20
 
 # param .strlt0
 
-# call printf, 3
+# call printf, 4
 
 subl $4, %esp
-pushl -8(%ebp)
-pushl -4(%ebp)
+pushl -96(%ebp)
+pushl -80(%ebp)
+pushl -64(%ebp)
 pushl $.strlt0
 call printf
-addl $16, %esp
+addl $20, %esp
 
 # return 0
 
-addl $32, %esp
+addl $96, %esp
 movl $0, %eax
 movl %eax, 8(%ebp)
 movl $0, %eax
