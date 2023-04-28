@@ -875,6 +875,8 @@ multiplicative_expression: unary_expression{
     }
     if(Symbols::symTabStage==2){
         $$->addr = Symbols::resolveProxies($1,code,ststack.top());
+        $$->isproxyaddr = false;
+        $$->iselem = false;
     }
 }
 | multiplicative_expression '*' unary_expression{

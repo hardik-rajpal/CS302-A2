@@ -331,6 +331,8 @@ vector<string> TroinBuffer::getASM(){
                 }
                 // push the parameters
                 int params_space = 0;
+                //FYI, Swayam Chube, I reversed the parameters order here.
+                reverse(params.begin(),params.end());
                 for (auto param: params) {
                     int offset = Symbols::flsts[function_name]->rows[param.args[0]].offset;
                     if (offset) {

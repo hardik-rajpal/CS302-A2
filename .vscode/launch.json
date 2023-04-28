@@ -35,7 +35,7 @@
             "cwd": "${workspaceFolder}",
             "args": [
                 "tests/test.c",
-                ">tests/myout.s",
+                ">tests/out.s",
                 "2>debug/mydebug.txt"
             ]
         }

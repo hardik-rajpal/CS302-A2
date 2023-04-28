@@ -1,5 +1,6 @@
 /*
-need to update ptrl to transfer struct members
+need to update (1) ptrl (2) y= *x to transfer struct members
+just reuse the loop from = expression.
 struct pair {
     int x;
     int y;
@@ -39,21 +40,23 @@ struct ghosala {
     struct pair koyal_koila;
 };
 
-struct ghosala bird(int x) {
+struct ghosala bird(int x, int y, int z) {
     struct ghosala g;
     g.eggs = x;
-    g.koyal_koila.x = 2 * x;
-    g.koyal_koila.y = 3 * x;
+    g.koyal_koila.x = 2 * y;
+    g.koyal_koila.y = 3 * z;
     return g;
 }
 
 int main() {
     struct ghosala g;
     struct pair p;
-    p.x = 12;
-    p.y=34;
-    g.eggs = 2;
-    g.koyal_koila = p;
+    int a,b,c;
+    c = 1;
+    a = 3;
+    g = bird(1,a,5);
     printf("g.eggs: %d, g.kk.x: %d, g.kk.y: %d\n",g.eggs,g.koyal_koila.x,g.koyal_koila.y);
+    p = bird(1,a,5).koyal_koila;
+    printf("p.x: %d, p.y:%d\n",p.x,p.y);
     return 0;
 }
