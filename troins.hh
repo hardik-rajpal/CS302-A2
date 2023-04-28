@@ -60,6 +60,7 @@ keyword = "goto"
     if x relop y goto L//specs = "if", args = {x, relop, y, L}
 keyword:return
     return y\\args = {y}
+    return ;\\args = {};
 keyword: func
     param x\\specs="param"args = {x}
     call f,n\\specs="call",args={f,n}

@@ -444,6 +444,14 @@ statement: ';'{
         gen(troins::ret,troins::na,{$2->addr});
     }
 }
+| RETURN ';'{
+    if(Symbols::symTabStage>0){
+        $$ = new return_astnode(NULL);
+    }
+    if(Symbols::symTabStage==2){
+        gen(troins::ret,troins::na,{});
+    }
+}
 ;
 
 printf_call: PRINTF '(' STRING_LITERAL ')' ';' {

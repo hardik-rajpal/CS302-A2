@@ -49,6 +49,7 @@ struct ghosala bird(int x, int y, int z) {
 }
 void dostuff(){
     printf("doing stuff\n");
+    return ;
 }
 int main() {
     struct ghosala g;

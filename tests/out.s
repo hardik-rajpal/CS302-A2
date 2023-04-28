@@ -19,7 +19,7 @@
 # "global",
 # 0,
 # 0,
-# "int"
+# "void"
 # ],
 # [
 # "struct ghosala","struct",
@@ -184,157 +184,13 @@
 # 8,
 # "int"
 # ]
-# ],
-# "ast":{
-# "seq": [
-# { "assignS": {
-# "left": 
-# { "member": {
-# "struct": 
-# {
-# "identifier": "g"
-# }
-# ,
-# "field": 
-# {
-# "identifier": "eggs"
-# }
-# }
-# }
-# ,
-# "right": 
-# {
-# "identifier": "x"
-# }
-# }
-# }
-# ,
-# { "assignS": {
-# "left": 
-# { "member": {
-# "struct": 
-# { "member": {
-# "struct": 
-# {
-# "identifier": "g"
-# }
-# ,
-# "field": 
-# {
-# "identifier": "koyal_koila"
-# }
-# }
-# }
-# ,
-# "field": 
-# {
-# "identifier": "x"
-# }
-# }
-# }
-# ,
-# "right": 
-# { "op_binary": {
-# "op": "MULT_INT"
-# ,
-# "left": 
-# {
-# "intconst": 2}
-# ,
-# "right": 
-# {
-# "identifier": "y"
-# }
-# }
-# }
-# }
-# }
-# ,
-# { "assignS": {
-# "left": 
-# { "member": {
-# "struct": 
-# { "member": {
-# "struct": 
-# {
-# "identifier": "g"
-# }
-# ,
-# "field": 
-# {
-# "identifier": "koyal_koila"
-# }
-# }
-# }
-# ,
-# "field": 
-# {
-# "identifier": "y"
-# }
-# }
-# }
-# ,
-# "right": 
-# { "op_binary": {
-# "op": "MULT_INT"
-# ,
-# "left": 
-# {
-# "intconst": 3}
-# ,
-# "right": 
-# {
-# "identifier": "z"
-# }
-# }
-# }
-# }
-# }
-# ,
-# {
-# "return": 
-# {
-# "identifier": "g"
-# }
-# }
-# 
-# 
 # ]
-# }
 # }
 # ,
 # {
 # "name":"dostuff",
 # "localST":[
-# [
-# "a","var",
-# "param",
-# 4,
-# 8,
-# "int"
 # ]
-# ],
-# "ast":{
-# "seq": [
-# { "proccall": {
-# "fname": 
-# {
-# "identifier": "printf"
-# }
-# ,
-# "params": [
-# {
-# "stringconst": "doing stuff\n"
-# }
-# 
-# 
-# ]
-# }
-# }
-# 
-# 
-# ]
-# }
 # }
 # ,
 # {
@@ -375,33 +231,7 @@
 # -20,
 # "struct pair"
 # ]
-# ],
-# "ast":{
-# "seq": [
-# { "proccall": {
-# "fname": 
-# {
-# "identifier": "dostuff"
-# }
-# ,
-# "params": [
-# {
-# "intconst": 1}
-# 
-# 
 # ]
-# }
-# }
-# ,
-# {
-# "return": 
-# {
-# "intconst": 0}
-# }
-# 
-# 
-# ]
-# }
 # }
 # 
 # ]
@@ -428,9 +258,9 @@
 # dostuff:
 #	param .strlt0
 #	call printf, 1
+#	return
 # main:
-#	param 1
-#	call dostuff, 1
+#	call dostuff, 0
 #	return 0
 
 # ****************ASM Starts here********** 
@@ -550,20 +380,25 @@ pushl $.strlt0
 call printf
 addl $8, %esp
 
-# param 1
+# return
+
+addl $0, %esp
+leave
+movl $0, %eax
+ret
+# call dostuff, 0
 
 .globl main
 main:
-# call dostuff, 1
-
-# return 0
-
 pushl %ebp
 movl %esp, %ebp
 subl $32, %esp
+call dostuff
+addl $0, %esp
+
+# return 0
+
 addl $32, %esp
-movl $0, %eax
-movl %eax, 8(%ebp)
 leave
 movl $0, %eax
 ret

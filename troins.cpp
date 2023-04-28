@@ -87,7 +87,12 @@ string troins::toString(){
         }
         break;
     case (kws::ret):
-        ans = "return " + args[0];
+        if(args.size()){
+            ans = "return " + args[0];
+        }
+        else{
+            ans = "return";
+        }
         break;    
     case (kws::nop):
         ans = "nop";
@@ -315,10 +320,7 @@ vector<string> TroinBuffer::getASM(){
                 // make space for return value
                 typespec_astnode type = Symbols::gst->rows[t.args[1]].type;
                 int ret_space = 0;
-                if (type.typeName == "void") {
-                    continue;
-                }
-                else {
+                if (type.typeName != "void") {
                     if (Symbols::gst->rows.count(type.typeName)) {
                         // return type is a struct
                         ret_space = Symbols::gst->rows[type.typeName].size;
@@ -385,10 +387,7 @@ vector<string> TroinBuffer::getASM(){
                 // make space for return value
                 typespec_astnode type = Symbols::gst->rows[t.args[0]].type;
                 int ret_space = 0;
-                if (type.typeName == "void") {
-                    continue;
-                }
-                else {
+                if (type.typeName != "void") {
                     if (Symbols::gst->rows.count(type.typeName)) {
                         // return type is a struct
                         ret_space = Symbols::gst->rows[type.typeName].size;
