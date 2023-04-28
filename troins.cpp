@@ -125,6 +125,7 @@ vector<string> TroinBuffer::getASM(){
     */
     std::vector<std::string> ans;
     std::string function_name = "";
+    int shift_esp = 0;
     int offset;
     std::stringstream ss;
     std::vector<troins> params;
@@ -137,7 +138,7 @@ vector<string> TroinBuffer::getASM(){
                 function_name = labels[i];
                 ss << "pushl %ebp\nmovl %esp, %ebp\n";
                 // find amount to shift esp by 
-                int shift_esp = 0;
+                shift_esp = 0;
                 for (auto row: Symbols::flsts[function_name]->rows) {
                     if (row.second.lpgtype == SymTab::ST_LPG::LOCAL)
                         shift_esp += row.second.size;
@@ -168,8 +169,28 @@ vector<string> TroinBuffer::getASM(){
                         ss << "subl " << offset << "(%ebp), %eax\n";
                     else if (t.args[2] == "*")
                         ss << "imull " << offset << "(%ebp), %eax\n";
+                    else if (t.args[2] == "/") {
+                        ss << "movl " << offset << "(%ebp), %ebx\n";
+                        ss << "movl $0, %edx\ndiv %ebx\n";
+                    }
                     else if (t.args[2] == "AND_OP")
                         ss << "andl " << offset << "(%ebp), %eax\n";
+                    else if (t.args[2] == "GT_OP") {
+                        ss << "cmpl " << offset << "(%ebp), %eax\n";
+                        ss << "setg %al\nmovzbl %al, %eax\n";
+                    }
+                    else if (t.args[2] == "LT_OP") {
+                        ss << "cmpl " << offset << "(%ebp), %eax\n";
+                        ss << "setl %al\nmovzbl %al, %eax\n";
+                    }
+                    else if (t.args[2] == "GE_OP") {
+                        ss << "cmpl " << offset << "(%ebp), %eax\n";
+                        ss << "setge %al\nmovzbl %al, %eax\n";
+                    }
+                    else if (t.args[2] == "LE_OP") {
+                        ss << "cmpl " << offset << "(%ebp), %eax\n";
+                        ss << "setle %al\nmovzbl %al, %eax\n";
+                    }
                 }
                 else {
                     if (t.args[2] == "+") 
@@ -180,6 +201,9 @@ vector<string> TroinBuffer::getASM(){
                         ss << "imull $" << t.args[3] << ", %eax\n";
                     else if (t.args[2] == "AND_OP")
                         ss << "andl $" << t.args[3] << ", %eax\n";
+                    else if (t.args[2] == "GT_OP") {
+                        
+                    }
                 }
 
                 // store result into x
@@ -208,14 +232,6 @@ vector<string> TroinBuffer::getASM(){
                 break;
 
                 case troins::specs::ptrr:
-                ans.push_back("here, motherfucker");
-                offset = Symbols::flsts[function_name]->rows[t.args[1]].offset;
-                ss << "movl " << offset << "(%ebp), %eax\n";
-                ss << "movl (%eax), %eax\n";
-                offset = Symbols::flsts[function_name]->rows[t.args[0]].offset;
-                ss << "movl %eax, " << offset << "(%ebp)\n";
-                ans.push_back(ss.str());
-                ss.str("");
                 break;
 
                 case troins::specs::ptrl:
@@ -253,17 +269,25 @@ vector<string> TroinBuffer::getASM(){
                 ans.push_back(ss.str());
                 ss.str("");
                 break;
-            }
-            break;
-
-
-            case (troins::kws::func):
-            switch(t.spec) {
-                case (troins::specs::param):
-                params.push_back(t);
-                break;
 
                 case (troins::specs::call):
+                // make space for return value
+                typespec_astnode type = Symbols::gst->rows[t.args[0]].type;
+                int ret_space = 0;
+                if (type.typeName == "void") {
+                    continue;
+                }
+                else {
+                    if (Symbols::gst->rows.count(type.typeName)) {
+                        // return type is a struct
+                        ret_space = Symbols::gst->rows[type.typeName].size;
+                        ss << "subl $" << ret_space << ", %esp\n";
+                    }
+                    else {
+                        ret_space = 4;
+                        ss << "subl $4, %esp\n";
+                    }
+                }
                 // push the parameters
                 int params_space = 0;
                 for (auto param: params) {
@@ -288,8 +312,72 @@ vector<string> TroinBuffer::getASM(){
                         params_space += 4;
                     }
                 }
-                ss << "call " << t.args[0] << "\n";
+                // ss << "subl $4, %esp\n"; // for the static link
+                ss << "call " << t.args[1] << "\n";
                 ss << "addl $" << params_space << ", %esp\n";
+                // need to add retspace
+                offset = Symbols::flsts[function_name]->rows[t.args[0]].offset;
+                ss << "movl (%esp), %eax\nmovl %eax, " << offset << "(%ebp)\n";
+                ss << "addl $" << ret_space << ", %esp\n";
+                params.clear();
+                ans.push_back(ss.str());
+                ss.str("");
+                break;
+            }
+            break;
+
+
+            case (troins::kws::func):
+            switch(t.spec) {
+                case (troins::specs::param):
+                params.push_back(t);
+                break;
+
+                case (troins::specs::call):
+                // make space for return value
+                typespec_astnode type = Symbols::gst->rows[t.args[0]].type;
+                int ret_space = 0;
+                if (type.typeName == "void") {
+                    continue;
+                }
+                else {
+                    if (Symbols::gst->rows.count(type.typeName)) {
+                        // return type is a struct
+                        ret_space = Symbols::gst->rows[type.typeName].size;
+                        ss << "subl $" << ret_space << ", %esp\n";
+                    }
+                    else {
+                        ret_space = 4;
+                        ss << "subl $4, %esp\n";
+                    }
+                }
+                // push the parameters
+                int params_space = 0;
+                for (auto param: params) {
+                    int offset = Symbols::flsts[function_name]->rows[param.args[0]].offset;
+                    if (offset) {
+                        typespec_astnode type = Symbols::flsts[function_name]->rows[param.args[0]].type;
+                        if (type.typeName == typespec_astnode::intc.typeName) {
+                            ss << "pushl " << offset << "(%ebp)\n";
+                        }
+                        else {
+                            int struct_size = Symbols::gst->rows[type.typeName].size;
+                            ss << "subl $" << struct_size << ", %esp\n";
+                            params_space += struct_size;
+                            for (int _i = 0; _i < struct_size; _i += 4) {
+                                ss << "movl " << offset - struct_size + _i << "(%ebp), %eax\n";
+                                ss << "movl %eax, " << _i << "(%esp)\n";
+                            }
+                        }
+                    } 
+                    else {
+                        ss << "pushl $" << param.args[0] << "\n";
+                        params_space += 4;
+                    }
+                }
+                // ss << "subl $4, %esp\n"; // for the static link
+                ss << "call " << t.args[0] << "\n";
+                ss << "addl $" << ret_space + params_space << ", %esp\n";
                 params.clear();
                 ans.push_back(ss.str());
                 ss.str("");
@@ -299,6 +387,24 @@ vector<string> TroinBuffer::getASM(){
 
             case (troins::kws::gt):
             switch(t.spec) {
+                case troins::specs::na:
+                ss << "jmp " << t.args[0] << "\n";
+                ans.push_back(ss.str());
+                ss.str("");
+                break;
+
+                case troins::specs::ifs:
+                offset = Symbols::flsts[function_name]->rows[t.args[0]].offset;
+                if (offset) 
+                    ss << "movl " << offset << "(%ebp), %eax\n";
+                else 
+                    ss << "movl $" << t.args[0] << ", %eax\n";
+
+                ss << "cmpl $0, %eax\n";
+                ss << "jne " << t.args[1] << "\n";
+                ans.push_back(ss.str());
+                ss.str("");
+                break;
             }
             break;
 
@@ -307,24 +413,28 @@ vector<string> TroinBuffer::getASM(){
             break;
 
             case (troins::kws::ret):
+            ss << "addl $" << shift_esp << ", %esp\n";
             if(t.args.size()) {
                 offset = Symbols::flsts[function_name]->rows[t.args[0]].offset;
-                if (offset) {
+                // TODO: Take care of returning structs 4 bytes eaach
+                if (offset) 
                     ss << "movl " << offset << "(%ebp), %eax\n";
-                }
                 else 
                     ss << "movl $" << t.args[0] << ", %eax\n";
                 // calculate offset of return value 
-                int num_params = 1;
+                int num_params = 2;  // for eip and dynamic link
                 for(auto row: Symbols::flsts[function_name]->rows) {
                     if (row.second.lpgtype == SymTab::ST_LPG::PARAM)
                         num_params++;
                 }
                 int offset_ret_val = 4 * num_params;
-                ss << "movl %eax, " << offset << "(%ebp)\n";
+                ss << "movl %eax, " << offset_ret_val << "(%ebp)\n";
             }
-            if (function_name == "main") ss << "leave\n";
-            ss << "ret\n";
+            ss << "leave\n";
+            if (function_name == "main")
+                ss << "call exit\n";
+            else 
+                ss << "ret\n";
             ans.push_back(ss.str());
             ss.str("");
             break;

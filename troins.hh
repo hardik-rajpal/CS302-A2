@@ -55,7 +55,7 @@ public:
 /*
 keyword = "goto"
     goto L //specs = "", args = {L}
-    if x goto L//specs = "if", args = {x,L}
+    if x goto L//specs = "ifs", args = {x,L}
     ifFalse x goto L//specs = "ifFalse", args = {x, L}
     if x relop y goto L//specs = "if", args = {x, relop, y, L}
 keyword:return

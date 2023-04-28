@@ -274,7 +274,7 @@ fun_declarator: IDENTIFIER '('{
         for(auto entry:rows){
             minParamOffset = min(minParamOffset,ststack.top()->rows[entry.first].offset);
         }
-        int localsParamsGap = 12;
+        int localsParamsGap = 8;
         int summer = localsParamsGap - minParamOffset;
         auto iter = rows.begin();
         for(;iter!=rows.end();){
@@ -885,7 +885,7 @@ multiplicative_expression: unary_expression{
         $$ = new op_binary_astnode(op, $1, $3);
     }
     if(Symbols::symTabStage==2){
-        $3->addr = Symbols::resolveProxies($3,code,ststack.top);
+        $3->addr = Symbols::resolveProxies($3,code,ststack.top());
         $$->addr = newtemp();
         gen(troins::ass,troins::bop,{$$->addr,$1->addr,"/",$3->addr});
     }
