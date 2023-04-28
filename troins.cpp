@@ -87,7 +87,7 @@ string troins::toString(){
         }
         break;
     case (kws::ret):
-        ans = "return "+args[0];
+        ans = "return " + args[0];
         break;    
     case (kws::nop):
         ans = "nop";
@@ -98,14 +98,14 @@ string troins::toString(){
 }
 void TroinBuffer::printCode(){
     for(auto strlit: Symbols::strlits){
-        cout<<strlit.second<<":\n\t"<<".string "<<strlit.first<<endl;
+        cout<<"; "<<strlit.second<<":\n;\t"<<".string "<<strlit.first<<endl;
     }
     for(int i=0;i<buffer.size();i++){
         troins t = buffer[i];
         if(labels.count(i)){
-            std::cout<<labels[i]<<":"<<std::endl;
+            std::cout<<"; "<<labels[i]<<":"<<std::endl;
         }
-        std::cout<<"\t"<<t.toString()<<std::endl;
+        std::cout<<";\t"<<t.toString()<<std::endl;
     }
 }
 
@@ -132,6 +132,7 @@ vector<string> TroinBuffer::getASM(){
 
     for (int i = 0; i < buffer.size(); ++i) {
         troins t = buffer[i];
+        ans.push_back("; " + t.toString() + "\n");
         if (labels.count(i)) {
             if (labels[i][0] != '.') {
                 // have reached a new function
@@ -202,7 +203,6 @@ vector<string> TroinBuffer::getASM(){
                     else if (t.args[2] == "AND_OP")
                         ss << "andl $" << t.args[3] << ", %eax\n";
                     else if (t.args[2] == "GT_OP") {
-                        
                     }
                 }
 
@@ -214,19 +214,23 @@ vector<string> TroinBuffer::getASM(){
                 ss.str("");
                 break;
 
-                case troins::specs::na:
-                offset = Symbols::flsts[function_name]->rows[t.args[1]].offset;
-                if (offset)
-                    ss << "movl " << offset << "(%ebp), %eax\n";
-                else
-                    ss << "movl $" << t.args[1] << ", %eax\n";
-                
-                offset = Symbols::flsts[function_name]->rows[t.args[0]].offset;
-                ss << "movl %eax, " << offset << "(%ebp)\n";
+                case (troins::specs::na): {
+                int source_offset = Symbols::flsts[function_name]->rows[t.args[1]].offset;
+                int dest_offset = Symbols::flsts[function_name]->rows[t.args[0]].offset;
+                int type_size = Symbols::flsts[function_name]->rows[t.args[1]].size;
+                for (int _i = 0; _i < type_size; _i += 4) {
+                    if (source_offset)
+                        ss << "movl " << offset + _i << "(%ebp), %eax\n";
+                    else
+                        ss << "movl $" << t.args[1] << ", %eax\n";
+                    
+                    ss << "movl %eax, " << dest_offset + _i << "(%ebp)\n";
+                }
 
                 ans.push_back(ss.str());
                 ss.str("");
                 break;
+                }
 
                 case troins::specs::adr:
                 break;

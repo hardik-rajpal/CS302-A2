@@ -1,9 +1,14 @@
-int main() {
+struct pair {
     int x;
     int y;
-    int z;
-    x = 10; y = 3;
-    z = x/y;
-    printf("z = %d\n", z);
-    return 0;
+};
+
+int main() {
+    struct pair a, b;
+    a.x = 10;
+    a.y = 12;
+
+    b = a;
+
+    printf("%d, %d", b.x, b.y);
 }
