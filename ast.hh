@@ -64,6 +64,7 @@ public:
     int offset=0;
     bool iselem=false;
     bool isproxyaddr = false;
+    bool ifgened = false;
 };
 
 class ref_astnode: public exp_astnode {

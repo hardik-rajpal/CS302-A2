@@ -19,6 +19,7 @@ inline void printAst(const char *astname, const char *fmt...) // fmt is a format
 		cout << "\"" << astname << "\"" << ": ";
 	}
 	cout << "{" << endl;
+	cout << "# ";
 	while (*fmt != '\0')
 	{
 		if (*fmt == 'a')
@@ -26,6 +27,7 @@ inline void printAst(const char *astname, const char *fmt...) // fmt is a format
 			char * field = va_arg(args, char *);
 			abstract_astnode *a = va_arg(args, abstract_astnode *);
 			cout << "\"" << field << "\": " << endl;
+	cout << "# ";
 			
 			a->print();
 		}
@@ -34,7 +36,7 @@ inline void printAst(const char *astname, const char *fmt...) // fmt is a format
 			char *field = va_arg(args, char *);
 			char *str = va_arg(args, char *);
 			cout << "\"" << field << "\": ";
-			cout << "\"" << str << "\"\n";
+			cout << "\"" << str << "\"\n #";
 		}
 		else if (*fmt == 'i')
 		{
@@ -57,26 +59,37 @@ inline void printAst(const char *astname, const char *fmt...) // fmt is a format
 			pv f =  va_arg(args, pv);
 			cout << "\"" << field << "\": ";
 			cout << "[" << endl;
+			cout << "# ";
 			for (int i = 0; i < (int)f->size(); ++i)
 			{
 				if ((*f)[i]) {
 					(*f)[i]->print();
-					if (i < (int)f->size() - 1)
+					if (i < (int)f->size() - 1){
 						cout << "," << endl;
-					else
+						cout << "# ";
+					}
+					else{
 						cout << endl;
+						cout << "# ";
+					}
 				}
 			}
 			cout << endl;
-			cout << "]" << endl;
+			cout << "# ]" << endl;
+			cout << "# ";
 		}
 		++fmt;
-		if (*fmt != '\0')
+		if (*fmt != '\0'){
 			cout << "," << endl;
+			cout << "# ";
+		}
 	}
 	cout << "}" << endl;
-	if ((astname != NULL) && (astname[0] != '\0'))
+	cout << "# ";
+	if ((astname != NULL) && (astname[0] != '\0')){
 		cout << "}" << endl;
+		cout << "# ";
+	}
 	va_end(args);
 }
 #endif

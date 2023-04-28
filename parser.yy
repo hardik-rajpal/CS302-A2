@@ -137,8 +137,10 @@ begin_nterm: {
         // ststack.top()->printJson();
     }
     else if(Symbols::symTabStage==2){
+        Symbols::gst->printJson();
+        std::cout<<"\n# *****************3A starts here**************"<<std::endl;
         code.printCode();
-        std::cout<<"\n;****************ASM Starts here********** "<<std::endl;
+        std::cout<<"\n# ****************ASM Starts here********** "<<std::endl;
         //TODO: will comment out last two instructions before submission, 
         //to print only asm.
         code.printASM();
@@ -639,11 +641,12 @@ mnterm:{
 ifgotocoder: equality_expression{
     $$ = $1;
     if(Symbols::symTabStage==2){
-        if(code.condcode){
+        if(code.condcode&&(!($$->ifgened))){
             $$->tl = {code.nextinstr()};
             gen(troins::gt,troins::ifs,{$1->addr,""});
             $$->fl = {code.nextinstr()};
             gen(troins::gt,troins::na,{""});
+            $$->ifgened = true;
         }
     }
 }
@@ -856,6 +859,11 @@ unary_expression: postfix_expression{
             }
             $$->addr = newtemp(tn);
             gen(troins::ass,troins::uop,{$$->addr,op,t0});
+            if(op=="!"){
+                $$->fl = $2->tl;
+                $$->tl = $2->fl;
+                $$->ifgened = true;
+            }
         }
     }
 }

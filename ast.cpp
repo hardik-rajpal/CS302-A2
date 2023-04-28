@@ -353,6 +353,9 @@ typespec_astnode::typespec_astnode(){
 }
 int typespec_astnode::genTypeWidth(){
     int btw = baseTypeWidth;
+    if(numptrstars>0){
+        btw = 4;
+    }
     for(auto size:arrsizes){
         btw*=size;
     }
