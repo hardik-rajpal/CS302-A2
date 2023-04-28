@@ -838,31 +838,52 @@ unary_expression: postfix_expression{
     }
     if(Symbols::symTabStage==2){
         std::string t0;
+        string op = unopName($1,true);
         if($2->isproxyaddr||$2->iselem){
             typespec_astnode tn = $2->typeNode;
-            tn.deref();
-            t0 = newtemp(tn);
-            gen(troins::ass,troins::uop,{t0,"*",$2->addr});
+            if(op=="&"){
+                $$->addr = $2->addr;//$$ isproxy addr is false.
+            }
+            else if(op=="*"){
+                $$->isproxyaddr = true;
+                $$->addr = $2->addr;
+            }
+            else{
+                tn.deref();
+                t0 = newtemp(tn);
+                gen(troins::ass,troins::uop,{t0,"*",$2->addr});
+                typespec_astnode tn = Symbols::getSymEntry(ststack.top(),t0,false)->type;
+                $$->addr = newtemp(tn);
+                gen(troins::ass,troins::uop,{$$->addr,op,t0});
+                if(op=="!"){
+                    $$->fl = $2->tl;
+                    $$->tl = $2->fl;
+                    $$->ifgened = true;
+                }
+            }
         }
         else{
-            t0 = $2->addr;
-        }
-        string op = unopName($1,true);
-        if(op=="*"){
-            $$->isproxyaddr = true;
-            $$->addr = t0;
-        }
-        else{
-            typespec_astnode tn = Symbols::getSymEntry(ststack.top(),t0,false)->type;
+            typespec_astnode tn = $2->typeNode;
             if(op=="&"){
                 tn.addressOf();
+                t0 = newtemp(tn);
+                gen(troins::ass,troins::uop,{t0,"&",$2->addr});
+                $$->addr = t0;//$$ isproxy addr is false.
             }
-            $$->addr = newtemp(tn);
-            gen(troins::ass,troins::uop,{$$->addr,op,t0});
-            if(op=="!"){
-                $$->fl = $2->tl;
-                $$->tl = $2->fl;
-                $$->ifgened = true;
+            else if(op=="*"){
+                $$->isproxyaddr = true;
+                $$->addr = $2->addr;
+            }
+            else{
+                t0 = $2->addr;
+                typespec_astnode tn = Symbols::getSymEntry(ststack.top(),t0,false)->type;
+                $$->addr = newtemp(tn);
+                gen(troins::ass,troins::uop,{$$->addr,op,t0});
+                if(op=="!"){
+                    $$->fl = $2->tl;
+                    $$->tl = $2->fl;
+                    $$->ifgened = true;
+                }
             }
         }
     }

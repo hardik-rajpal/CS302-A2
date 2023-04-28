@@ -353,14 +353,14 @@
 # "local",
 # 4,
 # -52,
-# "int*"
+# "struct pair*"
 # ],
 # [
 # "t13","var",
 # "local",
 # 4,
 # -56,
-# "int"
+# "int*"
 # ],
 # [
 # "t14","var",
@@ -374,135 +374,74 @@
 # "local",
 # 4,
 # -64,
-# "struct pair*"
+# "int*"
 # ],
 # [
 # "t16","var",
 # "local",
 # 4,
 # -68,
-# "int*"
+# "int"
 # ],
 # [
 # "t17","var",
 # "local",
 # 4,
 # -72,
-# "int"
+# "struct ghosala*"
 # ],
 # [
 # "t18","var",
 # "local",
 # 4,
 # -76,
-# "struct ghosala*"
+# "struct pair*"
 # ],
 # [
 # "t19","var",
 # "local",
 # 4,
 # -80,
-# "struct pair*"
+# "int*"
 # ],
 # [
 # "t20","var",
 # "local",
 # 4,
 # -84,
-# "int*"
+# "int"
 # ],
 # [
 # "t21","var",
 # "local",
 # 4,
 # -88,
-# "int"
+# "struct ghosala*"
 # ],
 # [
 # "t22","var",
 # "local",
-# 12,
-# -100,
-# "struct ghosala"
+# 4,
+# -92,
+# "struct pair*"
 # ],
 # [
 # "t23","var",
 # "local",
 # 4,
-# -104,
-# "struct ghosala*"
+# -96,
+# "int*"
 # ],
 # [
 # "t24","var",
 # "local",
 # 4,
-# -108,
-# "struct pair*"
-# ],
-# [
-# "t25","var",
-# "local",
-# 8,
-# -116,
-# "struct pair"
-# ],
-# [
-# "t26","var",
-# "local",
-# 4,
-# -120,
-# "struct pair*"
-# ],
-# [
-# "t27","var",
-# "local",
-# 4,
-# -124,
-# "int*"
-# ],
-# [
-# "t28","var",
-# "local",
-# 4,
-# -128,
-# "int"
-# ],
-# [
-# "t29","var",
-# "local",
-# 4,
-# -132,
-# "struct pair*"
-# ],
-# [
-# "t30","var",
-# "local",
-# 4,
-# -136,
-# "int*"
-# ],
-# [
-# "t31","var",
-# "local",
-# 4,
-# -140,
+# -100,
 # "int"
 # ]
 # ],
 # "ast":{
 # "seq": [
-# { "assignS": {
-# "left": 
-# {
-# "identifier": "c"
-# }
-# ,
-# "right": 
-# {
-# "intconst": 1}
-# }
-# }
-# ,
 # { "assignS": {
 # "left": 
 # {
@@ -543,6 +482,36 @@
 # ]
 # }
 # }
+# }
+# }
+# ,
+# { "assignS": {
+# "left": 
+# { "member": {
+# "struct": 
+# { "member": {
+# "struct": 
+# {
+# "identifier": "g"
+# }
+# ,
+# "field": 
+# {
+# "identifier": "koyal_koila"
+# }
+# }
+# }
+# ,
+# "field": 
+# {
+# "identifier": "x"
+# }
+# }
+# }
+# ,
+# "right": 
+# {
+# "intconst": 8}
 # }
 # }
 # ,
@@ -619,88 +588,6 @@
 # }
 # }
 # ,
-# { "assignS": {
-# "left": 
-# {
-# "identifier": "p"
-# }
-# ,
-# "right": 
-# { "member": {
-# "struct": 
-# { "funcall": {
-# "fname": 
-# {
-# "identifier": "bird"
-# }
-# ,
-# "params": [
-# {
-# "intconst": 5}
-# ,
-# {
-# "identifier": "a"
-# }
-# ,
-# {
-# "intconst": 1}
-# 
-# 
-# ]
-# }
-# }
-# ,
-# "field": 
-# {
-# "identifier": "koyal_koila"
-# }
-# }
-# }
-# }
-# }
-# ,
-# { "proccall": {
-# "fname": 
-# {
-# "identifier": "printf"
-# }
-# ,
-# "params": [
-# { "member": {
-# "struct": 
-# {
-# "identifier": "p"
-# }
-# ,
-# "field": 
-# {
-# "identifier": "y"
-# }
-# }
-# }
-# ,
-# { "member": {
-# "struct": 
-# {
-# "identifier": "p"
-# }
-# ,
-# "field": 
-# {
-# "identifier": "x"
-# }
-# }
-# }
-# ,
-# {
-# "stringconst": "p.x: %d, p.y:%d\n"
-# }
-# 
-# 
-# ]
-# }
-# }
-# ,
 # {
 # "return": 
 # {
@@ -718,8 +605,6 @@
 # *****************3A starts here**************
 # .strlt0:
 #	.string "g.eggs: %d, g.kk.x: %d, g.kk.y: %d\n"
-# .strlt1:
-#	.string "p.x: %d, p.y:%d\n"
 # bird:
 #	t0 = &g
 #	t1 = t0 + 0
@@ -736,7 +621,6 @@
 #	*t8 = t9
 #	return g
 # main:
-#	c = 1
 #	a = 3
 #	param 5
 #	param a
@@ -744,47 +628,31 @@
 #	t10 =  call bird, 3
 #	g = t10
 #	t11 = &g
-#	t12 = t11 + 0
-#	t13 = *t12
+#	t12 = t11 + 4
+#	t13 = t12 + 0
+#	*t13 = 8
 #	t14 = &g
-#	t15 = t14 + 4
-#	t16 = t15 + 0
-#	t17 = *t16
-#	t18 = &g
-#	t19 = t18 + 4
-#	t20 = t19 + 4
-#	t21 = *t20
-#	param t21
-#	param t17
-#	param t13
+#	t15 = t14 + 0
+#	t16 = *t15
+#	t17 = &g
+#	t18 = t17 + 4
+#	t19 = t18 + 0
+#	t20 = *t19
+#	t21 = &g
+#	t22 = t21 + 4
+#	t23 = t22 + 4
+#	t24 = *t23
+#	param t24
+#	param t20
+#	param t16
 #	param .strlt0
 #	call printf, 4
-#	param 5
-#	param a
-#	param 1
-#	t22 =  call bird, 3
-#	t23 = &t22
-#	t24 = t23 + 4
-#	t25 = *t24
-#	p = t25
-#	t26 = &p
-#	t27 = t26 + 0
-#	t28 = *t27
-#	t29 = &p
-#	t30 = t29 + 4
-#	t31 = *t30
-#	param t31
-#	param t28
-#	param .strlt1
-#	call printf, 3
 #	return 0
 
 # ****************ASM Starts here********** 
 .section .rodata
 .strlt0:
 	.string "g.eggs: %d, g.kk.x: %d, g.kk.y: %d\n"
-.strlt1:
-	.string "p.x: %d, p.y:%d\n"
 .text
 # t0 = &g
 
@@ -884,18 +752,13 @@ movl %eax, 28(%ebp)
 leave
 movl $0, %eax
 ret
-# c = 1
+# a = 3
 
 .globl main
 main:
 pushl %ebp
 movl %esp, %ebp
-subl $140, %esp
-movl $1, %eax
-movl %eax, -32(%ebp)
-
-# a = 3
-
+subl $100, %esp
 movl $3, %eax
 movl %eax, -24(%ebp)
 
@@ -937,18 +800,23 @@ add $-12, %eax
 movl %eax, -48(%ebp)
 
 
-# t12 = t11 + 0
+# t12 = t11 + 4
 
 movl -48(%ebp), %eax
-addl $0, %eax
+addl $4, %eax
 movl %eax, -52(%ebp)
 
-# t13 = *t12
+# t13 = t12 + 0
 
 movl -52(%ebp), %eax
-movl (%eax), %eax
+addl $0, %eax
 movl %eax, -56(%ebp)
 
+# *t13 = 8
+
+movl $8, %eax
+movl -56(%ebp), %ebx
+movl %eax, (%ebx)
 
 # t14 = &g
 
@@ -957,176 +825,92 @@ add $-12, %eax
 movl %eax, -60(%ebp)
 
 
-# t15 = t14 + 4
+# t15 = t14 + 0
 
 movl -60(%ebp), %eax
-addl $4, %eax
+addl $0, %eax
 movl %eax, -64(%ebp)
 
-# t16 = t15 + 0
+# t16 = *t15
 
 movl -64(%ebp), %eax
-addl $0, %eax
+movl (%eax), %eax
 movl %eax, -68(%ebp)
 
-# t17 = *t16
 
-movl -68(%ebp), %eax
-movl (%eax), %eax
-movl %eax, -72(%ebp)
-
-
-# t18 = &g
+# t17 = &g
 
 movl %ebp, %eax
 add $-12, %eax
+movl %eax, -72(%ebp)
+
+
+# t18 = t17 + 4
+
+movl -72(%ebp), %eax
+addl $4, %eax
 movl %eax, -76(%ebp)
 
-
-# t19 = t18 + 4
+# t19 = t18 + 0
 
 movl -76(%ebp), %eax
-addl $4, %eax
+addl $0, %eax
 movl %eax, -80(%ebp)
 
-# t20 = t19 + 4
+# t20 = *t19
 
 movl -80(%ebp), %eax
-addl $4, %eax
+movl (%eax), %eax
 movl %eax, -84(%ebp)
 
-# t21 = *t20
 
-movl -84(%ebp), %eax
-movl (%eax), %eax
+# t21 = &g
+
+movl %ebp, %eax
+add $-12, %eax
 movl %eax, -88(%ebp)
 
 
-# param t21
+# t22 = t21 + 4
 
-# param t17
+movl -88(%ebp), %eax
+addl $4, %eax
+movl %eax, -92(%ebp)
 
-# param t13
+# t23 = t22 + 4
+
+movl -92(%ebp), %eax
+addl $4, %eax
+movl %eax, -96(%ebp)
+
+# t24 = *t23
+
+movl -96(%ebp), %eax
+movl (%eax), %eax
+movl %eax, -100(%ebp)
+
+
+# param t24
+
+# param t20
+
+# param t16
 
 # param .strlt0
 
 # call printf, 4
 
 subl $4, %esp
-pushl -88(%ebp)
-pushl -72(%ebp)
-pushl -56(%ebp)
+pushl -100(%ebp)
+pushl -84(%ebp)
+pushl -68(%ebp)
 pushl $.strlt0
 call printf
 addl $20, %esp
 
-# param 5
-
-# param a
-
-# param 1
-
-# t22 =  call bird, 3
-
-subl $12, %esp
-pushl $1
-pushl -24(%ebp)
-pushl $5
-call bird
-addl $12, %esp
-movl 0(%esp), %eax
-movl %eax, -100(%ebp)
-movl 4(%esp), %eax
-movl %eax, -96(%ebp)
-movl 8(%esp), %eax
-movl %eax, -92(%ebp)
-addl $12, %esp
-
-# t23 = &t22
-
-movl %ebp, %eax
-add $-100, %eax
-movl %eax, -104(%ebp)
-
-
-# t24 = t23 + 4
-
-movl -104(%ebp), %eax
-addl $4, %eax
-movl %eax, -108(%ebp)
-
-# t25 = *t24
-
-movl -108(%ebp), %eax
-movl (%eax), %eax
-movl %eax, -116(%ebp)
-
-
-# p = t25
-
-movl -116(%ebp), %eax
-movl %eax, -20(%ebp)
-movl -112(%ebp), %eax
-movl %eax, -16(%ebp)
-
-# t26 = &p
-
-movl %ebp, %eax
-add $-20, %eax
-movl %eax, -120(%ebp)
-
-
-# t27 = t26 + 0
-
-movl -120(%ebp), %eax
-addl $0, %eax
-movl %eax, -124(%ebp)
-
-# t28 = *t27
-
-movl -124(%ebp), %eax
-movl (%eax), %eax
-movl %eax, -128(%ebp)
-
-
-# t29 = &p
-
-movl %ebp, %eax
-add $-20, %eax
-movl %eax, -132(%ebp)
-
-
-# t30 = t29 + 4
-
-movl -132(%ebp), %eax
-addl $4, %eax
-movl %eax, -136(%ebp)
-
-# t31 = *t30
-
-movl -136(%ebp), %eax
-movl (%eax), %eax
-movl %eax, -140(%ebp)
-
-
-# param t31
-
-# param t28
-
-# param .strlt1
-
-# call printf, 3
-
-subl $4, %esp
-pushl -140(%ebp)
-pushl -128(%ebp)
-pushl $.strlt1
-call printf
-addl $16, %esp
-
 # return 0
 
-addl $140, %esp
+addl $100, %esp
 movl $0, %eax
 movl %eax, 8(%ebp)
 movl $0, %eax

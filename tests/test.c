@@ -47,7 +47,9 @@ struct ghosala bird(int x, int y, int z) {
     g.koyal_koila.y = 3 * z;
     return g;
 }
-
+void dostuff(){
+    printf("doing stuff\n");
+}
 int main() {
     struct ghosala g;
     struct pair p;
