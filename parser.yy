@@ -853,8 +853,11 @@ unary_expression: postfix_expression{
                 $$->addr = $2->addr;//$$ isproxy addr is false.
             }
             else if(op=="*"){
+                tn.deref();
+                t0 = newtemp(tn);
+                gen(troins::ass,troins::uop,{t0,"*",$2->addr});
                 $$->isproxyaddr = true;
-                $$->addr = $2->addr;
+                $$->addr = t0;
             }
             else{
                 tn.deref();
