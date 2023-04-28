@@ -1,5 +1,5 @@
 /*
-need to update (1) ptrl (2) y= *x to transfer struct members
+need to update (1) ptrl, which is *y = x and (2) y= *x to copy "struct" variables x and y
 just reuse the loop from = expression.
 struct pair {
     int x;
