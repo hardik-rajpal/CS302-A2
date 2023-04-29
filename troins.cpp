@@ -176,13 +176,26 @@ vector<string> TroinBuffer::getASM(){
                     else if (t.args[2] == "*")
                         ss << "imull " << offset << "(%ebp), %eax\n";
                     else if (t.args[2] == "/") {
-                        ss << "movl " << offset << "(%ebp), %ebx\n";
-                        ss << "movl $0, %edx\ndiv %ebx\n";
+                        ss << "movl " << offset << "(%ebp), %ecx\n";
+                        ss << "cltd\n";
+                        ss << "movl $0, %edx\nidivl %ecx\n";
                     }
-                    else if (t.args[2] == "AND_OP")
+                    else if (t.args[2] == "&") 
                         ss << "andl " << offset << "(%ebp), %eax\n";
-                    else if (t.args[2] == "OR_OP")
+                    else if (t.args[2] == "|") 
                         ss << "orl " << offset << "(%ebp), %eax\n";
+                    else if (t.args[2] == "AND_OP") {
+                        ss << "movl " << offset << "(%ebp), %ebx\n";
+                        ss << "cmpl $0, %eax\nsetne %al\nmovzbl %al, %eax\n";
+                        ss << "cmpl $0, %ebx\nsetne %bl\nmovzbl %bl, %ebx\n";
+                        ss << "andl %ebx, %eax\n";
+                    }
+                    else if (t.args[2] == "OR_OP") {
+                        ss << "movl " << offset << "(%ebp), %ebx\n";
+                        ss << "cmpl $0, %eax\nsetne %al\nmovzbl %al, %eax\n";
+                        ss << "cmpl $0, %ebx\nsetne %bl\nmovzbl %bl, %ebx\n";
+                        ss << "orl %ebx, %eax\n";
+                    }
                     else if (t.args[2] == "GT_OP") {
                         ss << "cmpl " << offset << "(%ebp), %eax\n";
                         ss << "setg %al\nmovzbl %al, %eax\n";
@@ -216,13 +229,26 @@ vector<string> TroinBuffer::getASM(){
                     else if (t.args[2] == "*")
                         ss << "imull $" << t.args[3] << ", %eax\n";
                     else if (t.args[2] == "/") {
-                        ss << "movl $" << t.args[3] << ", %ebx\n";
-                        ss << "movl $0, %edx\ndiv %ebx\n";
+                        ss << "movl $" << t.args[3] << ", %ecx\n";
+                        ss << "cltd\n";
+                        ss << "movl $0, %edx\nidivl %ecx\n";
                     }
-                    else if (t.args[2] == "AND_OP")
+                    else if (t.args[2] == "&") 
                         ss << "andl $" << t.args[3] << ", %eax\n";
-                    else if (t.args[2] == "OR_OP")
+                    else if (t.args[2] == "|") 
                         ss << "orl $" << t.args[3] << ", %eax\n";
+                    else if (t.args[2] == "AND_OP") {
+                        ss << "movl $" << t.args[3] << ", %ebx\n";
+                        ss << "cmpl $0, %eax\nsetne %al\nmovzbl %al, %eax\n";
+                        ss << "cmpl $0, %ebx\nsetne %bl\nmovzbl %bl, %ebx\n";
+                        ss << "andl %ebx, %eax\n";
+                    }
+                    else if (t.args[2] == "OR_OP") {
+                        ss << "movl $" << t.args[3] << ", %ebx\n";
+                        ss << "cmpl $0, %eax\nsetne %al\nmovzbl %al, %eax\n";
+                        ss << "cmpl $0, %ebx\nsetne %bl\nmovzbl %bl, %ebx\n";
+                        ss << "orl %ebx, %eax\n";
+                    }
                     else if (t.args[2] == "GT_OP") {
                         ss << "cmpl $" << t.args[3] << ", %eax\n";
                         ss << "setg %al\nmovzbl %al, %eax\n";
