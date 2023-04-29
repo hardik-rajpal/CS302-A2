@@ -625,7 +625,7 @@ procedure_call: IDENTIFIER '(' ')' ';'{
             std::string prmaddr = prm->addr;
             SymEntry* se= Symbols::getSymEntry(ststack.top(),prm->addr,false);
             if(se){
-                if(se->type.arrsizes.size()>0){
+                if(se->type.arrsizes.size()>0&&(!prm->arrinprog)){
                     typespec_astnode bt = se->type;
                     bt.addressOf();
                     prmaddr = newtemp(bt);
@@ -819,7 +819,6 @@ additive_expression: multiplicative_expression{
             error(@$,"Incompatible operands for "+op+": \""+$1->typeNode.typeName+"\", \""+$3->typeNode.typeName+"\"");
         }
         $$ = new op_binary_astnode(op, $1, $3);
-
     }
     if(Symbols::symTabStage==2){
         std::string tdp = $3->addr;
@@ -978,6 +977,11 @@ multiplicative_expression: unary_expression{
     if(Symbols::symTabStage!=0){   
         $$ = (op_binary_astnode*) $1;
     }
+    if(Symbols::symTabStage==2){
+        $$->addr = Symbols::resolveProxies($1,code,ststack.top());
+        $$->isproxyaddr = false;
+        $$->iselem = false;
+    }
 }
 | multiplicative_expression '*' unary_expression{
     //operator and expression match check here.
@@ -989,7 +993,6 @@ multiplicative_expression: unary_expression{
         $$ = new op_binary_astnode(op, $1, $3);
     }
     if(Symbols::symTabStage==2){
-        $1->addr = Symbols::resolveProxies($1,code,ststack.top());
         $3->addr = Symbols::resolveProxies($3,code,ststack.top());
         $$->addr = newtemp(typespec_astnode::intc);
         gen(troins::ass,troins::bop,{$$->addr,$1->addr,"*",$3->addr});
@@ -1004,7 +1007,6 @@ multiplicative_expression: unary_expression{
         $$ = new op_binary_astnode(op, $1, $3);
     }
     if(Symbols::symTabStage==2){
-        $1->addr = Symbols::resolveProxies($1,code,ststack.top());
         $3->addr = Symbols::resolveProxies($3,code,ststack.top());
         $$->addr = newtemp(typespec_astnode::intc);
         gen(troins::ass,troins::bop,{$$->addr,$1->addr,"/",$3->addr});
@@ -1038,7 +1040,7 @@ postfix_expression: primary_expression{
         */
         typespec_astnode tmp = $1->typeNode;tmp.deref();
         std::string t0;
-        if($1->isproxyaddr||$1->iselem){
+        if($1->isproxyaddr||($1->iselem||$1->arrinprog)){
             t0 = $1->addr;
         }
         else{
@@ -1053,7 +1055,13 @@ postfix_expression: primary_expression{
         string t2 = newtemp(tn);
         gen(troins::ass,troins::bop,{t2, t0, "+", t1});
         $$->addr = t2;
-        $$->iselem = true;
+        if($$->typeNode.arrsizes.size()==0){
+            $$->iselem = true;
+            $$->arrinprog = false;
+        }
+        else{
+            $$->arrinprog = true;
+        }
     }
 
 }
@@ -1138,7 +1146,7 @@ postfix_expression: primary_expression{
             std::string prmaddr = prm->addr;
             SymEntry* se= Symbols::getSymEntry(ststack.top(),prm->addr,false);
             if(se){
-                if(se->type.arrsizes.size()>0){
+                if(se->type.arrsizes.size()>0&&(!prm->arrinprog)){
                     typespec_astnode bt = se->type;
                     bt.addressOf();
                     prmaddr = newtemp(bt);
@@ -1300,7 +1308,7 @@ primary_expression: IDENTIFIER{
         else{
             $$->typeNode = entry->type;
             if(entry->lpgtype==SymTab::PARAM){
-                if(entry->type.arrsizes.size()>0){
+                if((entry->type.numptrstars+entry->type.arrsizes.size())>0){
                     $$->isproxyaddr = true;
                 }
             }
