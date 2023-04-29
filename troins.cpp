@@ -178,7 +178,7 @@ vector<string> TroinBuffer::getASM(){
                     else if (t.args[2] == "/") {
                         ss << "movl " << offset << "(%ebp), %ecx\n";
                         ss << "cltd\n";
-                        ss << "movl $0, %edx\nidivl %ecx\n";
+                        ss << "idivl %ecx\n";
                     }
                     else if (t.args[2] == "&") 
                         ss << "andl " << offset << "(%ebp), %eax\n";
@@ -231,7 +231,7 @@ vector<string> TroinBuffer::getASM(){
                     else if (t.args[2] == "/") {
                         ss << "movl $" << t.args[3] << ", %ecx\n";
                         ss << "cltd\n";
-                        ss << "movl $0, %edx\nidivl %ecx\n";
+                        ss << "idivl %ecx\n";
                     }
                     else if (t.args[2] == "&") 
                         ss << "andl $" << t.args[3] << ", %eax\n";
@@ -360,9 +360,15 @@ vector<string> TroinBuffer::getASM(){
                     }
                 }
                 else if (t.args[1] == "!") {
+                    int source_offset = Symbols::flsts[function_name]->rows[t.args[2]].offset;
+                    int dest_offset = Symbols::flsts[function_name]->rows[t.args[0]].offset;
+                    if (source_offset)
+                        ss << "movl " << source_offset << "(%ebp), %eax\n";
+                    else
+                        ss << "movl $" << t.args[2] << ", %eax\n";
                     ss << "cmpl $" << 0 << ", %eax\n";
                     ss << "sete %al\nmovzbl %al, %eax\n";
-                    ss << "movl %eax, " << offset << "(%ebp)\n";
+                    ss << "movl %eax, " << dest_offset << "(%ebp)\n";
                 }
                 else if (t.args[1] == "-") {
                     // args = {x, -, y}

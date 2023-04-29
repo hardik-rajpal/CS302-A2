@@ -12,7 +12,7 @@ movl $44, %eax
 movl $230, %ebx
 
 cmpl $0, %eax
-setne %al
+sete %al
 movzbl %al, %eax 
 cmpl $0, %ebx 
 setne %bl 

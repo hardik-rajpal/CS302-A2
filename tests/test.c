@@ -12,7 +12,8 @@ int main()
     n10 = 1;
     n11 = -30;
     n12 = 0;
-    result = n11/1;
+    result = 273;
+    result = !1;
     printf("%d\n",result);
     return 0;
 }

@@ -142,7 +142,8 @@
 #	t2 = -30
 #	n11 = t2
 #	n12 = 0
-#	t3 = n11 / 1
+#	result = 273
+#	t3 = !1
 #	result = t3
 #	param result
 #	param .strlt0
@@ -230,14 +231,19 @@ movl %eax, -40(%ebp)
 movl $0, %eax
 movl %eax, -44(%ebp)
 
-# t3 = n11 / 1
+# result = 273
 
-movl -40(%ebp), %eax
-movl $1, %ecx
-cltd
-movl $0, %edx
-idivl %ecx
+movl $273, %eax
+movl %eax, -4(%ebp)
+
+# t3 = !1
+
+movl $1, %eax
+cmpl $0, %eax
+sete %al
+movzbl %al, %eax
 movl %eax, -60(%ebp)
+
 
 # result = t3
 
