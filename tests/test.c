@@ -1,19 +1,31 @@
-int main()
-{
-    int result;
-    int n3,n4,n5,n6,n7,n8,n9,n10,n11,n12;
-    n3 = -300;
-    n4 = -3;
-    n5 = 1;
-    n6 = 0;
-    n7 = 1;
-    n8 = 0;
-    n9 = 0;
-    n10 = 1;
-    n11 = -30;
-    n12 = 0;
-    result = 273;
-    result = !1;
-    printf("%d\n",result);
+void print_numbers(int* start_ptr, int num_elements) {
+    int i;
+    i = 0;
+    while(i < num_elements) {
+        if (*start_ptr / 2 * 2 == *start_ptr) {
+            print("%d is even\n", *start_ptr) ;
+        }
+        else {
+            printf("%d is odd\n",*start_ptr);
+        }
+        start_ptr = start_ptr - 1;
+        i = i + 1;
+    }
+}
+
+int main() {
+    int x,y, *ptr1, *ptr2;
+    x = 10;
+    y = 20;
+    ptr1 = &x;
+    ptr2 = &y;
+
+    print_number(ptr1, 2);
+
+    ptr1 = ptr1 - 1;
+    *ptr1 = 15;
+
+    print_numbers(&x, 2);
+
     return 0;
 }

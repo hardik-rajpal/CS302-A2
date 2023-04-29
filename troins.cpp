@@ -110,6 +110,11 @@ void TroinBuffer::printCode(){
         if(labels.count(i)){
             std::cout<<"# "<<labels[i]<<":"<<std::endl;
         }
+        if(t.keyword==troins::gt){
+            if(t.args[t.args.size()-1]==""){
+                continue;
+            }
+        }
         std::cout<<"#\t"<<t.toString()<<std::endl;
     }
 }
@@ -153,6 +158,11 @@ vector<string> TroinBuffer::getASM(){
                 ss << "subl $" << shift_esp << ", %esp\n";
             }
             asmlabels.insert(std::make_pair(ans.size(), labels[i]));
+        }
+        if(t.keyword==troins::gt){
+            if(t.args[t.args.size()-1]==""){
+                continue;
+            }
         }
         switch(t.keyword) {
             case (troins::kws::ass):
@@ -421,7 +431,7 @@ vector<string> TroinBuffer::getASM(){
                             ss << "subl $" << struct_size << ", %esp\n";
                             params_space += struct_size;
                             for (int _i = 0; _i < struct_size; _i += 4) {
-                                ss << "movl " << offset - struct_size + _i << "(%ebp), %eax\n";
+                                ss << "movl " << offset + _i << "(%ebp), %eax\n";
                                 ss << "movl %eax, " << _i << "(%esp)\n";
                             }
                         }
@@ -488,7 +498,7 @@ vector<string> TroinBuffer::getASM(){
                             ss << "subl $" << struct_size << ", %esp\n";
                             params_space += struct_size;
                             for (int _i = 0; _i < struct_size; _i += 4) {
-                                ss << "movl " << offset - struct_size + _i << "(%ebp), %eax\n";
+                                ss << "movl " << offset + _i << "(%ebp), %eax\n";
                                 ss << "movl %eax, " << _i << "(%esp)\n";
                             }
                         }

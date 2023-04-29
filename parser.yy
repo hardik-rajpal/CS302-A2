@@ -1312,6 +1312,7 @@ selection_statement: IF {
         std::string label = ".else_stmt"+code.newLabel();
         code.setLabel(label);
         code.backpatch($4->fl,label);
+        gen(troins::nop,troins::na,{});
     }
 } statement{
     if(Symbols::symTabStage>0){  
