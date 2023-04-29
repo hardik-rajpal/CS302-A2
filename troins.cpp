@@ -408,15 +408,8 @@ vector<string> TroinBuffer::getASM(){
                 typespec_astnode type = Symbols::gst->rows[t.args[1]].type;
                 int ret_space = 0;
                 if (type.typeName != "void") {
-                    if (Symbols::gst->rows.count(type.typeName)) {
-                        // return type is a struct
-                        ret_space = Symbols::gst->rows[type.typeName].size;
-                        ss << "subl $" << ret_space << ", %esp\n";
-                    }
-                    else {
-                        ret_space = 4;
-                        ss << "subl $4, %esp\n";
-                    }
+                    ret_space = type.typeWidth;
+                    ss << "subl $" << ret_space << ", %esp\n";
                 }
                 // push the parameters
                 int params_space = 0;
@@ -475,15 +468,8 @@ vector<string> TroinBuffer::getASM(){
                 typespec_astnode type = Symbols::gst->rows[t.args[0]].type;
                 int ret_space = 0;
                 if (type.typeName != "void") {
-                    if (Symbols::gst->rows.count(type.typeName)) {
-                        // return type is a struct
-                        ret_space = Symbols::gst->rows[type.typeName].size;
-                        ss << "subl $" << ret_space << ", %esp\n";
-                    }
-                    else {
-                        ret_space = 4;
-                        ss << "subl $4, %esp\n";
-                    }
+                    ret_space = type.typeWidth;
+                    ss << "subl $" << ret_space << ", %esp\n";
                 }
                 // push the parameters
                 int params_space = 0;
@@ -603,22 +589,5 @@ void TroinBuffer::printASM(){
     return ;
 }
 void TroinBuffer::setLabel(string name){
-    // if(labels.count(buffer.size())){
-    //     string oldname = labels[buffer.size()];
-    //     for(int i=buffer.size()-1;i>-1;i--){
-    //         troins &t = buffer[i];
-    //         if(t.keyword==troins::gt){
-    //             std::cerr<<"found gt stmt: "<<t.args[t.args.size()-1]<<endl;
-    //             if(t.args[t.args.size()-1]==oldname){
-    //                 t.args[t.args.size()-1] = name;
-    //             }
-    //         }
-    //     }
-    // }
     labels[buffer.size()] = name;
-    // std::cerr<<"{"<<endl;
-    // for(auto entry:labels){
-    //     std::cerr<<"\t"<<entry.first<<":"<<entry.second<<endl;
-    // }
-    // std::cerr<<"}"<<endl;
 }

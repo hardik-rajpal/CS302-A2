@@ -401,6 +401,9 @@ std::string typespec_astnode::genTypeName(){
     return tn;
 }
 bool typespec_astnode::compatibleWith(typespec_astnode t2,bool isparam){
+    if(t2.typeName==typeName){
+        return true;
+    }
     if((numptrstars+arrsizes.size())==0){
         //int, float or struct smt var.
         if((t2.numptrstars+t2.arrsizes.size())!=0){

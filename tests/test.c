@@ -1,26 +1,34 @@
-void print_numbers(int* start_ptr, int num_elements) {
-    int i;
-    i = 0;
-    while(i < num_elements) {
-        if (*start_ptr / 2 * 2 == *start_ptr) {
-            printf("%d is even\n", *start_ptr) ;
-        }
-        else {
-            printf("%d is odd\n",*start_ptr);
-        }
-        start_ptr = start_ptr - 1;
-        i = i + 1;
-    }
+void foo(int *a) {
+    a[3] = -1;
+    a[2] = 0;
+    a[1] = 1;
+    a[0] = 0;
 }
+
 int main() {
-    int x,y, *ptr1, *ptr2;
-    x = 10;
-    y = 20;
-    ptr1 = &x;
-    ptr2 = &y;
-    print_numbers(ptr1, 2);
-    ptr1 = ptr1 - 1;
-    *ptr1 = 15;
-    print_numbers(&x, 2);
+    int a[4][4], **b;
+    int i, j;
+
+    for (i = 0; i < 4; i = i + 1) {
+        for (j = 0; j < 4; j = j + 1) {
+            a[i][j] = i + j;
+        }
+    }
+
+    for (i = 0; i < 4; i = i + 1) {
+        for (j = 0; j < 4; j = j + 1) {
+            printf("%d", a[i][j]);
+        }
+        printf("\n");
+    }
+
+    printf("Foo:\n");
+    foo(a[3]);
+    for (i = 0; i < 4; i = i + 1) {
+        for (j = 0; j < 4; j = j + 1) {
+            printf("%d", a[i][j]);
+        }
+        printf("\n");
+    }
     return 0;
 }

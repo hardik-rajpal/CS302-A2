@@ -607,7 +607,18 @@ procedure_call: IDENTIFIER '(' ')' ';'{
     }
     if(Symbols::symTabStage==2){
         for(exp_astnode* prm:$3){
-            gen(troins::func,troins::param,{prm->addr});
+            //TODO replicate for postfix_expression.
+            std::string prmaddr = prm->addr;
+            SymEntry* se= Symbols::getSymEntry(ststack.top(),prm->addr,false);
+            if(se){
+                if(se->type.arrsizes.size()>0){
+                    typespec_astnode bt = se->type;
+                    bt.addressOf();
+                    prmaddr = newtemp(bt);
+                    gen(troins::ass,troins::uop,{prmaddr,"&",prm->addr});
+                }
+            }
+            gen(troins::func,troins::param,{prmaddr});
         }
         gen(troins::func,troins::call,{$1,to_string($3.size())});
     }
@@ -1112,7 +1123,17 @@ postfix_expression: primary_expression{
         typespec_astnode tn = Symbols::getSymEntry(ststack.top(),$1,false)->type;
         $$->addr = newtemp(tn);
         for(exp_astnode* prm:$3){
-            gen(troins::func,troins::param,{prm->addr});
+            std::string prmaddr = prm->addr;
+            SymEntry* se= Symbols::getSymEntry(ststack.top(),prm->addr,false);
+            if(se){
+                if(se->type.arrsizes.size()>0){
+                    typespec_astnode bt = se->type;
+                    bt.addressOf();
+                    prmaddr = newtemp(bt);
+                    gen(troins::ass,troins::uop,{prmaddr,"&",prm->addr});
+                }
+            }
+            gen(troins::func,troins::param,{prmaddr});
         }
         gen(troins::ass,troins::call,{$$->addr,$1,to_string($3.size())});
     }
@@ -1266,6 +1287,11 @@ primary_expression: IDENTIFIER{
         }
         else{
             $$->typeNode = entry->type;
+            if(entry->lpgtype==SymTab::PARAM){
+                if(entry->type.arrsizes.size()>0){
+                    $$->isproxyaddr = true;
+                }
+            }
             // std::cerr << __LINE__ << $$->typeNode.typeName<<std::endl;
         }
  
