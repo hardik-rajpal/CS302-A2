@@ -1,9 +1,15 @@
-void foo() {
-    int x;
-    x = 5;
+int abs(int x) {
+    if(x<0){
+        return -x;
+    }
+    else{
+        return x;
+    }
 }
 
 int main() {
-    foo();
+    int y;
+    y=abs(-4);
+    printf("y: %d\n",y);
     return 0;
 }

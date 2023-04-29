@@ -216,6 +216,11 @@ function_definition: type_specifier fun_declarator compound_statement{
     if(Symbols::symTabStage>0){
         ststack.top()->ptr = new seq_astnode($3);
     }
+    if(Symbols::symTabStage==2){
+        if($1.typeName=="void"){
+            gen(troins::ret,troins::na,{});
+        }
+    }
     $$ = nullptr;
     ststack.pop();
 };
@@ -442,14 +447,6 @@ statement: ';'{
     }
     if(Symbols::symTabStage==2){
         gen(troins::ret,troins::na,{$2->addr});
-    }
-}
-| RETURN ';'{
-    if(Symbols::symTabStage>0){
-        $$ = new return_astnode(NULL);
-    }
-    if(Symbols::symTabStage==2){
-        gen(troins::ret,troins::na,{});
     }
 }
 ;
@@ -887,7 +884,14 @@ unary_expression: postfix_expression{
             }
             else{
                 t0 = $2->addr;
-                typespec_astnode tn = Symbols::getSymEntry(ststack.top(),t0,false)->type;
+                SymEntry * tmpse = Symbols::getSymEntry(ststack.top(),t0,false);
+                typespec_astnode tn;
+                if(tmpse){
+                     tn = tmpse->type;
+                }
+                else{
+                    tn = typespec_astnode::intc;
+                }
                 $$->addr = newtemp(tn);
                 gen(troins::ass,troins::uop,{$$->addr,op,t0});
                 if(op=="!"){
