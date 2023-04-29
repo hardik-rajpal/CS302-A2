@@ -1,72 +1,80 @@
 # {
 # "globalST": [
 # [
-# "abs","fun",
-# "global",
-# 0,
-# 0,
-# "int"
-# ],
-# [
 # "main","fun",
 # "global",
 # 0,
 # 0,
-# "int"
+# ""
 # ]
 # ],
 # "structs":[
 # ],
 # "functions":[
 # {
-# "name":"abs",
+# "name":"main",
 # "localST":[
 # [
 # "t0","var",
-# "local",
-# 4,
-# -4,
-# "int"
-# ],
-# [
-# "t1","var",
-# "local",
-# 4,
-# -8,
-# "int"
-# ],
-# [
-# "t2","var",
 # "local",
 # 4,
 # -12,
 # "int"
 # ],
 # [
-# "x","var",
-# "param",
+# "t1","var",
+# "local",
 # 4,
-# 8,
+# -16,
 # "int"
-# ]
-# ]
-# }
-# ,
-# {
-# "name":"main",
-# "localST":[
+# ],
+# [
+# "t2","var",
+# "local",
+# 4,
+# -20,
+# "int"
+# ],
 # [
 # "t3","var",
 # "local",
 # 4,
-# -8,
+# -24,
+# "int"
+# ],
+# [
+# "t4","var",
+# "local",
+# 4,
+# -28,
+# "int"
+# ],
+# [
+# "t5","var",
+# "local",
+# 4,
+# -32,
+# "int"
+# ],
+# [
+# "t6","var",
+# "local",
+# 4,
+# -36,
+# "int"
+# ],
+# [
+# "x","var",
+# "local",
+# 4,
+# -4,
 # "int"
 # ],
 # [
 # "y","var",
 # "local",
 # 4,
-# -4,
+# -8,
 # "int"
 # ]
 # ]
@@ -77,134 +85,115 @@
 # 
 # *****************3A starts here**************
 # .strlt0:
-#	.string "y: %d\n"
-# abs:
-#	t0 = x LT_OP 0
-#	if t0 goto .if_stmt_L1
-#	goto .else_stmtL2
-# .if_stmt_L1:
-#	t1 = -x
-#	return t1
-#	goto .if_exit_L3
-# .else_stmtL2:
-#	t2 = -x
-#	x = t2
-# .if_exit_L3:
-#	nop
+#	.string "%d %d\n"
 # main:
-#	param 4
-#	t3 =  call abs, 1
-#	y = t3
-#	param y
+#	x = 100
+#	t0 = x + 1
+#	y = t0
+#	t1 = x NE_OP 100
+#	t2 = y NE_OP 100
+#	t3 = t1 OR_OP t2
+#	x = t3
+#	t4 = x * y
+#	t5 = x + t4
+#	t6 = y GT_OP 100
+#	param t6
+#	param t5
 #	param .strlt0
-#	call printf, 2
+#	call printf, 3
 #	return 0
 
 # ****************ASM Starts here********** 
 .section .rodata
 .strlt0:
-	.string "y: %d\n"
+	.string "%d %d\n"
 .text
-# t0 = x LT_OP 0
-
-.globl abs
-abs:
-pushl %ebp
-movl %esp, %ebp
-subl $12, %esp
-movl 8(%ebp), %eax
-cmpl $0, %eax
-setl %al
-movzbl %al, %eax
-movl %eax, -4(%ebp)
-
-# if t0 goto .if_stmt_L1
-
-movl -4(%ebp), %eax
-cmpl $0, %eax
-jne .if_stmt_L1
-
-# goto .else_stmtL2
-
-jmp .else_stmtL2
-
-# t1 = -x
-
-.if_stmt_L1:
-movl 8(%ebp), %eax
-imull $-1, %eax
-movl %eax, -8(%ebp)
-
-
-# return t1
-
-addl $12, %esp
-movl -8(%ebp), %eax
-movl %eax, 12(%ebp)
-leave
-movl $0, %eax
-ret
-# goto .if_exit_L3
-
-jmp .if_exit_L3
-
-# t2 = -x
-
-.else_stmtL2:
-movl 8(%ebp), %eax
-imull $-1, %eax
-movl %eax, -12(%ebp)
-
-
-# x = t2
-
-movl -12(%ebp), %eax
-movl %eax, 8(%ebp)
-
-# nop
-
-.if_exit_L3:
-nop
-
-# param 4
+# x = 100
 
 .globl main
 main:
-# t3 =  call abs, 1
-
 pushl %ebp
 movl %esp, %ebp
-subl $8, %esp
-subl $4, %esp
-pushl $4
-call abs
-addl $4, %esp
-movl 0(%esp), %eax
-movl %eax, -8(%ebp)
-addl $4, %esp
-
-# y = t3
-
-movl -8(%ebp), %eax
+subl $36, %esp
+movl $100, %eax
 movl %eax, -4(%ebp)
 
-# param y
+# t0 = x + 1
+
+movl -4(%ebp), %eax
+addl $1, %eax
+movl %eax, -12(%ebp)
+
+# y = t0
+
+movl -12(%ebp), %eax
+movl %eax, -8(%ebp)
+
+# t1 = x NE_OP 100
+
+movl -4(%ebp), %eax
+cmpl $100, %eax
+setne %al
+movzbl %al, %eax
+movl %eax, -16(%ebp)
+
+# t2 = y NE_OP 100
+
+movl -8(%ebp), %eax
+cmpl $100, %eax
+setne %al
+movzbl %al, %eax
+movl %eax, -20(%ebp)
+
+# t3 = t1 OR_OP t2
+
+movl -16(%ebp), %eax
+orl -20(%ebp), %eax
+movl %eax, -24(%ebp)
+
+# x = t3
+
+movl -24(%ebp), %eax
+movl %eax, -4(%ebp)
+
+# t4 = x * y
+
+movl -4(%ebp), %eax
+imull -8(%ebp), %eax
+movl %eax, -28(%ebp)
+
+# t5 = x + t4
+
+movl -4(%ebp), %eax
+addl -28(%ebp), %eax
+movl %eax, -32(%ebp)
+
+# t6 = y GT_OP 100
+
+movl -8(%ebp), %eax
+cmpl $100, %eax
+setg %al
+movzbl %al, %eax
+movl %eax, -36(%ebp)
+
+# param t6
+
+# param t5
 
 # param .strlt0
 
-# call printf, 2
+# call printf, 3
 
 subl $4, %esp
-pushl -4(%ebp)
+pushl -36(%ebp)
+pushl -32(%ebp)
 pushl $.strlt0
 call printf
-addl $12, %esp
+addl $16, %esp
 
 # return 0
 
-addl $8, %esp
-movl $0, %eax
-movl %eax, 8(%ebp)
+addl $36, %esp
 leave
 movl $0, %eax
 ret

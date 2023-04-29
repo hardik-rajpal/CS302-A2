@@ -8,8 +8,9 @@ int abs(int x) {
 }
 
 int main() {
-    int y;
-    y=abs(-4);
-    printf("y: %d\n",y);
+    int y,a;
+    a = 4;
+    y=abs(a);
+    printf("y: %d, a:%d\n",y,a);
     return 0;
 }

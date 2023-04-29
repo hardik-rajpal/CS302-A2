@@ -203,6 +203,10 @@ vector<string> TroinBuffer::getASM(){
                         ss << "cmpl " << offset << "(%ebp), %eax\n";
                         ss << "sete %al\nmovzbl %al, %eax\n";
                     }
+                    else if (t.args[2] == "NE_OP") {
+                        ss << "cmpl " << offset << "(%ebp), %eax\n";
+                        ss << "setne %al\nmovzbl %al, %eax\n";
+                    }
                 }
                 else {
                     if (t.args[2] == "+") 
@@ -238,6 +242,10 @@ vector<string> TroinBuffer::getASM(){
                     else if (t.args[2] == "EQ_OP") {
                         ss << "cmpl $" << t.args[3] << ", %eax\n";
                         ss << "sete %al\nmovzbl %al, %eax\n";
+                    }
+                    else if (t.args[2] == "NE_OP") {
+                        ss << "cmpl $" << t.args[3] << ", %eax\n";
+                        ss << "setne %al\nmovzbl %al, %eax\n";
                     }
                 }
 

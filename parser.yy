@@ -625,6 +625,7 @@ expression: logical_and_expression{
         $$ = new op_binary_astnode("OR_OP",$1,$4);
     }
     if(Symbols::symTabStage==2){
+        $$->addr = newtemp(typespec_astnode::intc);
         if(code.condcode){
             code.backpatch($1->fl,$3->nil);
             $$->tl = code.merge($1->tl,$4->tl);
