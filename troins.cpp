@@ -275,18 +275,24 @@ vector<string> TroinBuffer::getASM(){
                 case troins::specs::ptrr:
                 break;
 
-                case troins::specs::ptrl:
-                offset = Symbols::flsts[function_name]->rows[t.args[1]].offset;
-                if (offset)
+                case troins::specs::ptrl:{
+                // *x = y
+                // args = {x,y}
+                int source_offset = Symbols::flsts[function_name]->rows[t.args[1]].offset;
+                int dest_offset = Symbols::flsts[function_name]->rows[t.args[0]].offset;
+                if (source_offset) {
                     ss << "movl " << offset << "(%ebp), %eax\n";
-                else
+                }
+                else {
                     ss << "movl $" << t.args[1] << ", %eax\n";
-                offset = Symbols::flsts[function_name]->rows[t.args[0]].offset;
-                ss << "movl " << offset  << "(%ebp), %ebx\n";
-                ss << "movl %eax, (%ebx)\n";
+                    offset = Symbols::flsts[function_name]->rows[t.args[0]].offset;
+                    ss << "movl " << offset  << "(%ebp), %ebx\n";
+                    ss << "movl %eax, (%ebx)\n";
+                }
                 ans.push_back(ss.str());
                 ss.str("");
                 break;
+                }
 
                 case troins::specs::uop:
                 if (t.args[1] == "&") {
@@ -298,11 +304,18 @@ vector<string> TroinBuffer::getASM(){
                 }
                 else if (t.args[1] == "*") {
                     // ans.push_back("here, motherfucker");
-                    offset = Symbols::flsts[function_name]->rows[t.args[2]].offset;
-                    ss << "movl " << offset << "(%ebp), %eax\n";
-                    ss << "movl (%eax), %eax\n";
-                    offset = Symbols::flsts[function_name]->rows[t.args[0]].offset;
-                    ss << "movl %eax, " << offset << "(%ebp)\n";
+                    // t.args = {x, *, y}
+                    typespec_astnode type = Symbols::flsts[function_name]->rows[t.args[0]].type;
+                    int struct_size = Symbols::gst->rows[type.typeName].size;
+                    struct_size = (struct_size? struct_size: 4);
+                    int source_offset = Symbols::flsts[function_name]->rows[t.args[2]].offset;
+                    int dest_offset = Symbols::flsts[function_name]->rows[t.args[0]].offset;
+                    for (int _i = 0; _i < struct_size; _i += 4) {
+                        ss << "movl " << source_offset << "(%ebp), %eax\n";
+                        ss << "addl $" << _i << ", %eax\n";
+                        ss << "movl (%eax), %eax\n";
+                        ss << "movl %eax, " << dest_offset + _i << "(%ebp)\n";
+                    }
                 }
                 else if (t.args[1] == "!") {
                     ss << "cmpl $" << 0 << ", %eax\n";
@@ -400,6 +413,8 @@ vector<string> TroinBuffer::getASM(){
                 }
                 // push the parameters
                 int params_space = 0;
+                if (t.args[0] != "printf")
+                    std::reverse(params.begin(), params.end());
                 for (auto param: params) {
                     int offset = Symbols::flsts[function_name]->rows[param.args[0]].offset;
                     if (offset) {
@@ -423,7 +438,6 @@ vector<string> TroinBuffer::getASM(){
                         params_space += 4;
                     }
                 }
-                // ss << "subl $4, %esp\n"; // for the static link
                 ss << "call " << t.args[0] << "\n";
                 ss << "addl $" << ret_space + params_space << ", %esp\n";
                 params.clear();
