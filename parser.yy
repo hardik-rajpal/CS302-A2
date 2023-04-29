@@ -583,7 +583,6 @@ procedure_call: IDENTIFIER '(' ')' ';'{
                 error(@$, "Procedure \"" + $1 + "\" called with too many arguments");
             }
             std::vector<exp_astnode*> exp_list = $3;
-            std::reverse(exp_list.begin(), exp_list.end());
             int i = 0;
             for (auto item: expected) {
                 if (!item.second.compatibleWith(exp_list[i]->typeNode,true)) {
@@ -598,7 +597,6 @@ procedure_call: IDENTIFIER '(' ')' ';'{
                 }
                 i++;
             }
-            std::reverse(exp_list.begin(),exp_list.end());
             $$ = new funcall_astnode(new identifier_astnode($1), exp_list, true);
             $$->typeNode = Symbols::getSymEntry(Symbols::gst, $1)->type;
         }
@@ -798,8 +796,30 @@ additive_expression: multiplicative_expression{
         $$ = new op_binary_astnode(op, $1, $3);
     }
     if(Symbols::symTabStage==2){
-        $$->addr = newtemp(typespec_astnode::intc);
-        gen(troins::ass,troins::bop,{$$->addr,$1->addr,"+",$3->addr});
+        std::string tdp = $3->addr;
+        std::string lop = $1->addr;
+        //TODO: maybe consider arrays.
+        typespec_astnode restype = typespec_astnode::intc;
+        if($1->typeNode.numptrstars>0){
+            lop = $1->addr;
+            typespec_astnode tbase = $1->typeNode;
+            tbase.deref();
+            int base = tbase.typeWidth;
+            tdp = newtemp(typespec_astnode::intc);
+            gen(troins::ass,troins::bop,{tdp,to_string(base),"*",$3->addr});
+            restype = $1->typeNode;
+        }
+        if($3->typeNode.numptrstars>0){
+            lop = $3->addr;
+            typespec_astnode tbase = $3->typeNode;
+            tbase.deref();
+            int base = tbase.typeWidth;
+            tdp = newtemp(typespec_astnode::intc);
+            gen(troins::ass,troins::bop,{tdp,to_string(base),"*",$1->addr});
+            restype = $3->typeNode;
+        }
+        $$->addr = newtemp(restype);
+        gen(troins::ass,troins::bop,{$$->addr,lop,"+",tdp});
     }
 }
 | additive_expression '-' multiplicative_expression{
@@ -811,8 +831,30 @@ additive_expression: multiplicative_expression{
         $$ = new op_binary_astnode(op, $1, $3);
     }
     if(Symbols::symTabStage==2){
-        $$->addr = newtemp(typespec_astnode::intc);
-        gen(troins::ass,troins::bop,{$$->addr,$1->addr,"-",$3->addr});
+        std::string tdp = $3->addr;
+        std::string lop = $1->addr;
+        //TODO: maybe consider arrays.
+        typespec_astnode restype = typespec_astnode::intc;
+        if($1->typeNode.numptrstars>0){
+            lop = $1->addr;
+            typespec_astnode tbase = $1->typeNode;
+            tbase.deref();
+            int base = tbase.typeWidth;
+            tdp = newtemp(typespec_astnode::intc);
+            gen(troins::ass,troins::bop,{tdp,to_string(base),"*",$3->addr});
+            restype = $1->typeNode;
+        }
+        if($3->typeNode.numptrstars>0){
+            lop = $3->addr;
+            typespec_astnode tbase = $3->typeNode;
+            tbase.deref();
+            int base = tbase.typeWidth;
+            tdp = newtemp(typespec_astnode::intc);
+            gen(troins::ass,troins::bop,{tdp,to_string(base),"*",$1->addr});
+            restype = $3->typeNode;
+        }
+        $$->addr = newtemp(restype);
+        gen(troins::ass,troins::bop,{$$->addr,lop,"-",tdp});
     }
 }
 ;
