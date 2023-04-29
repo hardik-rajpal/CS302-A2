@@ -281,7 +281,15 @@ vector<string> TroinBuffer::getASM(){
                 int source_offset = Symbols::flsts[function_name]->rows[t.args[1]].offset;
                 int dest_offset = Symbols::flsts[function_name]->rows[t.args[0]].offset;
                 if (source_offset) {
-                    ss << "movl " << offset << "(%ebp), %eax\n";
+                    typespec_astnode type = Symbols::flsts[function_name]->rows[t.args[1]].type;
+                    int struct_size = Symbols::gst->rows[type.typeName].size;
+                    struct_size = (struct_size? struct_size: 4);
+                    ss << "movl " << dest_offset << "(%ebp), %ebx\n";
+                    for (int _i = 0; _i < struct_size; _i += 4) {
+                        ss << "movl " << source_offset + _i << "(%ebp), %eax\n";
+                        // ss << "movl %(ebx), %ebx";
+                        ss << "movl %eax, " << _i << "(%ebx)\n";
+                    }
                 }
                 else {
                     ss << "movl $" << t.args[1] << ", %eax\n";
@@ -322,6 +330,22 @@ vector<string> TroinBuffer::getASM(){
                     ss << "sete %al\nmovzbl %al, %eax\n";
                     ss << "movl %eax, " << offset << "(%ebp)\n";
                 }
+                else if (t.args[1] == "-") {
+                    // args = {x, -, y}
+                    offset = Symbols::flsts[function_name]->rows[t.args[2]].offset;
+                    if (offset) {
+                        ss << "movl " << offset << "(%ebp), %eax\n";
+                        ss << "imull $-1, %eax\n";
+                        offset = Symbols::flsts[function_name]->rows[t.args[0]].offset;
+                        ss << "movl %eax, " << offset << "(%ebp)\n";
+                    }
+                    else {
+                        ss << "movl $" << t.args[2] << ", %eax\n";
+                        ss << "imull $-1, %eax\n";
+                        offset = Symbols::flsts[function_name]->rows[t.args[0]].offset;
+                        ss << "movl %eax, " << offset << "(%ebp)\n";
+                    }
+                }
 
                 ans.push_back(ss.str());
                 ss.str("");
@@ -352,18 +376,18 @@ vector<string> TroinBuffer::getASM(){
                     int offset = Symbols::flsts[function_name]->rows[param.args[0]].offset;
                     if (offset) {
                         typespec_astnode type = Symbols::flsts[function_name]->rows[param.args[0]].type;
-                        if (type.typeName == typespec_astnode::intc.typeName) {
-                            ss << "pushl " << offset << "(%ebp)\n";
-                            params_space += 4;
-                        }
-                        else {
-                            int struct_size = Symbols::gst->rows[type.typeName].size;
+                        int struct_size = Symbols::gst->rows[type.typeName].size;
+                        if (struct_size) {
                             ss << "subl $" << struct_size << ", %esp\n";
                             params_space += struct_size;
                             for (int _i = 0; _i < struct_size; _i += 4) {
                                 ss << "movl " << offset - struct_size + _i << "(%ebp), %eax\n";
                                 ss << "movl %eax, " << _i << "(%esp)\n";
                             }
+                        }
+                        else {
+                            ss << "pushl " << offset << "(%ebp)\n";
+                            params_space += 4;
                         }
                     } 
                     else {
@@ -419,18 +443,18 @@ vector<string> TroinBuffer::getASM(){
                     int offset = Symbols::flsts[function_name]->rows[param.args[0]].offset;
                     if (offset) {
                         typespec_astnode type = Symbols::flsts[function_name]->rows[param.args[0]].type;
-                        if (type.typeName == typespec_astnode::intc.typeName) {
-                            ss << "pushl " << offset << "(%ebp)\n";
-                            params_space += 4;
-                        }
-                        else {
-                            int struct_size = Symbols::gst->rows[type.typeName].size;
+                        int struct_size = Symbols::gst->rows[type.typeName].size;
+                        if (struct_size) {
                             ss << "subl $" << struct_size << ", %esp\n";
                             params_space += struct_size;
                             for (int _i = 0; _i < struct_size; _i += 4) {
                                 ss << "movl " << offset - struct_size + _i << "(%ebp), %eax\n";
                                 ss << "movl %eax, " << _i << "(%esp)\n";
                             }
+                        }
+                        else {
+                            ss << "pushl " << offset << "(%ebp)\n";
+                            params_space += 4;
                         }
                     } 
                     else {
@@ -480,12 +504,13 @@ vector<string> TroinBuffer::getASM(){
                 offset = Symbols::flsts[function_name]->rows[t.args[0]].offset;
                 // TODO: Take care of returning structs 4 bytes eaach
                 // calculate offset of return value 
-                int num_params = 2;  // for eip and dynamic link
+                int offset_ret_val = 8;  // for eip and dynamic link
                 for(auto row: Symbols::flsts[function_name]->rows) {
-                    if (row.second.lpgtype == SymTab::ST_LPG::PARAM)
-                        num_params++;
+                    if (row.second.lpgtype == SymTab::ST_LPG::PARAM) {
+                        typespec_astnode type = row.second.type;
+                        offset_ret_val += type.typeWidth;
+                    }
                 }
-                int offset_ret_val = 4 * num_params;
                 int ret_size = Symbols::gst->rows[function_name].type.typeWidth;
                 for (int _i = 0; _i < ret_size; _i += 4) {
                     if (offset) 

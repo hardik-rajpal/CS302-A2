@@ -1037,7 +1037,7 @@ postfix_expression: primary_expression{
                 error(@$, "Procedure \"" + $1 + "\" called with too many arguments");
             }
             std::vector<exp_astnode*> exp_list = $3;
-            std::reverse(exp_list.begin(), exp_list.end());
+            // std::reverse(exp_list.begin(), exp_list.end());
             int i = 0;
             for (auto item: expected) {
                 if (!item.second.compatibleWith(exp_list[i]->typeNode,true)) {
@@ -1052,7 +1052,7 @@ postfix_expression: primary_expression{
                 }
                 i++;
             }
-            std::reverse(exp_list.begin(),exp_list.end());
+            // std::reverse(exp_list.begin(),exp_list.end());
             $$ = new funcall_astnode(new identifier_astnode($1), exp_list, false);
             $$->typeNode = Symbols::getSymEntry(Symbols::gst, $1)->type;
         }
