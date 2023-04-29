@@ -1040,7 +1040,7 @@ postfix_expression: primary_expression{
         */
         typespec_astnode tmp = $1->typeNode;tmp.deref();
         std::string t0;
-        if($1->isproxyaddr||($1->iselem||$1->arrinprog)){
+        if($1->isproxyaddr||($1->iselem||$1->arrinprog)||($1->typeNode.arrsizes.size()==0)){
             t0 = $1->addr;
         }
         else{
@@ -1308,7 +1308,7 @@ primary_expression: IDENTIFIER{
         else{
             $$->typeNode = entry->type;
             if(entry->lpgtype==SymTab::PARAM){
-                if((entry->type.numptrstars+entry->type.arrsizes.size())>0){
+                if((entry->type.arrsizes.size())>0){
                     $$->isproxyaddr = true;
                 }
             }
